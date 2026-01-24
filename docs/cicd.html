@@ -1,0 +1,1665 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CI/CD | From Code to Cloud</title>
+    <meta name="description" content="Pipeline bosqichlari, test, build, security scan, artifact va release strategy - CI/CD asoslari">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-primary: #0B1020;
+            --bg-secondary: #0A0F1A;
+            --bg-card: #0F1629;
+            --accent-teal: #27D7C4;
+            --accent-violet: #7C5CFF;
+            --accent-amber: #F59E0B;
+            --accent-red: #EF4444;
+            --accent-green: #10B981;
+            --accent-cyan: #06B6D4;
+            --text-primary: #E8EEF8;
+            --text-muted: #A7B1C2;
+            --text-dim: #6B7280;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            line-height: 1.7;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(6, 182, 212, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(124, 92, 255, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(11, 16, 32, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent-teal), var(--accent-violet));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--accent-cyan);
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 60px;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-violet));
+            z-index: 99;
+            transition: width 0.1s ease;
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 250px 1fr 280px;
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 5rem 2rem 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .sidebar-left {
+            position: sticky;
+            top: 80px;
+            height: fit-content;
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
+        }
+
+        .sidebar-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .toc-list {
+            list-style: none;
+        }
+
+        .toc-list a {
+            display: block;
+            padding: 0.5rem 0;
+            padding-left: 1rem;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.85rem;
+            border-left: 2px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+
+        .toc-list a:hover,
+        .toc-list a.active {
+            color: var(--accent-cyan);
+            border-left-color: var(--accent-cyan);
+        }
+
+        .main-content {
+            max-width: 800px;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            margin-bottom: 2rem;
+        }
+
+        .breadcrumb a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--accent-cyan);
+        }
+
+        .breadcrumb i {
+            font-size: 0.7rem;
+        }
+
+        .hero {
+            margin-bottom: 3rem;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            font-size: 0.8rem;
+            color: var(--accent-cyan);
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-tagline {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 600px;
+        }
+
+        .reading-time {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+        }
+
+        .reading-time span {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .section {
+            margin-bottom: 4rem;
+            scroll-margin-top: 100px;
+        }
+
+        .section h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section h2 i {
+            color: var(--accent-cyan);
+            font-size: 1.2rem;
+        }
+
+        .section h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem;
+            color: var(--text-primary);
+        }
+
+        .section p {
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .callout {
+            padding: 1.25rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .callout-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 0.75rem;
+        }
+
+        .callout-info {
+            background: rgba(6, 182, 212, 0.1);
+            border: 1px solid rgba(6, 182, 212, 0.2);
+        }
+
+        .callout-info .callout-icon {
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
+        }
+
+        .callout-warning {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .callout-warning .callout-icon {
+            background: var(--accent-amber);
+            color: var(--bg-primary);
+        }
+
+        .callout-tip {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .callout-tip .callout-icon {
+            background: var(--accent-green);
+            color: white;
+        }
+
+        .callout-content {
+            flex: 1;
+        }
+
+        .callout-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+        }
+
+        .callout-text {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        .code-block {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            overflow: hidden;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .code-lang {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .code-copy {
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.75rem;
+            transition: color 0.3s ease;
+        }
+
+        .code-copy:hover {
+            color: var(--accent-cyan);
+        }
+
+        .code-content {
+            padding: 1rem;
+            overflow-x: auto;
+        }
+
+        .code-content pre {
+            margin: 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+
+        .code-content .comment { color: var(--text-dim); }
+        .code-content .keyword { color: var(--accent-violet); }
+        .code-content .string { color: var(--accent-teal); }
+        .code-content .function { color: var(--accent-amber); }
+        .code-content .variable { color: var(--accent-cyan); }
+
+        .section ul, .section ol {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+            color: var(--text-muted);
+        }
+
+        .section li {
+            margin-bottom: 0.5rem;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: var(--accent-cyan);
+            transform: translateY(-2px);
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(124, 92, 255, 0.2));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            color: var(--accent-cyan);
+        }
+
+        .card h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .card p {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            margin: 0;
+        }
+
+        /* Pipeline Visual */
+        .pipeline-visual {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            overflow-x: auto;
+        }
+
+        .pipeline-stage {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            min-width: 80px;
+        }
+
+        .pipeline-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .pipeline-stage:nth-child(1) .pipeline-icon { background: linear-gradient(135deg, #3B82F6, #1D4ED8); }
+        .pipeline-stage:nth-child(3) .pipeline-icon { background: linear-gradient(135deg, #10B981, #059669); }
+        .pipeline-stage:nth-child(5) .pipeline-icon { background: linear-gradient(135deg, #F59E0B, #D97706); }
+        .pipeline-stage:nth-child(7) .pipeline-icon { background: linear-gradient(135deg, #8B5CF6, #7C3AED); }
+        .pipeline-stage:nth-child(9) .pipeline-icon { background: linear-gradient(135deg, #EC4899, #DB2777); }
+        .pipeline-stage:nth-child(11) .pipeline-icon { background: linear-gradient(135deg, #06B6D4, #0891B2); }
+
+        .pipeline-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        .pipeline-arrow {
+            color: var(--text-dim);
+            font-size: 1.2rem;
+        }
+
+        .steps {
+            margin: 1.5rem 0;
+        }
+
+        .step {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-violet));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .step-content h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-content p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        .checklist {
+            list-style: none;
+            padding: 0;
+            margin: 1.5rem 0;
+        }
+
+        .checklist li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .checklist li i {
+            color: var(--accent-green);
+            margin-top: 0.2rem;
+        }
+
+        .tools-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin: 1.5rem 0;
+        }
+
+        .tool-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+        }
+
+        .tool-badge:hover {
+            border-color: var(--accent-cyan);
+            color: var(--text-primary);
+        }
+
+        .tool-badge i {
+            color: var(--accent-cyan);
+        }
+
+        .faq-item {
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            margin-bottom: 0.75rem;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            background: var(--glass-bg);
+            border: none;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            transition: background 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .faq-question i {
+            color: var(--text-dim);
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 1rem 1.25rem;
+            max-height: 500px;
+        }
+
+        .faq-answer p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        .glossary-grid {
+            display: grid;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .glossary-item {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+        }
+
+        .glossary-term {
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--accent-cyan);
+        }
+
+        .glossary-def {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .sidebar-right {
+            position: sticky;
+            top: 80px;
+            height: fit-content;
+        }
+
+        .takeaways-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+
+        .takeaways-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .takeaways-title i {
+            color: var(--accent-amber);
+        }
+
+        .takeaways-list {
+            list-style: none;
+        }
+
+        .takeaways-list li {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.5rem 0;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .takeaways-list li:last-child {
+            border-bottom: none;
+        }
+
+        .takeaways-list li i {
+            color: var(--accent-cyan);
+            margin-top: 0.2rem;
+        }
+
+        .security-card {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.05), rgba(124, 92, 255, 0.05));
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .security-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--accent-red);
+        }
+
+        .security-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .security-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.5rem 0;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .security-list li i {
+            color: var(--accent-red);
+            margin-top: 0.2rem;
+        }
+
+        .nav-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 1.5rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            text-decoration: none;
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            border-color: var(--accent-cyan);
+            color: var(--text-primary);
+        }
+
+        .nav-btn-label {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+
+        .nav-btn-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .nav-btn.next {
+            text-align: right;
+        }
+
+        @media (max-width: 1200px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar-left,
+            .sidebar-right {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem 1.5rem;
+            }
+
+            .nav-toggle {
+                display: block;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: rgba(11, 16, 32, 0.95);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                padding: 1rem;
+                gap: 0;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-links li {
+                padding: 0.75rem 1rem;
+            }
+
+            .main-layout {
+                padding: 4.5rem 1rem 2rem;
+            }
+
+            .hero h1 {
+                font-size: 1.75rem;
+            }
+
+            .glossary-item {
+                grid-template-columns: 1fr;
+            }
+
+            .pipeline-visual {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .pipeline-arrow {
+                transform: rotate(90deg);
+            }
+
+            .nav-footer {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-btn {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+
+    <header class="header">
+        <a href="index.html" class="logo">
+            <span class="logo-icon"><i class="fas fa-code"></i></span>
+            Code to Cloud
+        </a>
+        <button class="nav-toggle" aria-label="Toggle navigation">
+            <i class="fas fa-bars"></i>
+        </button>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="code.html">Code</a></li>
+            <li><a href="frontend.html">Frontend</a></li>
+            <li><a href="backend-api.html">Backend API</a></li>
+            <li><a href="database.html">Database</a></li>
+            <li><a href="architecture.html">Architecture</a></li>
+            <li><a href="cicd.html" class="active">CI/CD</a></li>
+            <li><a href="devops.html">DevOps</a></li>
+            <li><a href="cloud-deploy.html">Cloud</a></li>
+        </ul>
+    </header>
+
+    <div class="main-layout">
+        <aside class="sidebar-left">
+            <h3 class="sidebar-title">On This Page</h3>
+            <ul class="toc-list">
+                <li><a href="#what-is">CI/CD nima?</a></li>
+                <li><a href="#why-needed">Nega kerak?</a></li>
+                <li><a href="#concepts">Asosiy tushunchalar</a></li>
+                <li><a href="#process">Amaliy jarayon</a></li>
+                <li><a href="#mistakes">Ko'p uchraydigan xatolar</a></li>
+                <li><a href="#best-practices">Best practices</a></li>
+                <li><a href="#tools">Asboblar</a></li>
+                <li><a href="#example">Mini misol</a></li>
+                <li><a href="#security">Xavfsizlik</a></li>
+                <li><a href="#faq">FAQ</a></li>
+                <li><a href="#glossary">Glossary</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <nav class="breadcrumb">
+                <a href="index.html">Home</a>
+                <i class="fas fa-chevron-right"></i>
+                <span>CI/CD</span>
+            </nav>
+
+            <section class="hero">
+                <div class="hero-badge">
+                    <i class="fas fa-sync-alt"></i>
+                    <span>6-bosqich</span>
+                </div>
+                <h1>CI/CD</h1>
+                <p class="hero-tagline">Continuous Integration va Continuous Delivery - koddan productiongacha avtomatlashtirilgan yo'l.</p>
+                <div class="reading-time">
+                    <span><i class="fas fa-clock"></i> 20 daqiqa o'qish</span>
+                    <span><i class="fas fa-book"></i> O'rta daraja</span>
+                </div>
+            </section>
+
+            <!-- Pipeline Visual -->
+            <div class="pipeline-visual">
+                <div class="pipeline-stage">
+                    <div class="pipeline-icon"><i class="fas fa-code"></i></div>
+                    <span class="pipeline-label">Code</span>
+                </div>
+                <i class="fas fa-chevron-right pipeline-arrow"></i>
+                <div class="pipeline-stage">
+                    <div class="pipeline-icon"><i class="fas fa-vial"></i></div>
+                    <span class="pipeline-label">Test</span>
+                </div>
+                <i class="fas fa-chevron-right pipeline-arrow"></i>
+                <div class="pipeline-stage">
+                    <div class="pipeline-icon"><i class="fas fa-hammer"></i></div>
+                    <span class="pipeline-label">Build</span>
+                </div>
+                <i class="fas fa-chevron-right pipeline-arrow"></i>
+                <div class="pipeline-stage">
+                    <div class="pipeline-icon"><i class="fas fa-shield-alt"></i></div>
+                    <span class="pipeline-label">Security</span>
+                </div>
+                <i class="fas fa-chevron-right pipeline-arrow"></i>
+                <div class="pipeline-stage">
+                    <div class="pipeline-icon"><i class="fas fa-box"></i></div>
+                    <span class="pipeline-label">Artifact</span>
+                </div>
+                <i class="fas fa-chevron-right pipeline-arrow"></i>
+                <div class="pipeline-stage">
+                    <div class="pipeline-icon"><i class="fas fa-rocket"></i></div>
+                    <span class="pipeline-label">Deploy</span>
+                </div>
+            </div>
+
+            <section class="section" id="what-is">
+                <h2><i class="fas fa-question-circle"></i> CI/CD nima?</h2>
+                <p>CI/CD - bu dasturiy ta'minotni ishlab chiqish va yetkazib berishni avtomatlashtiradigan amaliyotlar va vositalar to'plami. Bu qisqartma ikki tushunchani o'z ichiga oladi:</p>
+                
+                <ul>
+                    <li><strong>CI (Continuous Integration)</strong> - doimiy integratsiya: dasturchilar kodlarini tez-tez (kuniga bir necha marta) umumiy repo'ga qo'shishadi, har safar avtomatik testlar ishga tushadi</li>
+                    <li><strong>CD (Continuous Delivery/Deployment)</strong> - doimiy yetkazib berish: kod avtomatik ravishda production'ga yetkaziladi (yoki bir tugma bilan)</li>
+                </ul>
+
+                <p>CI/CD pipeline - bu kod yozilganidan boshlab production'ga chiqguncha bo'lgan barcha bosqichlarni avtomatlashtiradigan conveyer.</p>
+
+                <div class="callout callout-info">
+                    <div class="callout-icon"><i class="fas fa-info"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">Oddiy tushuntirish</div>
+                        <p class="callout-text">CI/CD - bu zavod konveyeri kabi. Xomashyo (kod) kiradi, tekshiruvlardan o'tadi (test), qayta ishlanadi (build), sifat nazoratidan o'tadi (QA), va tayyor mahsulot (release) chiqadi. Hamma narsa avtomatik, odam aralashuvi minimal.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="why-needed">
+                <h2><i class="fas fa-lightbulb"></i> Nega kerak?</h2>
+                <p>CI/CD yo'q bo'lsa, deploy qilish qo'lda amalga oshiriladi. Bu ko'p muammolarga olib keladi:</p>
+
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-clock"></i></div>
+                        <h4>Vaqtni tejash</h4>
+                        <p>Qo'lda deploy 2-4 soat, CI/CD bilan 5-15 daqiqa. Kuniga 10 marta deploy = 20+ soat tejaladi.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-bug"></i></div>
+                        <h4>Xatolarni erta topish</h4>
+                        <p>Har bir commit'da test ishlagani uchun xato 5 daqiqada topiladi, 5 kundan keyin emas.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-user-shield"></i></div>
+                        <h4>Xavfsizlik</h4>
+                        <p>Avtomatik security scanning har commit'da. Zaifliklar production'ga yetib bormaydi.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-undo"></i></div>
+                        <h4>Tez rollback</h4>
+                        <p>Muammo bo'lsa, oldingi versiyaga 1 daqiqada qaytish. Artifact'lar saqlanadi.</p>
+                    </div>
+                </div>
+
+                <div class="callout callout-warning">
+                    <div class="callout-icon"><i class="fas fa-exclamation"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">Statistika</div>
+                        <p class="callout-text">DORA (DevOps Research and Assessment) tadqiqotiga ko'ra, yuqori darajadagi CI/CD amaliyotlari: 208x tezroq deploy, 106x tezroq recovery, 7x kam xato chiqishi, 2604x tezroq lead time.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="concepts">
+                <h2><i class="fas fa-book-open"></i> Asosiy tushunchalar</h2>
+
+                <h3>Pipeline bosqichlari</h3>
+                <ul>
+                    <li><strong>Source</strong> - kod o'zgarishi trigger bo'ladi (push, PR, tag)</li>
+                    <li><strong>Build</strong> - kod kompilyatsiya, dependency'lar o'rnatiladi</li>
+                    <li><strong>Test</strong> - unit, integration, e2e testlar ishlaydi</li>
+                    <li><strong>Security Scan</strong> - SAST, DAST, dependency check</li>
+                    <li><strong>Artifact</strong> - Docker image, binary, package yaratiladi</li>
+                    <li><strong>Deploy</strong> - staging yoki production'ga joylashtiriladi</li>
+                </ul>
+
+                <h3>Continuous Integration</h3>
+                <p>CI ning asosiy tamoyillari:</p>
+                <ul>
+                    <li>Har bir developer kuniga kamida bir marta main branch'ga merge qiladi</li>
+                    <li>Har bir merge avtomatik build va test trigger qiladi</li>
+                    <li>Build buzilsa, darhol tuzatiladi (birinchi prioritet)</li>
+                    <li>Test coverage yetarli darajada bo'lishi kerak (80%+)</li>
+                </ul>
+
+                <h3>Continuous Delivery vs Deployment</h3>
+                <ul>
+                    <li><strong>Continuous Delivery</strong> - kod har doim deploy qilishga tayyor holatda. Lekin production'ga chiqarish qo'lda (bir tugma bilan)</li>
+                    <li><strong>Continuous Deployment</strong> - barcha testlardan o'tgan kod avtomatik production'ga chiqadi. Odam aralashuvi yo'q.</li>
+                </ul>
+
+                <h3>Deployment Strategiyalari</h3>
+                <ul>
+                    <li><strong>Rolling Update</strong> - eski pod'lar birin-ketin yangilanadi</li>
+                    <li><strong>Blue/Green</strong> - ikki muhit, traffic bir zumda almashadi</li>
+                    <li><strong>Canary</strong> - avval 5% traffic, keyin asta-sekin 100%</li>
+                    <li><strong>Feature Flags</strong> - kod deploy, lekin feature o'chirilgan</li>
+                </ul>
+            </section>
+
+            <section class="section" id="process">
+                <h2><i class="fas fa-tasks"></i> Amaliy jarayon (step-by-step)</h2>
+
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>CI/CD tool tanlash</h4>
+                            <p>GitHub Actions, GitLab CI, Jenkins, CircleCI - loyiha talablariga qarab. GitHub Actions boshlash uchun eng oson.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Asosiy pipeline yaratish</h4>
+                            <p>.github/workflows/ci.yml yoki .gitlab-ci.yml fayl yarating. Build va test bosqichlaridan boshlang.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Test strategiyasini aniqlash</h4>
+                            <p>Unit testlar (Jest, pytest), integration testlar, e2e testlar (Playwright). Coverage threshold o'rnating.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Security scanning qo'shish</h4>
+                            <p>Dependabot, Snyk, SonarQube - dependency va code vulnerabilities uchun.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h4>Artifact yaratish</h4>
+                            <p>Docker image build, tag (git SHA yoki semantic version), registry'ga push (GHCR, ECR, GCR).</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">6</div>
+                        <div class="step-content">
+                            <h4>Staging deploy</h4>
+                            <p>Avval staging muhitga avtomatik deploy. Smoke testlar, manual QA imkoniyati.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">7</div>
+                        <div class="step-content">
+                            <h4>Production deploy</h4>
+                            <p>Manual approval yoki avtomatik (Continuous Deployment). Rollback strategiyasi tayyor bo'lsin.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">8</div>
+                        <div class="step-content">
+                            <h4>Monitoring va alerting</h4>
+                            <p>Deploy'dan keyin health check, error rate, latency kuzatilsin. Anomaly bo'lsa - alert.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="mistakes">
+                <h2><i class="fas fa-exclamation-triangle"></i> Eng ko'p uchraydigan xatolar</h2>
+
+                <div class="callout callout-warning">
+                    <div class="callout-icon"><i class="fas fa-times"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">1. Test'larsiz CI</div>
+                        <p class="callout-text">Pipeline bor, lekin testlar yo'q yoki juda kam. CI faqat build tekshiradi. Bu foydasiz - xatolar production'ga yetib boradi.</p>
+                    </div>
+                </div>
+
+                <div class="callout callout-warning">
+                    <div class="callout-icon"><i class="fas fa-times"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">2. Sekin pipeline</div>
+                        <p class="callout-text">Pipeline 30+ daqiqa ishlaydi. Developerlar feedback'ni kutib turishadi yoki pipeline'ni ignore qilishadi. Target: 10 daqiqadan kam.</p>
+                    </div>
+                </div>
+
+                <div class="callout callout-warning">
+                    <div class="callout-icon"><i class="fas fa-times"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">3. Secret'larni kodda saqlash</div>
+                        <p class="callout-text">API key, password .yml faylda. Hacker uchun ochiq eshik. GitHub/GitLab Secrets yoki Vault ishlating.</p>
+                    </div>
+                </div>
+
+                <div class="callout callout-warning">
+                    <div class="callout-icon"><i class="fas fa-times"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">4. Rollback strategiyasi yo'q</div>
+                        <p class="callout-text">Yangi deploy ishlamayapti, lekin orqaga qaytish jarayoni aniq emas. Panic. Oldingi artifact'lar saqlanmagan.</p>
+                    </div>
+                </div>
+
+                <div class="callout callout-tip">
+                    <div class="callout-icon"><i class="fas fa-check"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">Yechim</div>
+                        <p class="callout-text">"Fail fast" prinsipi - tez ishlaydigan testlarni avval bajaring. Parallelizatsiya bilan pipeline'ni tezlashtiring. Har doim oxirgi 5 ta artifact saqlab turing.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="best-practices">
+                <h2><i class="fas fa-medal"></i> Best practices</h2>
+
+                <ul class="checklist">
+                    <li><i class="fas fa-check"></i> Trunk-based development - qisqa muddatli branch'lar, tez merge</li>
+                    <li><i class="fas fa-check"></i> Fast feedback - pipeline 10 daqiqadan oshmasin, tez testlarni avval bajaring</li>
+                    <li><i class="fas fa-check"></i> Immutable artifacts - bir marta build, har joyda deploy (staging = production artifact)</li>
+                    <li><i class="fas fa-check"></i> Infrastructure as Code - pipeline konfiguratsiyasi ham version control'da</li>
+                    <li><i class="fas fa-check"></i> Semantic versioning - v1.2.3 format, automated changelog</li>
+                    <li><i class="fas fa-check"></i> Branch protection - main branch'ga to'g'ridan-to'g'ri push taqiq, PR va review majburiy</li>
+                    <li><i class="fas fa-check"></i> Environment parity - dev, staging, production bir xil konfiguratsiya</li>
+                    <li><i class="fas fa-check"></i> Automated rollback - health check fail bo'lsa, avtomatik orqaga qaytarish</li>
+                    <li><i class="fas fa-check"></i> Deployment windows - production deploy faqat ish vaqtida (rollback uchun jamoa tayyor)</li>
+                    <li><i class="fas fa-check"></i> Post-deploy verification - smoke tests, synthetic monitoring</li>
+                </ul>
+            </section>
+
+            <section class="section" id="tools">
+                <h2><i class="fas fa-wrench"></i> Asboblar va texnologiyalar</h2>
+
+                <div class="tools-grid">
+                    <span class="tool-badge"><i class="fab fa-github"></i> GitHub Actions</span>
+                    <span class="tool-badge"><i class="fab fa-gitlab"></i> GitLab CI</span>
+                    <span class="tool-badge"><i class="fas fa-jenkins"></i> Jenkins</span>
+                    <span class="tool-badge"><i class="fas fa-circle"></i> CircleCI</span>
+                    <span class="tool-badge"><i class="fab fa-aws"></i> AWS CodePipeline</span>
+                    <span class="tool-badge"><i class="fab fa-docker"></i> Docker</span>
+                    <span class="tool-badge"><i class="fas fa-dharmachakra"></i> Kubernetes</span>
+                    <span class="tool-badge"><i class="fas fa-box"></i> Argo CD</span>
+                    <span class="tool-badge"><i class="fas fa-shield-alt"></i> Snyk</span>
+                    <span class="tool-badge"><i class="fas fa-code-branch"></i> SonarQube</span>
+                    <span class="tool-badge"><i class="fas fa-vial"></i> Jest/Playwright</span>
+                    <span class="tool-badge"><i class="fas fa-ship"></i> Helm</span>
+                </div>
+
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="card-icon"><i class="fab fa-github"></i></div>
+                        <h4>GitHub Actions</h4>
+                        <p>GitHub ichida o'rnatilgan. YAML syntax, katta marketplace, bepul tier.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-box"></i></div>
+                        <h4>Argo CD</h4>
+                        <p>GitOps uchun. Kubernetes cluster bilan deklarativ sync.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-shield-alt"></i></div>
+                        <h4>Snyk</h4>
+                        <p>Dependency va container security scanning. Developer-friendly.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="example">
+                <h2><i class="fas fa-laptop-code"></i> Mini misol</h2>
+
+                <p>GitHub Actions bilan Node.js CI/CD pipeline:</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">yaml - .github/workflows/ci.yml</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <div class="code-content">
+<pre><span class="keyword">name:</span> CI/CD Pipeline
+
+<span class="keyword">on:</span>
+  <span class="function">push:</span>
+    branches: [main, develop]
+  <span class="function">pull_request:</span>
+    branches: [main]
+
+<span class="keyword">env:</span>
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+<span class="keyword">jobs:</span>
+  <span class="comment"># ========== TEST ==========</span>
+  <span class="function">test:</span>
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: <span class="string">'20'</span>
+          cache: <span class="string">'npm'</span>
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run linter
+        run: npm run lint
+      
+      - name: Run unit tests
+        run: npm run test:coverage
+      
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
+
+  <span class="comment"># ========== SECURITY SCAN ==========</span>
+  <span class="function">security:</span>
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Run Snyk
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+  <span class="comment"># ========== BUILD ==========</span>
+  <span class="function">build:</span>
+    needs: [test, security]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+
+  <span class="comment"># ========== DEPLOY STAGING ==========</span>
+  <span class="function">deploy-staging:</span>
+    needs: build
+    runs-on: ubuntu-latest
+    environment: staging
+    
+    steps:
+      - name: Deploy to Staging
+        run: |
+          echo <span class="string">"Deploying ${{ github.sha }} to staging..."</span>
+          <span class="comment"># kubectl set image deployment/app ...</span>
+      
+      - name: Run smoke tests
+        run: |
+          curl -f https://staging.example.com/health
+
+  <span class="comment"># ========== DEPLOY PRODUCTION ==========</span>
+  <span class="function">deploy-production:</span>
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+    environment: production
+    if: github.ref == <span class="string">'refs/heads/main'</span>
+    
+    steps:
+      - name: Deploy to Production
+        run: |
+          echo <span class="string">"Deploying ${{ github.sha }} to production..."</span>
+</pre>
+                    </div>
+                </div>
+
+                <p>Docker multi-stage build (optimized):</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">dockerfile - Dockerfile</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <div class="code-content">
+<pre><span class="comment"># Build stage</span>
+<span class="keyword">FROM</span> node:20-alpine <span class="keyword">AS</span> builder
+
+<span class="keyword">WORKDIR</span> /app
+<span class="keyword">COPY</span> package*.json ./
+<span class="keyword">RUN</span> npm ci --only=production
+
+<span class="keyword">COPY</span> . .
+<span class="keyword">RUN</span> npm run build
+
+<span class="comment"># Production stage</span>
+<span class="keyword">FROM</span> node:20-alpine <span class="keyword">AS</span> production
+
+<span class="keyword">WORKDIR</span> /app
+<span class="keyword">COPY</span> --from=builder /app/dist ./dist
+<span class="keyword">COPY</span> --from=builder /app/node_modules ./node_modules
+
+<span class="keyword">USER</span> node
+<span class="keyword">EXPOSE</span> 3000
+
+<span class="keyword">HEALTHCHECK</span> --interval=30s --timeout=3s \
+  CMD wget -qO- http://localhost:3000/health || exit 1
+
+<span class="keyword">CMD</span> [<span class="string">"node"</span>, <span class="string">"dist/main.js"</span>]</pre>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="security">
+                <div class="security-card">
+                    <h3 class="security-title"><i class="fas fa-shield-alt"></i> Xavfsizlik va ishonchlilik</h3>
+                    <ul class="security-list">
+                        <li><i class="fas fa-lock"></i> Secrets management - GitHub Secrets, HashiCorp Vault. YAML'da hech qachon plaintext secret bo'lmasin.</li>
+                        <li><i class="fas fa-lock"></i> SAST (Static Analysis) - har PR'da kod security scan. SonarQube, CodeQL.</li>
+                        <li><i class="fas fa-lock"></i> Dependency scanning - Dependabot, Snyk avtomatik PR'lar bilan vulnerable package'larni yangilaydi.</li>
+                        <li><i class="fas fa-lock"></i> Container scanning - Trivy, Clair bilan Docker image vulnerabilities tekshiring.</li>
+                        <li><i class="fas fa-lock"></i> Signed commits va artifacts - provenance, kod qaerdan kelganini isbotlash.</li>
+                        <li><i class="fas fa-lock"></i> Least privilege - CI runner'lar minimal permission bilan. Production deploy faqat alohida approval bilan.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="section" id="faq">
+                <h2><i class="fas fa-question-circle"></i> Ko'p so'raladigan savollar (FAQ)</h2>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        CI va CD farqi nima?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>CI (Continuous Integration) - kodlarni tez-tez merge qilish va har safar avtomatik test. CD esa ikki xil bo'ladi: Continuous Delivery - har doim deploy qilishga tayyor, lekin qo'lda trigger; Continuous Deployment - testlardan o'tgan kod avtomatik production'ga.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        GitHub Actions va Jenkins - qaysi biri yaxshi?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>GitHub Actions: yaxshi integration, oson boshlash, hosted runners, katta marketplace. Jenkins: self-hosted, ko'proq control, plugin ecosystem, legacy loyihalar uchun. Yangi loyiha = GitHub Actions. Katta enterprise = Jenkins yoki GitLab CI.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Pipeline qancha vaqt ishlashi kerak?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Ideal: PR check 5-10 daqiqa, full pipeline 15-20 daqiqa. 30 daqiqadan oshsa - optimallashtiring: parallel jobs, cache, tez testlarni avval, sekin testlarni alohida workflow'ga.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Blue/Green va Canary farqi nima?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Blue/Green: 2 ta to'liq muhit, traffic bir zumda almashadi (0% → 100%). Canary: asta-sekin (5% → 25% → 50% → 100%), xato bo'lsa erta aniqlash. Canary xavfsizroq, lekin murakkab.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Monorepo uchun CI qanday sozlanadi?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Path filter'lar bilan faqat o'zgargan package uchun pipeline ishga tushadi. Nx, Turborepo affected commands. Yoki Bazel bilan smart caching. To'liq rebuild har safar - vaqt isrof.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Feature flags qanday ishlaydi?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Kod deploy bo'ladi, lekin yangi feature if-else orqali o'chirilgan. LaunchDarkly, Unleash, yoki oddiy env variable. Kerak bo'lganda yoqiladi. Rollback = kod rollback emas, flag o'chirish.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        GitOps nima?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Infrastructure va application state Git'da saqlanadi. Argo CD, Flux kabi toollar Git'ni kuzatib turadi va cluster'ni sync qiladi. Deklarativ, auditable, rollback oson (git revert).</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Database migration CI/CD'da qanday bo'ladi?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Migration'lar app deploy'dan OLDIN ishga tushadi (pre-deploy hook). Backward compatible bo'lishi kerak - eski va yangi kod bir vaqtda ishlashi mumkin. Flyway, Prisma migrate, Alembic.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="glossary">
+                <h2><i class="fas fa-book"></i> Glossary (Atamalar lug'ati)</h2>
+
+                <div class="glossary-grid">
+                    <div class="glossary-item">
+                        <span class="glossary-term">Pipeline</span>
+                        <span class="glossary-def">Kod'dan production'gacha avtomatlashtirilgan bosqichlar ketma-ketligi.</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">Job</span>
+                        <span class="glossary-def">Pipeline ichidagi bitta vazifa (masalan: test, build). Parallel yoki ketma-ket ishlashi mumkin.</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">Artifact</span>
+                        <span class="glossary-def">Build natijasi - Docker image, JAR, npm package. Versiyalangan va saqlanadi.</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">Runner</span>
+                        <span class="glossary-def">Pipeline job'larini bajaradigan server/agent. Hosted yoki self-hosted.</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">Trigger</span>
+                        <span class="glossary-def">Pipeline'ni boshlashga sabab bo'ladigan event - push, PR, schedule, webhook.</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">SAST</span>
+                        <span class="glossary-def">Static Application Security Testing - kod ishlamay turib security xatolarni topish.</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">DAST</span>
+                        <span class="glossary-def">Dynamic Application Security Testing - ishlab turgan app'ni security test qilish.</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">Rollback</span>
+                        <span class="glossary-def">Yangi versiyada muammo bo'lsa, oldingi ishlaydigan versiyaga qaytish.</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">Canary Deploy</span>
+                        <span class="glossary-def">Yangi versiyani avval kichik foiz traffic bilan sinash, keyin asta-sekin oshirish.</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">Blue/Green</span>
+                        <span class="glossary-def">Ikki identik muhit, traffic bir zumda yangisiga yo'naltiriladi.</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">Feature Flag</span>
+                        <span class="glossary-def">Kodni deploy qilib, feature'ni runtime'da yoqish/o'chirish imkoniyati.</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">GitOps</span>
+                        <span class="glossary-def">Git repository infrastructure va app holatining yagona manbai sifatida.</span>
+                    </div>
+                </div>
+            </section>
+
+            <nav class="nav-footer">
+                <a href="architecture.html" class="nav-btn prev">
+                    <i class="fas fa-arrow-left"></i>
+                    <div>
+                        <span class="nav-btn-label">Oldingi</span>
+                        <span class="nav-btn-title">Architecture</span>
+                    </div>
+                </a>
+                <a href="devops.html" class="nav-btn next">
+                    <div>
+                        <span class="nav-btn-label">Keyingi</span>
+                        <span class="nav-btn-title">DevOps</span>
+                    </div>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </nav>
+        </main>
+
+        <aside class="sidebar-right">
+            <div class="takeaways-card">
+                <h3 class="takeaways-title"><i class="fas fa-star"></i> Key Takeaways</h3>
+                <ul class="takeaways-list">
+                    <li><i class="fas fa-check"></i> CI = tez-tez merge + avtomatik test</li>
+                    <li><i class="fas fa-check"></i> CD = har doim deploy tayyor</li>
+                    <li><i class="fas fa-check"></i> Pipeline 10 daqiqadan oshmasin</li>
+                    <li><i class="fas fa-check"></i> Security scan har pipeline'da</li>
+                    <li><i class="fas fa-check"></i> Immutable artifacts yarating</li>
+                    <li><i class="fas fa-check"></i> Rollback har doim tayyor bo'lsin</li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+
+    <script>
+        const navToggle = document.querySelector('.nav-toggle');
+        const navLinks = document.querySelector('.nav-links');
+
+        navToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            const icon = navToggle.querySelector('i');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
+        });
+
+        const progressBar = document.getElementById('progressBar');
+        
+        window.addEventListener('scroll', () => {
+            const winScroll = document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            progressBar.style.width = scrolled + '%';
+        });
+
+        const faqItems = document.querySelectorAll('.faq-item');
+        
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question');
+            question.addEventListener('click', () => {
+                const isActive = item.classList.contains('active');
+                faqItems.forEach(i => i.classList.remove('active'));
+                if (!isActive) {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        function copyCode(button) {
+            const codeBlock = button.closest('.code-block');
+            const code = codeBlock.querySelector('pre').textContent;
+            
+            navigator.clipboard.writeText(code).then(() => {
+                const originalHTML = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                button.style.color = 'var(--accent-green)';
+                
+                setTimeout(() => {
+                    button.innerHTML = originalHTML;
+                    button.style.color = '';
+                }, 2000);
+            });
+        }
+
+        const tocLinks = document.querySelectorAll('.toc-list a');
+        const sections = document.querySelectorAll('.section');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (window.scrollY >= sectionTop - 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            tocLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1504 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code | From Code to Cloud</title>
+    <meta name="description" content="Git workflow, branching, code style, linting va testing asoslari - professional kod yozish san'ati">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-primary: #0B1020;
+            --bg-secondary: #0A0F1A;
+            --bg-card: #0F1629;
+            --accent-teal: #27D7C4;
+            --accent-violet: #7C5CFF;
+            --accent-amber: #F59E0B;
+            --accent-red: #EF4444;
+            --accent-green: #10B981;
+            --text-primary: #E8EEF8;
+            --text-muted: #A7B1C2;
+            --text-dim: #6B7280;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            line-height: 1.7;
+        }
+
+        /* Background Pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(39, 215, 196, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(124, 92, 255, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(11, 16, 32, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent-teal), var(--accent-violet));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--accent-teal);
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            position: fixed;
+            top: 60px;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-teal), var(--accent-violet));
+            z-index: 99;
+            transition: width 0.1s ease;
+        }
+
+        /* Main Layout */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 250px 1fr 280px;
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 5rem 2rem 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Sidebar - On This Page */
+        .sidebar-left {
+            position: sticky;
+            top: 80px;
+            height: fit-content;
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
+        }
+
+        .sidebar-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .toc-list {
+            list-style: none;
+        }
+
+        .toc-list a {
+            display: block;
+            padding: 0.5rem 0;
+            padding-left: 1rem;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.85rem;
+            border-left: 2px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+
+        .toc-list a:hover,
+        .toc-list a.active {
+            color: var(--accent-teal);
+            border-left-color: var(--accent-teal);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 800px;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            margin-bottom: 2rem;
+        }
+
+        .breadcrumb a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--accent-teal);
+        }
+
+        .breadcrumb i {
+            font-size: 0.7rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-bottom: 3rem;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            font-size: 0.8rem;
+            color: var(--accent-teal);
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent-teal));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-tagline {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 600px;
+        }
+
+        .reading-time {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+        }
+
+        .reading-time span {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        /* Section Styles */
+        .section {
+            margin-bottom: 4rem;
+            scroll-margin-top: 100px;
+        }
+
+        .section h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section h2 i {
+            color: var(--accent-teal);
+            font-size: 1.2rem;
+        }
+
+        .section h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem;
+            color: var(--text-primary);
+        }
+
+        .section p {
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        /* Callout Boxes */
+        .callout {
+            padding: 1.25rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .callout-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 0.75rem;
+        }
+
+        .callout-info {
+            background: rgba(39, 215, 196, 0.1);
+            border: 1px solid rgba(39, 215, 196, 0.2);
+        }
+
+        .callout-info .callout-icon {
+            background: var(--accent-teal);
+            color: var(--bg-primary);
+        }
+
+        .callout-warning {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .callout-warning .callout-icon {
+            background: var(--accent-amber);
+            color: var(--bg-primary);
+        }
+
+        .callout-tip {
+            background: rgba(124, 92, 255, 0.1);
+            border: 1px solid rgba(124, 92, 255, 0.2);
+        }
+
+        .callout-tip .callout-icon {
+            background: var(--accent-violet);
+            color: white;
+        }
+
+        .callout-content {
+            flex: 1;
+        }
+
+        .callout-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+        }
+
+        .callout-text {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        /* Code Blocks */
+        .code-block {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            overflow: hidden;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .code-lang {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .code-copy {
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.75rem;
+            transition: color 0.3s ease;
+        }
+
+        .code-copy:hover {
+            color: var(--accent-teal);
+        }
+
+        .code-content {
+            padding: 1rem;
+            overflow-x: auto;
+        }
+
+        .code-content pre {
+            margin: 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+
+        .code-content .comment { color: var(--text-dim); }
+        .code-content .keyword { color: var(--accent-violet); }
+        .code-content .string { color: var(--accent-teal); }
+        .code-content .function { color: var(--accent-amber); }
+
+        /* Lists */
+        .section ul, .section ol {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+            color: var(--text-muted);
+        }
+
+        .section li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: var(--accent-teal);
+            transform: translateY(-2px);
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, rgba(39, 215, 196, 0.2), rgba(124, 92, 255, 0.2));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            color: var(--accent-teal);
+        }
+
+        .card h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .card p {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            margin: 0;
+        }
+
+        /* Steps */
+        .steps {
+            margin: 1.5rem 0;
+        }
+
+        .step {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent-teal), var(--accent-violet));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .step-content h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-content p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        /* Checklist */
+        .checklist {
+            list-style: none;
+            padding: 0;
+            margin: 1.5rem 0;
+        }
+
+        .checklist li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .checklist li i {
+            color: var(--accent-green);
+            margin-top: 0.2rem;
+        }
+
+        /* Tools Grid */
+        .tools-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin: 1.5rem 0;
+        }
+
+        .tool-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+        }
+
+        .tool-badge:hover {
+            border-color: var(--accent-teal);
+            color: var(--text-primary);
+        }
+
+        .tool-badge i {
+            color: var(--accent-teal);
+        }
+
+        /* FAQ */
+        .faq-item {
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            margin-bottom: 0.75rem;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            background: var(--glass-bg);
+            border: none;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            transition: background 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .faq-question i {
+            color: var(--text-dim);
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 1rem 1.25rem;
+            max-height: 500px;
+        }
+
+        .faq-answer p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        /* Glossary */
+        .glossary-grid {
+            display: grid;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .glossary-item {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+        }
+
+        .glossary-term {
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--accent-teal);
+        }
+
+        .glossary-def {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* Sidebar Right - Key Takeaways */
+        .sidebar-right {
+            position: sticky;
+            top: 80px;
+            height: fit-content;
+        }
+
+        .takeaways-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+
+        .takeaways-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .takeaways-title i {
+            color: var(--accent-amber);
+        }
+
+        .takeaways-list {
+            list-style: none;
+        }
+
+        .takeaways-list li {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.5rem 0;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .takeaways-list li:last-child {
+            border-bottom: none;
+        }
+
+        .takeaways-list li i {
+            color: var(--accent-teal);
+            margin-top: 0.2rem;
+        }
+
+        /* Security Section */
+        .security-card {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.05), rgba(124, 92, 255, 0.05));
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .security-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--accent-red);
+        }
+
+        .security-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .security-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.5rem 0;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .security-list li i {
+            color: var(--accent-red);
+            margin-top: 0.2rem;
+        }
+
+        /* Navigation Footer */
+        .nav-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 1.5rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            text-decoration: none;
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            border-color: var(--accent-teal);
+            color: var(--text-primary);
+        }
+
+        .nav-btn-label {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+
+        .nav-btn-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .nav-btn.next {
+            text-align: right;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar-left,
+            .sidebar-right {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem 1.5rem;
+            }
+
+            .nav-toggle {
+                display: block;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: rgba(11, 16, 32, 0.95);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                padding: 1rem;
+                gap: 0;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-links li {
+                padding: 0.75rem 1rem;
+            }
+
+            .main-layout {
+                padding: 4.5rem 1rem 2rem;
+            }
+
+            .hero h1 {
+                font-size: 1.75rem;
+            }
+
+            .glossary-item {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-footer {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-btn {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <a href="index.html" class="logo">
+            <span class="logo-icon"><i class="fas fa-code"></i></span>
+            Code to Cloud
+        </a>
+        <button class="nav-toggle" aria-label="Toggle navigation">
+            <i class="fas fa-bars"></i>
+        </button>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="code.html" class="active">Code</a></li>
+            <li><a href="frontend.html">Frontend</a></li>
+            <li><a href="backend-api.html">Backend API</a></li>
+            <li><a href="database.html">Database</a></li>
+            <li><a href="architecture.html">Architecture</a></li>
+            <li><a href="cicd.html">CI/CD</a></li>
+            <li><a href="devops.html">DevOps</a></li>
+            <li><a href="cloud-deploy.html">Cloud</a></li>
+        </ul>
+    </header>
+
+    <!-- Main Layout -->
+    <div class="main-layout">
+        <!-- Sidebar Left - Table of Contents -->
+        <aside class="sidebar-left">
+            <h3 class="sidebar-title">On This Page</h3>
+            <ul class="toc-list">
+                <li><a href="#what-is">Code nima?</a></li>
+                <li><a href="#why-needed">Nega kerak?</a></li>
+                <li><a href="#concepts">Asosiy tushunchalar</a></li>
+                <li><a href="#process">Amaliy jarayon</a></li>
+                <li><a href="#mistakes">Ko'p uchraydigan xatolar</a></li>
+                <li><a href="#best-practices">Best practices</a></li>
+                <li><a href="#tools">Asboblar</a></li>
+                <li><a href="#example">Mini misol</a></li>
+                <li><a href="#security">Xavfsizlik</a></li>
+                <li><a href="#faq">FAQ</a></li>
+                <li><a href="#glossary">Glossary</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb">
+                <a href="index.html">Home</a>
+                <i class="fas fa-chevron-right"></i>
+                <span>Code</span>
+            </nav>
+
+            <!-- Hero -->
+            <section class="hero">
+                <div class="hero-badge">
+                    <i class="fas fa-code"></i>
+                    <span>1-bosqich</span>
+                </div>
+                <h1>Code</h1>
+                <p class="hero-tagline">Professional kod yozish san'ati - Git workflow, code style, linting va testing asoslari bilan tanishing.</p>
+                <div class="reading-time">
+                    <span><i class="fas fa-clock"></i> 15 daqiqa o'qish</span>
+                    <span><i class="fas fa-book"></i> Boshlang'ich daraja</span>
+                </div>
+            </section>
+
+            <!-- What Is Section -->
+            <section class="section" id="what-is">
+                <h2><i class="fas fa-question-circle"></i> Code nima?</h2>
+                <p>Kod - bu dasturchilar kompyuterga buyruqlar beradigan til. Oddiy qilib aytganda, siz kompyuterga "nima qilish kerakligini" yozma shaklda aytasiz. Biroq, professional dasturlashda kod yozish faqat "ishlasa bo'ldi" emas.</p>
+                
+                <p>Professional kod yozish quyidagilarni o'z ichiga oladi:</p>
+                <ul>
+                    <li><strong>O'qilishi oson bo'lsin</strong> - 6 oydan keyin o'zingiz ham tushunasiz</li>
+                    <li><strong>Qayta ishlatilsin</strong> - bir joyda yozib, ko'p joyda ishlatish</li>
+                    <li><strong>Xatolar kam bo'lsin</strong> - testlar va tekshiruvlar orqali</li>
+                    <li><strong>Jamoa bilan ishlashga mos bo'lsin</strong> - Git va code review</li>
+                </ul>
+
+                <div class="callout callout-info">
+                    <div class="callout-icon"><i class="fas fa-info"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">Muhim!</div>
+                        <p class="callout-text">Yaxshi kod - bu faqat ishlaydigan kod emas, balki boshqalar (va kelajakdagi siz) oson tushuna oladigan koddir.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Why Needed Section -->
+            <section class="section" id="why-needed">
+                <h2><i class="fas fa-lightbulb"></i> Nega kerak?</h2>
+                <p>Ko'p yangi dasturchilar "Kod ishlaydimi? Bo'ldi-da!" deb o'ylashadi. Lekin real loyihalarda bu yetarli emas:</p>
+
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-users"></i></div>
+                        <h4>Jamoa ishlashi</h4>
+                        <p>Bir loyihada 5-50 odam ishlashi mumkin. Barcha bir xil standartga amal qilishi kerak.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-history"></i></div>
+                        <h4>Loyiha uzoq yashaydi</h4>
+                        <p>Loyiha 5-10 yil davomida rivojlanishi mumkin. Tartibsiz kod vaqt o'tishi bilan "chigal"ga aylanadi.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-bug"></i></div>
+                        <h4>Xatolarni tuzatish</h4>
+                        <p>Tartibli kodda xatoni topish oson. Chalkash kodda esa soatlab izlaysiz.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-rocket"></i></div>
+                        <h4>Tez rivojlantirish</h4>
+                        <p>Yaxshi kod bazasi bo'lsa, yangi funksiyalar qo'shish tez va oson.</p>
+                    </div>
+                </div>
+
+                <div class="callout callout-warning">
+                    <div class="callout-icon"><i class="fas fa-exclamation"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">Haqiqiy hayotdan</div>
+                        <p class="callout-text">Katta kompaniyalarda noto'g'ri yozilgan kod tufayli millionlab dollar yo'qotilgan holatlar bor. Masalan, Knight Capital 2012-yilda 45 daqiqada $440 million yo'qotdi - sabab: eski kod yangi tizimga to'g'ri integratsiya qilinmagan edi.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Core Concepts Section -->
+            <section class="section" id="concepts">
+                <h2><i class="fas fa-book-open"></i> Asosiy tushunchalar</h2>
+
+                <h3>Version Control (Git)</h3>
+                <p>Version control - bu kodingiz tarixini saqlaydigan tizim. Git eng mashhur version control tizimi hisoblanadi. U sizga imkon beradi:</p>
+                <ul>
+                    <li>Har bir o'zgarishni saqlash va kerak bo'lsa orqaga qaytarish</li>
+                    <li>Bir vaqtda bir nechta odam ishlashi</li>
+                    <li>Turli versiyalarni (branch) parallel rivojlantirish</li>
+                </ul>
+
+                <h3>Branching Strategy</h3>
+                <p>Branchlar - bu kodning alohida nusxalari. Eng ko'p ishlatiladigan strategiyalar:</p>
+                <ul>
+                    <li><strong>main/master</strong> - production tayyor kod</li>
+                    <li><strong>develop</strong> - rivojlanish jarayonidagi kod</li>
+                    <li><strong>feature/*</strong> - yangi funksiyalar uchun</li>
+                    <li><strong>hotfix/*</strong> - shoshilinch tuzatishlar uchun</li>
+                </ul>
+
+                <h3>Code Style</h3>
+                <p>Jamoadagi barcha dasturchilar bir xil uslubda yozishi kerak. Bu o'z ichiga oladi:</p>
+                <ul>
+                    <li>Nomlash qoidalari (camelCase, snake_case)</li>
+                    <li>Indentatsiya (tab yoki space, nechtasi)</li>
+                    <li>Fayllar tuzilishi</li>
+                    <li>Kommentariy yozish qoidalari</li>
+                </ul>
+
+                <h3>Linting</h3>
+                <p>Linter - bu kodingizni avtomatik tekshiradigan dastur. U topadi:</p>
+                <ul>
+                    <li>Sintaksis xatolarini</li>
+                    <li>Code style buzilishlarini</li>
+                    <li>Potensial xatolarni (masalan, ishlatilmagan o'zgaruvchilar)</li>
+                </ul>
+            </section>
+
+            <!-- Process Section -->
+            <section class="section" id="process">
+                <h2><i class="fas fa-tasks"></i> Amaliy jarayon (step-by-step)</h2>
+
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Repository yaratish</h4>
+                            <p>Yangi loyiha uchun Git repository oching. GitHub, GitLab yoki Bitbucket dan birini tanlang.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Branch ochish</h4>
+                            <p>Har bir yangi funksiya uchun alohida branch oching: <code>git checkout -b feature/login-page</code></p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Kod yozish va commit qilish</h4>
+                            <p>Kichik, mantiqiy bo'laklarda commit qiling. Har bir commit bitta ishni bajarsin.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Lint va testlarni ishga tushirish</h4>
+                            <p>Commit qilishdan oldin linter va testlarni ishga tushiring. Xatolar bo'lsa tuzating.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h4>Pull Request ochish</h4>
+                            <p>Ishingiz tugagach, Pull Request (PR) oching. Jamoa a'zolari kodingizni ko'rib chiqadi.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">6</div>
+                        <div class="step-content">
+                            <h4>Code Review va merge</h4>
+                            <p>Review'dan o'tgach, kod asosiy branch'ga qo'shiladi (merge).</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Common Mistakes Section -->
+            <section class="section" id="mistakes">
+                <h2><i class="fas fa-exclamation-triangle"></i> Eng ko'p uchraydigan xatolar</h2>
+
+                <div class="callout callout-warning">
+                    <div class="callout-icon"><i class="fas fa-times"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">1. Juda katta commitlar</div>
+                        <p class="callout-text">Bir commitda 1000 qator o'zgartirish qilish. Bunday commitni review qilish va xato topish juda qiyin.</p>
+                    </div>
+                </div>
+
+                <div class="callout callout-warning">
+                    <div class="callout-icon"><i class="fas fa-times"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">2. Yomon commit xabarlari</div>
+                        <p class="callout-text">"fix", "update", "changes" kabi xabarlar hech narsa aytmaydi. Aniq yozing: "Fix login button not responding on mobile"</p>
+                    </div>
+                </div>
+
+                <div class="callout callout-warning">
+                    <div class="callout-icon"><i class="fas fa-times"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">3. Main branch'ga to'g'ridan-to'g'ri push</div>
+                        <p class="callout-text">Hech qachon main branch'ga to'g'ridan-to'g'ri kod qo'shmang. Har doim PR orqali.</p>
+                    </div>
+                </div>
+
+                <div class="callout callout-warning">
+                    <div class="callout-icon"><i class="fas fa-times"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">4. .env fayllarni commit qilish</div>
+                        <p class="callout-text">Maxfiy kalitlar va parollarni Git'ga qo'shmang! .gitignore dan foydalaning.</p>
+                    </div>
+                </div>
+
+                <div class="callout callout-tip">
+                    <div class="callout-icon"><i class="fas fa-check"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">Yechim</div>
+                        <p class="callout-text">Pre-commit hooks o'rnating - ular commit qilishdan oldin avtomatik tekshiruvlar o'tkazadi.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Best Practices Section -->
+            <section class="section" id="best-practices">
+                <h2><i class="fas fa-medal"></i> Best practices</h2>
+
+                <ul class="checklist">
+                    <li><i class="fas fa-check"></i> Har kuni kamida bir marta pull qiling (yangilanishlarni oling)</li>
+                    <li><i class="fas fa-check"></i> Commit xabarlarini imperativ shaklda yozing: "Add feature" emas "Added feature"</li>
+                    <li><i class="fas fa-check"></i> Branch nomlarini standart qiling: feature/, bugfix/, hotfix/</li>
+                    <li><i class="fas fa-check"></i> Har bir PR 400 qatordan oshmasin (ideal: 200-300)</li>
+                    <li><i class="fas fa-check"></i> README.md faylini yangilab turing</li>
+                    <li><i class="fas fa-check"></i> .gitignore faylini to'g'ri sozlang</li>
+                    <li><i class="fas fa-check"></i> Semantic versioning ishlating (v1.2.3)</li>
+                    <li><i class="fas fa-check"></i> Code review'da konstruktiv bo'ling</li>
+                </ul>
+            </section>
+
+            <!-- Tools Section -->
+            <section class="section" id="tools">
+                <h2><i class="fas fa-wrench"></i> Asboblar va texnologiyalar</h2>
+
+                <div class="tools-grid">
+                    <span class="tool-badge"><i class="fab fa-git-alt"></i> Git</span>
+                    <span class="tool-badge"><i class="fab fa-github"></i> GitHub</span>
+                    <span class="tool-badge"><i class="fab fa-gitlab"></i> GitLab</span>
+                    <span class="tool-badge"><i class="fab fa-bitbucket"></i> Bitbucket</span>
+                    <span class="tool-badge"><i class="fas fa-code"></i> VS Code</span>
+                    <span class="tool-badge"><i class="fas fa-terminal"></i> ESLint</span>
+                    <span class="tool-badge"><i class="fas fa-terminal"></i> Prettier</span>
+                    <span class="tool-badge"><i class="fas fa-terminal"></i> Husky</span>
+                    <span class="tool-badge"><i class="fas fa-vial"></i> Jest</span>
+                    <span class="tool-badge"><i class="fas fa-terminal"></i> commitlint</span>
+                </div>
+
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="card-icon"><i class="fab fa-git-alt"></i></div>
+                        <h4>Git</h4>
+                        <p>Versiya boshqaruv tizimi. Barcha zamonaviy loyihalarda ishlatiladi.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-magic"></i></div>
+                        <h4>ESLint + Prettier</h4>
+                        <p>ESLint xatolarni topadi, Prettier kodni formatlaydi. Birga juda kuchli.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-dog"></i></div>
+                        <h4>Husky</h4>
+                        <p>Git hooks boshqarish uchun. Commit qilishdan oldin testlarni ishga tushiradi.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Example Section -->
+            <section class="section" id="example">
+                <h2><i class="fas fa-laptop-code"></i> Mini misol</h2>
+
+                <p>Oddiy Git workflow misoli:</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">bash</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <div class="code-content">
+<pre><span class="comment"># 1. Repository klonlash</span>
+<span class="function">git clone</span> https://github.com/username/project.git
+<span class="function">cd</span> project
+
+<span class="comment"># 2. Yangi branch ochish</span>
+<span class="function">git checkout</span> -b feature/user-authentication
+
+<span class="comment"># 3. Kod yozish va o'zgarishlarni staging'ga qo'shish</span>
+<span class="function">git add</span> src/auth/login.js
+
+<span class="comment"># 4. Commit qilish (yaxshi xabar bilan)</span>
+<span class="function">git commit</span> -m <span class="string">"Add user login functionality with JWT"</span>
+
+<span class="comment"># 5. Remote'ga push qilish</span>
+<span class="function">git push</span> origin feature/user-authentication
+
+<span class="comment"># 6. GitHub/GitLab'da Pull Request ochish</span></pre>
+                    </div>
+                </div>
+
+                <p>ESLint konfiguratsiya misoli:</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">.eslintrc.json</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <div class="code-content">
+<pre>{
+  <span class="string">"extends"</span>: [<span class="string">"eslint:recommended"</span>],
+  <span class="string">"env"</span>: {
+    <span class="string">"browser"</span>: <span class="keyword">true</span>,
+    <span class="string">"node"</span>: <span class="keyword">true</span>,
+    <span class="string">"es2021"</span>: <span class="keyword">true</span>
+  },
+  <span class="string">"rules"</span>: {
+    <span class="string">"no-unused-vars"</span>: <span class="string">"warn"</span>,
+    <span class="string">"no-console"</span>: <span class="string">"warn"</span>,
+    <span class="string">"semi"</span>: [<span class="string">"error"</span>, <span class="string">"always"</span>]
+  }
+}</pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Security Section -->
+            <section class="section" id="security">
+                <div class="security-card">
+                    <h3 class="security-title"><i class="fas fa-shield-alt"></i> Xavfsizlik va ishonchlilik</h3>
+                    <ul class="security-list">
+                        <li><i class="fas fa-lock"></i> Maxfiy kalitlarni HECH QACHON Git'ga push qilmang. .env fayllarni .gitignore'ga qo'shing.</li>
+                        <li><i class="fas fa-lock"></i> GitHub Secrets yoki boshqa secret manager'lardan foydalaning.</li>
+                        <li><i class="fas fa-lock"></i> Dependency'larni muntazam yangilang (npm audit, Dependabot).</li>
+                        <li><i class="fas fa-lock"></i> Branch protection rules o'rnating - main branch'ga to'g'ridan-to'g'ri push taqiqlang.</li>
+                        <li><i class="fas fa-lock"></i> 2FA (ikki faktorli autentifikatsiya) yoqing GitHub/GitLab akkauntingizda.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- FAQ Section -->
+            <section class="section" id="faq">
+                <h2><i class="fas fa-question-circle"></i> Ko'p so'raladigan savollar (FAQ)</h2>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Git va GitHub farqi nima?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Git - bu versiya boshqaruv dasturi (local kompyuteringizda ishlaydi). GitHub esa Git repository'larni online saqlash va hamkorlik qilish uchun platforma. GitLab va Bitbucket ham GitHub'ga o'xshash xizmatlar.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Merge va Rebase farqi nima?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Merge - ikki branch'ni birlashtiradi va yangi "merge commit" yaratadi. Rebase esa branch tarixini "qayta yozadi", commitlarni boshqa branch ustiga ko'chiradi. Rebase tarixni toza saqlaydi, lekin shared branch'larda ehtiyot bo'lish kerak.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Commit'ni qanday bekor qilaman?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Oxirgi commit'ni o'zgartirish: <code>git commit --amend</code>. Commit'ni bekor qilish (lekin o'zgarishlarni saqlash): <code>git reset --soft HEAD~1</code>. Butunlay o'chirish: <code>git reset --hard HEAD~1</code>.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        .gitignore nima uchun kerak?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>.gitignore fayli Git'ga qaysi fayl va papkalarni e'tiborsiz qoldirish kerakligini aytadi. Masalan: node_modules/, .env, build/, *.log kabi fayllarni commit qilmaslik kerak.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Conflict (ziddiyat) yuzaga kelsa nima qilish kerak?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Conflict - ikki odam bir faylning bir joyini o'zgartirganda yuzaga keladi. Uni hal qilish uchun: 1) Conflict bo'lgan fayllarni oching, 2) <<<, ===, >>> belgilar orasidagi kodni ko'ring, 3) Qaysi versiyani saqlashni hal qiling, 4) Belgilarni o'chirib, to'g'ri kodni qoldiring, 5) git add va git commit qiling.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Qanday qilib yaxshi commit xabari yozaman?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yaxshi format: "type(scope): description". Masalan: "feat(auth): add password reset functionality", "fix(ui): correct button alignment on mobile", "docs(readme): update installation instructions". Conventional Commits spetsifikatsiyasiga amal qiling.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Pull Request'da nimalarni tekshirish kerak?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>1) Kod ishlayaptimi? 2) Testlar bormi va o'tayaptimi? 3) Code style qoidalariga mos kelayaptimi? 4) Xavfsizlik muammolari yo'qmi? 5) Performance ta'sir qilmaydimi? 6) Dokumentatsiya yangilangan mi?</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Stash nima va qachon ishlatiladi?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>git stash - joriy o'zgarishlarni vaqtinchalik saqlaydi. Masalan, biror ishni qilyapsiz, lekin tezda boshqa branch'ga o'tishingiz kerak. <code>git stash</code> qiling, branch'ni almashtirib ish qiling, keyin <code>git stash pop</code> bilan o'zgarishlarni qaytaring.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Glossary Section -->
+            <section class="section" id="glossary">
+                <h2><i class="fas fa-book"></i> Glossary (Atamalar lug'ati)</h2>
+
+                <div class="glossary-grid">
+                    <div class="glossary-item">
+                        <span class="glossary-term">Repository</span>
+                        <span class="glossary-def">Loyihaning barcha fayllari va ularning tarixini saqlaydigan joy. Qisqacha "repo" deb ataladi.</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">Commit</span>
+                        <span class="glossary-def">Koddagi o'zgarishlarning saqlangan holati. Har bir commit o'ziga xos ID (hash) ga ega.</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">Branch</span>
+                        <span class="glossary-def">Kodning parallel nusxasi. Yangi funksiyalar yoki tuzatishlar uchun alohida ishlash imkonini beradi.</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">Merge</span>
+                        <span class="glossary-def">Ikki branch'ni birlashtirish. O'zgarishlar bitta branch'ga qo'shiladi.</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">Pull Request</span>
+                        <span class="glossary-def">Kodni asosiy branch'ga qo'shish so'rovi. Jamoa a'zolari kod review qiladi.</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">Clone</span>
+                        <span class="glossary-def">Remote repository'ni local kompyuterga to'liq nusxalash.</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">Fork</span>
+                        <span class="glossary-def">Boshqa odamning repository'sini o'z akkauntingizga nusxalash (open source uchun).</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">Staging</span>
+                        <span class="glossary-def">Commit qilish uchun tayyorlangan o'zgarishlar. git add bilan qo'shiladi.</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">HEAD</span>
+                        <span class="glossary-def">Hozirgi joylashgan commit'ga ko'rsatgich. Odatda branch'ning oxirgi commit'i.</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">Remote</span>
+                        <span class="glossary-def">Online saqlangan repository (masalan GitHub'da). "origin" eng ko'p ishlatiladigan nom.</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">Linter</span>
+                        <span class="glossary-def">Kodni avtomatik tekshirib, xatolar va style buzilishlarini ko'rsatadigan dastur.</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">Hook</span>
+                        <span class="glossary-def">Git amallaridan oldin yoki keyin avtomatik ishlaydigan skriptlar (pre-commit, post-merge va h.k.).</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Navigation Footer -->
+            <nav class="nav-footer">
+                <a href="index.html" class="nav-btn prev">
+                    <i class="fas fa-arrow-left"></i>
+                    <div>
+                        <span class="nav-btn-label">Oldingi</span>
+                        <span class="nav-btn-title">Home</span>
+                    </div>
+                </a>
+                <a href="frontend.html" class="nav-btn next">
+                    <div>
+                        <span class="nav-btn-label">Keyingi</span>
+                        <span class="nav-btn-title">Frontend</span>
+                    </div>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </nav>
+        </main>
+
+        <!-- Sidebar Right - Key Takeaways -->
+        <aside class="sidebar-right">
+            <div class="takeaways-card">
+                <h3 class="takeaways-title"><i class="fas fa-star"></i> Key Takeaways</h3>
+                <ul class="takeaways-list">
+                    <li><i class="fas fa-check"></i> Git - professional dasturlashning asosi</li>
+                    <li><i class="fas fa-check"></i> Kichik, mantiqiy commitlar qiling</li>
+                    <li><i class="fas fa-check"></i> Branch'lar orqali parallel ishlang</li>
+                    <li><i class="fas fa-check"></i> Linter va formatter o'rnating</li>
+                    <li><i class="fas fa-check"></i> Code review - sifat kafolati</li>
+                    <li><i class="fas fa-check"></i> Maxfiy ma'lumotlarni himoyalang</li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+
+    <script>
+        // Mobile Navigation Toggle
+        const navToggle = document.querySelector('.nav-toggle');
+        const navLinks = document.querySelector('.nav-links');
+
+        navToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            const icon = navToggle.querySelector('i');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
+        });
+
+        // Progress Bar
+        const progressBar = document.getElementById('progressBar');
+        
+        window.addEventListener('scroll', () => {
+            const winScroll = document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            progressBar.style.width = scrolled + '%';
+        });
+
+        // FAQ Accordion
+        const faqItems = document.querySelectorAll('.faq-item');
+        
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question');
+            question.addEventListener('click', () => {
+                const isActive = item.classList.contains('active');
+                faqItems.forEach(i => i.classList.remove('active'));
+                if (!isActive) {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        // Copy Code Function
+        function copyCode(button) {
+            const codeBlock = button.closest('.code-block');
+            const code = codeBlock.querySelector('pre').textContent;
+            
+            navigator.clipboard.writeText(code).then(() => {
+                const icon = button.querySelector('i');
+                const originalHTML = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                button.style.color = 'var(--accent-green)';
+                
+                setTimeout(() => {
+                    button.innerHTML = originalHTML;
+                    button.style.color = '';
+                }, 2000);
+            });
+        }
+
+        // Active TOC Link
+        const tocLinks = document.querySelectorAll('.toc-list a');
+        const sections = document.querySelectorAll('.section');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (window.scrollY >= sectionTop - 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            tocLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

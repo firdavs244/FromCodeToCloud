@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>From Code to Cloud | Premium Developer Journey</title>
+    <meta name="description" content="Kodni yozishdan bulutga deploy qilishgacha - zamonaviy dasturchilar uchun to'liq yo'llanma">
+    <meta property="og:title" content="From Code to Cloud">
+    <meta property="og:description" content="Premium developer journey - Code, Frontend, Backend, Database, Architecture, CI/CD, DevOps, Cloud Deploy">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-primary: #0B1020;
+            --bg-secondary: #0A0F1A;
+            --accent-teal: #27D7C4;
+            --accent-violet: #7C5CFF;
+            --text-primary: #E8EEF8;
+            --text-muted: #A7B1C2;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Background Pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(39, 215, 196, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(124, 92, 255, 0.03) 0%, transparent 50%),
+                url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0v60M0 30h60' stroke='%23ffffff' stroke-opacity='0.02' stroke-width='1'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Noise Overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.015;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(11, 16, 32, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--accent-teal), var(--accent-violet));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--accent-teal);
+        }
+
+        /* Main Container */
+        .main-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 6rem 2rem 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Orbit Container */
+        .orbit-container {
+            position: relative;
+            width: min(700px, 90vw);
+            height: min(700px, 90vw);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Center Ring */
+        .center-ring {
+            position: absolute;
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(39, 215, 196, 0.1), rgba(124, 92, 255, 0.1));
+            border: 2px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            box-shadow: 
+                0 0 60px rgba(39, 215, 196, 0.1),
+                inset 0 0 60px rgba(124, 92, 255, 0.05);
+            overflow: hidden;
+        }
+
+        .center-ring::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent 40%,
+                rgba(255, 255, 255, 0.03) 50%,
+                transparent 60%
+            );
+            animation: lightSweep 8s ease-in-out infinite;
+        }
+
+        @keyframes lightSweep {
+            0%, 100% { transform: translateX(-100%) rotate(45deg); }
+            50% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        .center-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-align: center;
+            letter-spacing: 0.15em;
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+
+        .center-subtitle {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+            letter-spacing: 0.1em;
+        }
+
+        /* Orbit Track */
+        .orbit-track {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 1px dashed rgba(255, 255, 255, 0.05);
+        }
+
+        /* Orbit Wrapper */
+        .orbit-wrapper {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            animation: orbitRotate 60s linear infinite;
+        }
+
+        .orbit-wrapper.paused {
+            animation-play-state: paused;
+        }
+
+        @keyframes orbitRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Orbit Cards */
+        .orbit-card {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: var(--text-primary);
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .orbit-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 16px;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(39, 215, 196, 0.2), rgba(124, 92, 255, 0.2));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .orbit-card:hover::before {
+            opacity: 1;
+        }
+
+        .orbit-card:hover {
+            transform: scale(1.1);
+            box-shadow: 
+                0 10px 40px rgba(39, 215, 196, 0.15),
+                0 0 20px rgba(124, 92, 255, 0.1);
+        }
+
+        .orbit-card:focus {
+            outline: 2px solid var(--accent-teal);
+            outline-offset: 4px;
+        }
+
+        .orbit-card i {
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--accent-teal), var(--accent-violet));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .orbit-card span {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            animation: counterRotate 60s linear infinite;
+        }
+
+        @keyframes counterRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(-360deg); }
+        }
+
+        .orbit-wrapper.paused .orbit-card span {
+            animation-play-state: paused;
+        }
+
+        /* Card Positions */
+        .orbit-card:nth-child(1) { top: 0%; left: 50%; transform: translate(-50%, -50%); }
+        .orbit-card:nth-child(2) { top: 14.6%; left: 85.4%; transform: translate(-50%, -50%); }
+        .orbit-card:nth-child(3) { top: 50%; left: 100%; transform: translate(-50%, -50%); }
+        .orbit-card:nth-child(4) { top: 85.4%; left: 85.4%; transform: translate(-50%, -50%); }
+        .orbit-card:nth-child(5) { top: 100%; left: 50%; transform: translate(-50%, -50%); }
+        .orbit-card:nth-child(6) { top: 85.4%; left: 14.6%; transform: translate(-50%, -50%); }
+        .orbit-card:nth-child(7) { top: 50%; left: 0%; transform: translate(-50%, -50%); }
+        .orbit-card:nth-child(8) { top: 14.6%; left: 14.6%; transform: translate(-50%, -50%); }
+
+        /* Connector Lines */
+        .connectors {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .connector {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 50%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(39, 215, 196, 0.1), rgba(124, 92, 255, 0.1), transparent);
+            transform-origin: left center;
+        }
+
+        .connector::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: -2px;
+            width: 5px;
+            height: 5px;
+            background: var(--accent-teal);
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 0.8; transform: scale(1.2); }
+        }
+
+        .connector:nth-child(1) { transform: rotate(0deg); }
+        .connector:nth-child(2) { transform: rotate(45deg); }
+        .connector:nth-child(3) { transform: rotate(90deg); }
+        .connector:nth-child(4) { transform: rotate(135deg); }
+        .connector:nth-child(5) { transform: rotate(180deg); }
+        .connector:nth-child(6) { transform: rotate(225deg); }
+        .connector:nth-child(7) { transform: rotate(270deg); }
+        .connector:nth-child(8) { transform: rotate(315deg); }
+
+        /* Control Button */
+        .orbit-control {
+            position: absolute;
+            bottom: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-muted);
+            padding: 0.75rem 1.5rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .orbit-control:hover {
+            color: var(--text-primary);
+            border-color: var(--accent-teal);
+        }
+
+        /* Journey Timeline */
+        .journey-section {
+            margin-top: 8rem;
+            width: 100%;
+            max-width: 1000px;
+            padding: 0 2rem;
+        }
+
+        .journey-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--text-primary);
+        }
+
+        .journey-timeline {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .journey-timeline::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-teal), var(--accent-violet));
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        .journey-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 1;
+            text-decoration: none;
+            color: var(--text-muted);
+            transition: color 0.3s ease;
+        }
+
+        .journey-step:hover {
+            color: var(--accent-teal);
+        }
+
+        .journey-dot {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bg-primary);
+            border: 2px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .journey-step:hover .journey-dot {
+            border-color: var(--accent-teal);
+            box-shadow: 0 0 20px rgba(39, 215, 196, 0.3);
+        }
+
+        .journey-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 6rem;
+            padding: 2rem;
+            text-align: center;
+            border-top: 1px solid var(--glass-border);
+            width: 100%;
+        }
+
+        .footer p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            .orbit-wrapper,
+            .orbit-card span,
+            .center-ring::before,
+            .connector::after {
+                animation: none !important;
+            }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem 1.5rem;
+            }
+
+            .nav-toggle {
+                display: block;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: rgba(11, 16, 32, 0.95);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                padding: 1rem;
+                gap: 0;
+                border-bottom: 1px solid var(--glass-border);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-links li {
+                padding: 0.75rem 1rem;
+            }
+
+            .orbit-container {
+                width: min(500px, 85vw);
+                height: min(500px, 85vw);
+            }
+
+            .center-ring {
+                width: 160px;
+                height: 160px;
+            }
+
+            .center-title {
+                font-size: 0.8rem;
+            }
+
+            .orbit-card {
+                width: 70px;
+                height: 70px;
+            }
+
+            .orbit-card i {
+                font-size: 1.1rem;
+            }
+
+            .orbit-card span {
+                font-size: 0.55rem;
+            }
+
+            .journey-timeline {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .journey-timeline::before {
+                width: 2px;
+                height: 100%;
+                top: 0;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            .journey-step {
+                flex-direction: row;
+                width: 100%;
+                justify-content: center;
+                padding: 1rem 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .orbit-container {
+                width: 320px;
+                height: 320px;
+            }
+
+            .center-ring {
+                width: 120px;
+                height: 120px;
+            }
+
+            .center-title {
+                font-size: 0.65rem;
+            }
+
+            .center-subtitle {
+                display: none;
+            }
+
+            .orbit-card {
+                width: 55px;
+                height: 55px;
+                border-radius: 12px;
+            }
+
+            .orbit-card i {
+                font-size: 0.9rem;
+            }
+
+            .orbit-card span {
+                font-size: 0.45rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <a href="index.html" class="logo">
+            <span class="logo-icon"><i class="fas fa-code"></i></span>
+            Code to Cloud
+        </a>
+        <button class="nav-toggle" aria-label="Toggle navigation">
+            <i class="fas fa-bars"></i>
+        </button>
+        <ul class="nav-links">
+            <li><a href="index.html" class="active">Home</a></li>
+            <li><a href="code.html">Code</a></li>
+            <li><a href="frontend.html">Frontend</a></li>
+            <li><a href="backend-api.html">Backend API</a></li>
+            <li><a href="database.html">Database</a></li>
+            <li><a href="architecture.html">Architecture</a></li>
+            <li><a href="cicd.html">CI/CD</a></li>
+            <li><a href="devops.html">DevOps</a></li>
+            <li><a href="cloud-deploy.html">Cloud</a></li>
+        </ul>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <!-- Orbit Container -->
+        <div class="orbit-container">
+            <!-- Connectors -->
+            <div class="connectors">
+                <div class="connector"></div>
+                <div class="connector"></div>
+                <div class="connector"></div>
+                <div class="connector"></div>
+                <div class="connector"></div>
+                <div class="connector"></div>
+                <div class="connector"></div>
+                <div class="connector"></div>
+            </div>
+
+            <!-- Orbit Track -->
+            <div class="orbit-track"></div>
+
+            <!-- Center Ring -->
+            <div class="center-ring">
+                <h1 class="center-title">FROM CODE<br>TO CLOUD</h1>
+                <p class="center-subtitle">Developer Journey</p>
+            </div>
+
+            <!-- Orbit Wrapper -->
+            <div class="orbit-wrapper" id="orbitWrapper">
+                <a href="code.html" class="orbit-card" aria-label="Code section">
+                    <i class="fas fa-code"></i>
+                    <span>Code</span>
+                </a>
+                <a href="frontend.html" class="orbit-card" aria-label="Frontend section">
+                    <i class="fas fa-palette"></i>
+                    <span>Frontend</span>
+                </a>
+                <a href="backend-api.html" class="orbit-card" aria-label="Backend API section">
+                    <i class="fas fa-server"></i>
+                    <span>Backend API</span>
+                </a>
+                <a href="database.html" class="orbit-card" aria-label="Database section">
+                    <i class="fas fa-database"></i>
+                    <span>Database</span>
+                </a>
+                <a href="architecture.html" class="orbit-card" aria-label="Architecture section">
+                    <i class="fas fa-sitemap"></i>
+                    <span>Architecture</span>
+                </a>
+                <a href="cicd.html" class="orbit-card" aria-label="CI/CD section">
+                    <i class="fas fa-sync-alt"></i>
+                    <span>CI/CD</span>
+                </a>
+                <a href="devops.html" class="orbit-card" aria-label="DevOps section">
+                    <i class="fas fa-cogs"></i>
+                    <span>DevOps</span>
+                </a>
+                <a href="cloud-deploy.html" class="orbit-card" aria-label="Cloud Deploy section">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <span>Cloud Deploy</span>
+                </a>
+            </div>
+
+            <!-- Control Button -->
+            <button class="orbit-control" id="orbitControl" aria-label="Toggle orbit animation">
+                <i class="fas fa-pause"></i>
+                <span>Pause</span>
+            </button>
+        </div>
+
+        <!-- Journey Timeline -->
+        <section class="journey-section">
+            <h2 class="journey-title">Your Development Journey</h2>
+            <div class="journey-timeline">
+                <a href="code.html" class="journey-step">
+                    <div class="journey-dot"><i class="fas fa-code"></i></div>
+                    <span class="journey-label">Code</span>
+                </a>
+                <a href="frontend.html" class="journey-step">
+                    <div class="journey-dot"><i class="fas fa-palette"></i></div>
+                    <span class="journey-label">Frontend</span>
+                </a>
+                <a href="backend-api.html" class="journey-step">
+                    <div class="journey-dot"><i class="fas fa-server"></i></div>
+                    <span class="journey-label">Backend</span>
+                </a>
+                <a href="database.html" class="journey-step">
+                    <div class="journey-dot"><i class="fas fa-database"></i></div>
+                    <span class="journey-label">Database</span>
+                </a>
+                <a href="architecture.html" class="journey-step">
+                    <div class="journey-dot"><i class="fas fa-sitemap"></i></div>
+                    <span class="journey-label">Architecture</span>
+                </a>
+                <a href="cicd.html" class="journey-step">
+                    <div class="journey-dot"><i class="fas fa-sync-alt"></i></div>
+                    <span class="journey-label">CI/CD</span>
+                </a>
+                <a href="devops.html" class="journey-step">
+                    <div class="journey-dot"><i class="fas fa-cogs"></i></div>
+                    <span class="journey-label">DevOps</span>
+                </a>
+                <a href="cloud-deploy.html" class="journey-step">
+                    <div class="journey-dot"><i class="fas fa-cloud-upload-alt"></i></div>
+                    <span class="journey-label">Cloud</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>From Code to Cloud - Premium Developer Journey Guide</p>
+        </footer>
+    </main>
+
+    <script>
+        // Mobile Navigation Toggle
+        const navToggle = document.querySelector('.nav-toggle');
+        const navLinks = document.querySelector('.nav-links');
+
+        navToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            const icon = navToggle.querySelector('i');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
+        });
+
+        // Orbit Control
+        const orbitWrapper = document.getElementById('orbitWrapper');
+        const orbitControl = document.getElementById('orbitControl');
+        let isPaused = false;
+
+        orbitControl.addEventListener('click', () => {
+            isPaused = !isPaused;
+            orbitWrapper.classList.toggle('paused');
+            const icon = orbitControl.querySelector('i');
+            const text = orbitControl.querySelector('span');
+            
+            if (isPaused) {
+                icon.classList.remove('fa-pause');
+                icon.classList.add('fa-play');
+                text.textContent = 'Play';
+            } else {
+                icon.classList.remove('fa-play');
+                icon.classList.add('fa-pause');
+                text.textContent = 'Pause';
+            }
+        });
+
+        // Pause on hover
+        const orbitContainer = document.querySelector('.orbit-container');
+        
+        orbitContainer.addEventListener('mouseenter', () => {
+            if (!isPaused) {
+                orbitWrapper.classList.add('paused');
+            }
+        });
+
+        orbitContainer.addEventListener('mouseleave', () => {
+            if (!isPaused) {
+                orbitWrapper.classList.remove('paused');
+            }
+        });
+
+        // 3D Tilt Effect on Cards
+        const orbitCards = document.querySelectorAll('.orbit-card');
+
+        orbitCards.forEach(card => {
+            card.addEventListener('pointermove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = (y - centerY) / 10;
+                const rotateY = (centerX - x) / 10;
+
+                card.style.transform = `translate(-50%, -50%) perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.1)`;
+            });
+
+            card.addEventListener('pointerleave', () => {
+                card.style.transform = 'translate(-50%, -50%)';
+            });
+        });
+
+        // Check for reduced motion preference
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+        
+        if (prefersReducedMotion.matches) {
+            orbitWrapper.classList.add('paused');
+            isPaused = true;
+            orbitControl.querySelector('i').classList.replace('fa-pause', 'fa-play');
+            orbitControl.querySelector('span').textContent = 'Play';
+        }
+    </script>
+</body>
+</html>

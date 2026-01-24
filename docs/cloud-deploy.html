@@ -1,0 +1,1770 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Deploy | From Code to Cloud</title>
+    <meta name="description" content="Cloud provider konseptlari, container deploy, blue/green, rollback va cost control - cloud deployment asoslari">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-primary: #0B1020;
+            --bg-secondary: #0A0F1A;
+            --bg-card: #0F1629;
+            --accent-teal: #27D7C4;
+            --accent-violet: #7C5CFF;
+            --accent-amber: #F59E0B;
+            --accent-red: #EF4444;
+            --accent-green: #10B981;
+            --accent-sky: #0EA5E9;
+            --text-primary: #E8EEF8;
+            --text-muted: #A7B1C2;
+            --text-dim: #6B7280;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            line-height: 1.7;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(14, 165, 233, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(124, 92, 255, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(11, 16, 32, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent-teal), var(--accent-violet));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--accent-sky);
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 60px;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-sky), var(--accent-violet));
+            z-index: 99;
+            transition: width 0.1s ease;
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 250px 1fr 280px;
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 5rem 2rem 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .sidebar-left {
+            position: sticky;
+            top: 80px;
+            height: fit-content;
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
+        }
+
+        .sidebar-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .toc-list {
+            list-style: none;
+        }
+
+        .toc-list a {
+            display: block;
+            padding: 0.5rem 0;
+            padding-left: 1rem;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.85rem;
+            border-left: 2px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+
+        .toc-list a:hover,
+        .toc-list a.active {
+            color: var(--accent-sky);
+            border-left-color: var(--accent-sky);
+        }
+
+        .main-content {
+            max-width: 800px;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            margin-bottom: 2rem;
+        }
+
+        .breadcrumb a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--accent-sky);
+        }
+
+        .breadcrumb i {
+            font-size: 0.7rem;
+        }
+
+        .hero {
+            margin-bottom: 3rem;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            font-size: 0.8rem;
+            color: var(--accent-sky);
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent-sky));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-tagline {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 600px;
+        }
+
+        .reading-time {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+        }
+
+        .reading-time span {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .section {
+            margin-bottom: 4rem;
+            scroll-margin-top: 100px;
+        }
+
+        .section h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section h2 i {
+            color: var(--accent-sky);
+            font-size: 1.2rem;
+        }
+
+        .section h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem;
+            color: var(--text-primary);
+        }
+
+        .section p {
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .callout {
+            padding: 1.25rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .callout-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 0.75rem;
+        }
+
+        .callout-info {
+            background: rgba(14, 165, 233, 0.1);
+            border: 1px solid rgba(14, 165, 233, 0.2);
+        }
+
+        .callout-info .callout-icon {
+            background: var(--accent-sky);
+            color: white;
+        }
+
+        .callout-warning {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .callout-warning .callout-icon {
+            background: var(--accent-amber);
+            color: var(--bg-primary);
+        }
+
+        .callout-tip {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .callout-tip .callout-icon {
+            background: var(--accent-green);
+            color: white;
+        }
+
+        .callout-content {
+            flex: 1;
+        }
+
+        .callout-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+        }
+
+        .callout-text {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        .code-block {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            overflow: hidden;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .code-lang {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .code-copy {
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.75rem;
+            transition: color 0.3s ease;
+        }
+
+        .code-copy:hover {
+            color: var(--accent-sky);
+        }
+
+        .code-content {
+            padding: 1rem;
+            overflow-x: auto;
+        }
+
+        .code-content pre {
+            margin: 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+
+        .code-content .comment { color: var(--text-dim); }
+        .code-content .keyword { color: var(--accent-violet); }
+        .code-content .string { color: var(--accent-teal); }
+        .code-content .function { color: var(--accent-amber); }
+        .code-content .variable { color: var(--accent-sky); }
+
+        .section ul, .section ol {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+            color: var(--text-muted);
+        }
+
+        .section li {
+            margin-bottom: 0.5rem;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: var(--accent-sky);
+            transform: translateY(-2px);
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.2), rgba(124, 92, 255, 0.2));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            color: var(--accent-sky);
+        }
+
+        .card h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .card p {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            margin: 0;
+        }
+
+        /* Cloud Providers */
+        .providers-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .provider-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .provider-card:hover {
+            border-color: var(--accent-sky);
+        }
+
+        .provider-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 1rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+        }
+
+        .provider-card:nth-child(1) .provider-icon { background: rgba(255, 153, 0, 0.15); color: #FF9900; }
+        .provider-card:nth-child(2) .provider-icon { background: rgba(66, 133, 244, 0.15); color: #4285F4; }
+        .provider-card:nth-child(3) .provider-icon { background: rgba(0, 120, 212, 0.15); color: #0078D4; }
+
+        .provider-name {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .provider-desc {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        .steps {
+            margin: 1.5rem 0;
+        }
+
+        .step {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent-sky), var(--accent-violet));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .step-content h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-content p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        .checklist {
+            list-style: none;
+            padding: 0;
+            margin: 1.5rem 0;
+        }
+
+        .checklist li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .checklist li i {
+            color: var(--accent-green);
+            margin-top: 0.2rem;
+        }
+
+        .tools-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin: 1.5rem 0;
+        }
+
+        .tool-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+        }
+
+        .tool-badge:hover {
+            border-color: var(--accent-sky);
+            color: var(--text-primary);
+        }
+
+        .tool-badge i {
+            color: var(--accent-sky);
+        }
+
+        /* Deployment Strategies */
+        .deploy-strategies {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .strategy-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1.25rem;
+        }
+
+        .strategy-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .strategy-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .strategy-card:nth-child(1) .strategy-icon { background: rgba(16, 185, 129, 0.2); color: var(--accent-green); }
+        .strategy-card:nth-child(2) .strategy-icon { background: rgba(59, 130, 246, 0.2); color: #3B82F6; }
+        .strategy-card:nth-child(3) .strategy-icon { background: rgba(245, 158, 11, 0.2); color: var(--accent-amber); }
+        .strategy-card:nth-child(4) .strategy-icon { background: rgba(124, 92, 255, 0.2); color: var(--accent-violet); }
+
+        .strategy-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .strategy-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+        }
+
+        .strategy-pros {
+            font-size: 0.8rem;
+            color: var(--accent-green);
+        }
+
+        .faq-item {
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            margin-bottom: 0.75rem;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            background: var(--glass-bg);
+            border: none;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            transition: background 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .faq-question i {
+            color: var(--text-dim);
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 1rem 1.25rem;
+            max-height: 500px;
+        }
+
+        .faq-answer p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        .glossary-grid {
+            display: grid;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .glossary-item {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+        }
+
+        .glossary-term {
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--accent-sky);
+        }
+
+        .glossary-def {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .sidebar-right {
+            position: sticky;
+            top: 80px;
+            height: fit-content;
+        }
+
+        .takeaways-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+
+        .takeaways-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .takeaways-title i {
+            color: var(--accent-amber);
+        }
+
+        .takeaways-list {
+            list-style: none;
+        }
+
+        .takeaways-list li {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.5rem 0;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .takeaways-list li:last-child {
+            border-bottom: none;
+        }
+
+        .takeaways-list li i {
+            color: var(--accent-sky);
+            margin-top: 0.2rem;
+        }
+
+        .security-card {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.05), rgba(124, 92, 255, 0.05));
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .security-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--accent-red);
+        }
+
+        .security-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .security-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.5rem 0;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .security-list li i {
+            color: var(--accent-red);
+            margin-top: 0.2rem;
+        }
+
+        /* Journey Complete */
+        .journey-complete {
+            background: linear-gradient(135deg, rgba(39, 215, 196, 0.1), rgba(124, 92, 255, 0.1));
+            border: 1px solid rgba(39, 215, 196, 0.3);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .journey-complete h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--accent-teal), var(--accent-violet));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .journey-complete p {
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .journey-complete a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--accent-teal), var(--accent-violet));
+            border-radius: 8px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .journey-complete a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(39, 215, 196, 0.3);
+        }
+
+        .nav-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 1.5rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            text-decoration: none;
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            border-color: var(--accent-sky);
+            color: var(--text-primary);
+        }
+
+        .nav-btn-label {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+
+        .nav-btn-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .nav-btn.next {
+            text-align: right;
+        }
+
+        @media (max-width: 1200px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar-left,
+            .sidebar-right {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem 1.5rem;
+            }
+
+            .nav-toggle {
+                display: block;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: rgba(11, 16, 32, 0.95);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                padding: 1rem;
+                gap: 0;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-links li {
+                padding: 0.75rem 1rem;
+            }
+
+            .main-layout {
+                padding: 4.5rem 1rem 2rem;
+            }
+
+            .hero h1 {
+                font-size: 1.75rem;
+            }
+
+            .glossary-item {
+                grid-template-columns: 1fr;
+            }
+
+            .providers-grid,
+            .deploy-strategies {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-footer {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-btn {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+
+    <header class="header">
+        <a href="index.html" class="logo">
+            <span class="logo-icon"><i class="fas fa-code"></i></span>
+            Code to Cloud
+        </a>
+        <button class="nav-toggle" aria-label="Toggle navigation">
+            <i class="fas fa-bars"></i>
+        </button>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="code.html">Code</a></li>
+            <li><a href="frontend.html">Frontend</a></li>
+            <li><a href="backend-api.html">Backend API</a></li>
+            <li><a href="database.html">Database</a></li>
+            <li><a href="architecture.html">Architecture</a></li>
+            <li><a href="cicd.html">CI/CD</a></li>
+            <li><a href="devops.html">DevOps</a></li>
+            <li><a href="cloud-deploy.html" class="active">Cloud</a></li>
+        </ul>
+    </header>
+
+    <div class="main-layout">
+        <aside class="sidebar-left">
+            <h3 class="sidebar-title">On This Page</h3>
+            <ul class="toc-list">
+                <li><a href="#what-is">Cloud Deploy nima?</a></li>
+                <li><a href="#why-needed">Nega kerak?</a></li>
+                <li><a href="#concepts">Asosiy tushunchalar</a></li>
+                <li><a href="#process">Amaliy jarayon</a></li>
+                <li><a href="#mistakes">Ko'p uchraydigan xatolar</a></li>
+                <li><a href="#best-practices">Best practices</a></li>
+                <li><a href="#tools">Asboblar</a></li>
+                <li><a href="#example">Mini misol</a></li>
+                <li><a href="#security">Xavfsizlik</a></li>
+                <li><a href="#faq">FAQ</a></li>
+                <li><a href="#glossary">Glossary</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <nav class="breadcrumb">
+                <a href="index.html">Home</a>
+                <i class="fas fa-chevron-right"></i>
+                <span>Cloud Deploy</span>
+            </nav>
+
+            <section class="hero">
+                <div class="hero-badge">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <span>8-bosqich (Final)</span>
+                </div>
+                <h1>Cloud Deploy</h1>
+                <p class="hero-tagline">Koddan bulutgacha sayohatning oxirgi bosqichi - ilovangizni dunyoga taqdim eting.</p>
+                <div class="reading-time">
+                    <span><i class="fas fa-clock"></i> 25 daqiqa o'qish</span>
+                    <span><i class="fas fa-book"></i> Ilg'or daraja</span>
+                </div>
+            </section>
+
+            <!-- Cloud Providers -->
+            <div class="providers-grid">
+                <div class="provider-card">
+                    <div class="provider-icon"><i class="fab fa-aws"></i></div>
+                    <div class="provider-name">AWS</div>
+                    <div class="provider-desc">Market leader, eng keng servislar</div>
+                </div>
+                <div class="provider-card">
+                    <div class="provider-icon"><i class="fab fa-google"></i></div>
+                    <div class="provider-name">Google Cloud</div>
+                    <div class="provider-desc">Kubernetes native, data/ML kuchli</div>
+                </div>
+                <div class="provider-card">
+                    <div class="provider-icon"><i class="fab fa-microsoft"></i></div>
+                    <div class="provider-name">Azure</div>
+                    <div class="provider-desc">Enterprise, Microsoft stack</div>
+                </div>
+            </div>
+
+            <section class="section" id="what-is">
+                <h2><i class="fas fa-question-circle"></i> Cloud Deploy nima?</h2>
+                <p>Cloud Deploy - bu ilovani cloud infrastructure'ga joylash, uni foydalanuvchilarga yetkazib berish jarayoni. Bu "From Code to Cloud" sayohatining oxirgi va eng muhim bosqichi.</p>
+                
+                <p>Cloud deployment quyidagilarni o'z ichiga oladi:</p>
+                <ul>
+                    <li><strong>Infrastructure provisioning</strong> - serverlar, network, storage yaratish</li>
+                    <li><strong>Application deployment</strong> - kod/container'larni serverga joylash</li>
+                    <li><strong>Configuration</strong> - environment variables, secrets, DNS</li>
+                    <li><strong>Scaling</strong> - load'ga qarab resurslarni oshirish/kamaytirish</li>
+                    <li><strong>Monitoring</strong> - sog'liqni kuzatish, alerting</li>
+                </ul>
+
+                <div class="callout callout-info">
+                    <div class="callout-icon"><i class="fas fa-info"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">Cloud = Boshqa birovning kompyuteri</div>
+                        <p class="callout-text">Cloud - bu AWS, Google yoki Microsoft data centerlaridagi serverlar. Siz ularni "ijaraga" olasiz. O'zingiz server sotib olish, joylashtirish, boshqarish shart emas. Faqat ishlatgan resurs uchun to'laysiz.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="why-needed">
+                <h2><i class="fas fa-lightbulb"></i> Nega kerak?</h2>
+                <p>Nima uchun o'z serveringizni emas, cloud'ni ishlatish kerak?</p>
+
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-expand-arrows-alt"></i></div>
+                        <h4>Elasticity</h4>
+                        <p>Black Friday'da 100x traffic? 5 daqiqada 100 server qo'shing. Tunda faqat 2 server.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-globe"></i></div>
+                        <h4>Global reach</h4>
+                        <p>Bir necha daqiqada dunyoning istalgan nuqtasida server oching. Edge locations.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-shield-alt"></i></div>
+                        <h4>Security</h4>
+                        <p>Cloud provider'lar security'ga milliardlab dollar sarflaydi. Compliance certificates.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-coins"></i></div>
+                        <h4>Cost efficiency</h4>
+                        <p>CapEx → OpEx. Katta investitsiya shart emas. Pay-as-you-go model.</p>
+                    </div>
+                </div>
+
+                <div class="callout callout-warning">
+                    <div class="callout-icon"><i class="fas fa-exclamation"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">Cloud cost xavfi</div>
+                        <p class="callout-text">Cloud arzon emas! Noto'g'ri konfiguratsiya bilan oylik $10,000+ bill kelishi mumkin. Cost monitoring, budget alerts, right-sizing muhim. Doim "reserved instances" va "spot instances" o'ylab ko'ring.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="concepts">
+                <h2><i class="fas fa-book-open"></i> Asosiy tushunchalar</h2>
+
+                <h3>Cloud Service Models</h3>
+                <ul>
+                    <li><strong>IaaS</strong> (Infrastructure as a Service) - VM, network, storage. EC2, Compute Engine.</li>
+                    <li><strong>PaaS</strong> (Platform as a Service) - runtime environment. Heroku, App Engine, Elastic Beanstalk.</li>
+                    <li><strong>SaaS</strong> (Software as a Service) - tayyor dastur. Gmail, Salesforce.</li>
+                    <li><strong>FaaS</strong> (Function as a Service) - serverless. Lambda, Cloud Functions.</li>
+                </ul>
+
+                <h3>Deployment Strategies</h3>
+                <div class="deploy-strategies">
+                    <div class="strategy-card">
+                        <div class="strategy-header">
+                            <div class="strategy-icon"><i class="fas fa-sync"></i></div>
+                            <div class="strategy-name">Rolling Update</div>
+                        </div>
+                        <p class="strategy-desc">Pod'lar birin-ketin yangilanadi. Downtime yo'q, lekin mixed versions.</p>
+                        <span class="strategy-pros">Default Kubernetes strategy</span>
+                    </div>
+                    <div class="strategy-card">
+                        <div class="strategy-header">
+                            <div class="strategy-icon"><i class="fas fa-exchange-alt"></i></div>
+                            <div class="strategy-name">Blue/Green</div>
+                        </div>
+                        <p class="strategy-desc">2 muhit, traffic bir zumda almashadi. Instant rollback.</p>
+                        <span class="strategy-pros">Xavfsiz, tez rollback</span>
+                    </div>
+                    <div class="strategy-card">
+                        <div class="strategy-header">
+                            <div class="strategy-icon"><i class="fas fa-chart-line"></i></div>
+                            <div class="strategy-name">Canary</div>
+                        </div>
+                        <p class="strategy-desc">Avval 5% traffic, keyin asta-sekin 100%. Real user testing.</p>
+                        <span class="strategy-pros">Eng xavfsiz, erta xato aniqlash</span>
+                    </div>
+                    <div class="strategy-card">
+                        <div class="strategy-header">
+                            <div class="strategy-icon"><i class="fas fa-toggle-on"></i></div>
+                            <div class="strategy-name">Feature Flags</div>
+                        </div>
+                        <p class="strategy-desc">Kod deploy, feature runtime'da yoqiladi/o'chiriladi.</p>
+                        <span class="strategy-pros">Kod rollback shart emas</span>
+                    </div>
+                </div>
+
+                <h3>Container Orchestration</h3>
+                <p>Containerlarni boshqarish uchun:</p>
+                <ul>
+                    <li><strong>Kubernetes</strong> - industry standard, powerful, murakkab</li>
+                    <li><strong>ECS/Fargate</strong> - AWS native, simpler</li>
+                    <li><strong>Cloud Run</strong> - GCP serverless containers</li>
+                    <li><strong>Azure Container Apps</strong> - Azure serverless</li>
+                </ul>
+
+                <h3>Cost Optimization</h3>
+                <ul>
+                    <li><strong>Reserved Instances</strong> - 1-3 yillik commitment = 30-70% tejash</li>
+                    <li><strong>Spot/Preemptible</strong> - keraksiz capacity = 90% tejash (lekin to'xtatilishi mumkin)</li>
+                    <li><strong>Right-sizing</strong> - ortiqcha katta instance ishlatmang</li>
+                    <li><strong>Auto-scaling</strong> - faqat kerak bo'lganda resurs</li>
+                    <li><strong>Serverless</strong> - idle vaqtda to'lov yo'q</li>
+                </ul>
+            </section>
+
+            <section class="section" id="process">
+                <h2><i class="fas fa-tasks"></i> Amaliy jarayon (step-by-step)</h2>
+
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Cloud provider tanlash</h4>
+                            <p>AWS (eng keng), GCP (Kubernetes, ML), Azure (enterprise). Multi-cloud yoki single? Cost, team expertise, compliance requirements.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Account va organization setup</h4>
+                            <p>Root account, IAM, billing alerts, multi-account strategy (dev/staging/prod). AWS Organizations, GCP folders.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Network architecture</h4>
+                            <p>VPC, subnets (public/private), NAT Gateway, Security Groups, VPN/Direct Connect. Terraform bilan IaC.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Container registry va build</h4>
+                            <p>ECR, GCR, ACR - Docker image'larni saqlash. CI pipeline'dan push. Vulnerability scanning.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h4>Kubernetes yoki managed service</h4>
+                            <p>EKS, GKE, AKS - managed Kubernetes. Yoki Fargate, Cloud Run - serverless. Helm charts, GitOps (ArgoCD).</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">6</div>
+                        <div class="step-content">
+                            <h4>Database va stateful services</h4>
+                            <p>RDS, Cloud SQL, DocumentDB - managed databases. Backup, replication, encryption at rest.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">7</div>
+                        <div class="step-content">
+                            <h4>CDN va edge</h4>
+                            <p>CloudFront, Cloud CDN - static assets. Edge functions - compute at edge. Global latency kamaytirish.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">8</div>
+                        <div class="step-content">
+                            <h4>Monitoring va observability</h4>
+                            <p>CloudWatch, Stackdriver, Azure Monitor. Yoki third-party: Datadog, New Relic. Dashboards, alerts, on-call.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="mistakes">
+                <h2><i class="fas fa-exclamation-triangle"></i> Eng ko'p uchraydigan xatolar</h2>
+
+                <div class="callout callout-warning">
+                    <div class="callout-icon"><i class="fas fa-times"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">1. Cost monitoring yo'qligi</div>
+                        <p class="callout-text">Oy oxirida $50,000 bill keldi - hech kim kutmagan. Billing alerts, budgets, cost explorer - day 1 dan o'rnating.</p>
+                    </div>
+                </div>
+
+                <div class="callout callout-warning">
+                    <div class="callout-icon"><i class="fas fa-times"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">2. Public S3 buckets</div>
+                        <p class="callout-text">S3 bucket public qoldirildi - company data leak. Default: private. "Block public access" setting yoqing.</p>
+                    </div>
+                </div>
+
+                <div class="callout callout-warning">
+                    <div class="callout-icon"><i class="fas fa-times"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">3. Single AZ deployment</div>
+                        <p class="callout-text">Bitta availability zone'da deploy - AZ o'chsa, sayt ham o'chadi. Har doim multi-AZ.</p>
+                    </div>
+                </div>
+
+                <div class="callout callout-warning">
+                    <div class="callout-icon"><i class="fas fa-times"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">4. IAM root user ishlatish</div>
+                        <p class="callout-text">Root account bilan kundalik ish - juda xavfli. IAM users, roles, least privilege. MFA majburiy.</p>
+                    </div>
+                </div>
+
+                <div class="callout callout-tip">
+                    <div class="callout-icon"><i class="fas fa-check"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">Yechim</div>
+                        <p class="callout-text">AWS Well-Architected Framework yoki GCP Cloud Architecture Framework o'qing. Cost, security, reliability, performance, operational excellence - 5 ustun.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="best-practices">
+                <h2><i class="fas fa-medal"></i> Best practices</h2>
+
+                <ul class="checklist">
+                    <li><i class="fas fa-check"></i> Multi-AZ va multi-region deployment - high availability</li>
+                    <li><i class="fas fa-check"></i> Infrastructure as Code - Terraform, Pulumi. ClickOps yo'q</li>
+                    <li><i class="fas fa-check"></i> Immutable deployments - server'ni patch qilmang, almashtiring</li>
+                    <li><i class="fas fa-check"></i> Auto-scaling - CPU/memory/custom metrics asosida</li>
+                    <li><i class="fas fa-check"></i> Cost tagging - har bir resursga tag (team, environment, project)</li>
+                    <li><i class="fas fa-check"></i> Backup va disaster recovery - RTO/RPO aniqlang, test qiling</li>
+                    <li><i class="fas fa-check"></i> Least privilege IAM - faqat kerakli permissionlar</li>
+                    <li><i class="fas fa-check"></i> Encryption everywhere - at rest va in transit</li>
+                    <li><i class="fas fa-check"></i> GitOps - ArgoCD, Flux bilan declarative deployment</li>
+                    <li><i class="fas fa-check"></i> FinOps practice - cloud cost management culture</li>
+                </ul>
+            </section>
+
+            <section class="section" id="tools">
+                <h2><i class="fas fa-wrench"></i> Asboblar va texnologiyalar</h2>
+
+                <div class="tools-grid">
+                    <span class="tool-badge"><i class="fab fa-aws"></i> AWS</span>
+                    <span class="tool-badge"><i class="fab fa-google"></i> GCP</span>
+                    <span class="tool-badge"><i class="fab fa-microsoft"></i> Azure</span>
+                    <span class="tool-badge"><i class="fas fa-dharmachakra"></i> Kubernetes</span>
+                    <span class="tool-badge"><i class="fas fa-boxes"></i> Terraform</span>
+                    <span class="tool-badge"><i class="fas fa-ship"></i> Helm</span>
+                    <span class="tool-badge"><i class="fas fa-box"></i> ArgoCD</span>
+                    <span class="tool-badge"><i class="fab fa-docker"></i> Docker</span>
+                    <span class="tool-badge"><i class="fas fa-network-wired"></i> Istio</span>
+                    <span class="tool-badge"><i class="fas fa-cloud"></i> CloudFlare</span>
+                    <span class="tool-badge"><i class="fas fa-chart-line"></i> Datadog</span>
+                    <span class="tool-badge"><i class="fas fa-coins"></i> Kubecost</span>
+                </div>
+
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-dharmachakra"></i></div>
+                        <h4>EKS/GKE/AKS</h4>
+                        <p>Managed Kubernetes. Control plane managed, siz worker nodes. Production-ready.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-box"></i></div>
+                        <h4>ArgoCD</h4>
+                        <p>GitOps operator. Git = source of truth. Declarative, auditable deployments.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-coins"></i></div>
+                        <h4>Kubecost</h4>
+                        <p>Kubernetes cost monitoring. Pod, namespace, label bo'yicha xarajatlar.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="example">
+                <h2><i class="fas fa-laptop-code"></i> Mini misol</h2>
+
+                <p>AWS EKS ga Kubernetes deployment:</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">yaml - deployment.yaml</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <div class="code-content">
+<pre><span class="keyword">apiVersion:</span> apps/v1
+<span class="keyword">kind:</span> Deployment
+<span class="keyword">metadata:</span>
+  <span class="function">name:</span> my-app
+  <span class="function">namespace:</span> production
+  <span class="function">labels:</span>
+    app: my-app
+    version: v1.2.0
+<span class="keyword">spec:</span>
+  <span class="function">replicas:</span> 3
+  <span class="function">strategy:</span>
+    <span class="function">type:</span> RollingUpdate
+    <span class="function">rollingUpdate:</span>
+      maxSurge: 1
+      maxUnavailable: 0
+  <span class="function">selector:</span>
+    <span class="function">matchLabels:</span>
+      app: my-app
+  <span class="function">template:</span>
+    <span class="function">metadata:</span>
+      <span class="function">labels:</span>
+        app: my-app
+        version: v1.2.0
+    <span class="function">spec:</span>
+      <span class="function">containers:</span>
+        - <span class="function">name:</span> my-app
+          <span class="function">image:</span> <span class="string">123456789.dkr.ecr.us-east-1.amazonaws.com/my-app:v1.2.0</span>
+          <span class="function">ports:</span>
+            - containerPort: 3000
+          <span class="function">resources:</span>
+            <span class="function">requests:</span>
+              memory: <span class="string">"256Mi"</span>
+              cpu: <span class="string">"250m"</span>
+            <span class="function">limits:</span>
+              memory: <span class="string">"512Mi"</span>
+              cpu: <span class="string">"500m"</span>
+          <span class="function">livenessProbe:</span>
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          <span class="function">readinessProbe:</span>
+            httpGet:
+              path: /ready
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          <span class="function">env:</span>
+            - <span class="function">name:</span> NODE_ENV
+              <span class="function">value:</span> <span class="string">"production"</span>
+            - <span class="function">name:</span> DATABASE_URL
+              <span class="function">valueFrom:</span>
+                secretKeyRef:
+                  name: app-secrets
+                  key: database-url
+      <span class="function">affinity:</span>
+        <span class="function">podAntiAffinity:</span>
+          <span class="function">preferredDuringSchedulingIgnoredDuringExecution:</span>
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app: my-app
+                topologyKey: <span class="string">"topology.kubernetes.io/zone"</span>
+---
+<span class="keyword">apiVersion:</span> v1
+<span class="keyword">kind:</span> Service
+<span class="keyword">metadata:</span>
+  <span class="function">name:</span> my-app
+  <span class="function">namespace:</span> production
+<span class="keyword">spec:</span>
+  <span class="function">type:</span> ClusterIP
+  <span class="function">ports:</span>
+    - port: 80
+      targetPort: 3000
+  <span class="function">selector:</span>
+    app: my-app
+---
+<span class="keyword">apiVersion:</span> autoscaling/v2
+<span class="keyword">kind:</span> HorizontalPodAutoscaler
+<span class="keyword">metadata:</span>
+  <span class="function">name:</span> my-app-hpa
+  <span class="function">namespace:</span> production
+<span class="keyword">spec:</span>
+  <span class="function">scaleTargetRef:</span>
+    apiVersion: apps/v1
+    kind: Deployment
+    name: my-app
+  <span class="function">minReplicas:</span> 3
+  <span class="function">maxReplicas:</span> 20
+  <span class="function">metrics:</span>
+    - <span class="function">type:</span> Resource
+      <span class="function">resource:</span>
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70</pre>
+                    </div>
+                </div>
+
+                <p>ArgoCD Application (GitOps):</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">yaml - argocd-app.yaml</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <div class="code-content">
+<pre><span class="keyword">apiVersion:</span> argoproj.io/v1alpha1
+<span class="keyword">kind:</span> Application
+<span class="keyword">metadata:</span>
+  <span class="function">name:</span> my-app
+  <span class="function">namespace:</span> argocd
+<span class="keyword">spec:</span>
+  <span class="function">project:</span> default
+  <span class="function">source:</span>
+    <span class="function">repoURL:</span> <span class="string">https://github.com/company/k8s-manifests</span>
+    <span class="function">targetRevision:</span> main
+    <span class="function">path:</span> apps/my-app/production
+  <span class="function">destination:</span>
+    <span class="function">server:</span> <span class="string">https://kubernetes.default.svc</span>
+    <span class="function">namespace:</span> production
+  <span class="function">syncPolicy:</span>
+    <span class="function">automated:</span>
+      prune: <span class="keyword">true</span>
+      selfHeal: <span class="keyword">true</span>
+    <span class="function">syncOptions:</span>
+      - CreateNamespace=<span class="keyword">true</span></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="security">
+                <div class="security-card">
+                    <h3 class="security-title"><i class="fas fa-shield-alt"></i> Xavfsizlik va ishonchlilik</h3>
+                    <ul class="security-list">
+                        <li><i class="fas fa-lock"></i> IAM least privilege - faqat kerakli permissionlar. Root account faqat emergency.</li>
+                        <li><i class="fas fa-lock"></i> MFA everywhere - console va CLI access uchun multi-factor authentication.</li>
+                        <li><i class="fas fa-lock"></i> Encryption at rest va in transit - EBS, S3, RDS encryption. TLS everywhere.</li>
+                        <li><i class="fas fa-lock"></i> VPC security - private subnets, security groups, NACLs. Public access minimal.</li>
+                        <li><i class="fas fa-lock"></i> Secrets management - AWS Secrets Manager, Vault. Env variables'da plaintext yo'q.</li>
+                        <li><i class="fas fa-lock"></i> Compliance - SOC 2, HIPAA, GDPR. Cloud provider certifications leverage qiling.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="section" id="faq">
+                <h2><i class="fas fa-question-circle"></i> Ko'p so'raladigan savollar (FAQ)</h2>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        AWS, GCP va Azure - qaysi birini tanlashim kerak?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>AWS - eng keng servislar, eng katta bozor, ko'p dokumentatsiya. GCP - Kubernetes native (GKE eng yaxshi), BigQuery, ML. Azure - Microsoft stack, enterprise, hybrid cloud. Team expertise va existing tools ham muhim. Kichik loyiha - GCP/AWS. Enterprise - Azure/AWS.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Kubernetes yoki serverless?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Kubernetes: murakkab apps, full control, consistent environment, portability. Serverless (Lambda, Cloud Run): oddiy workloads, event-driven, pay-per-use, tez scaling. Hybrid ham bo'lishi mumkin. Kichik jamoa + oddiy app = serverless. Katta app + team expertise = Kubernetes.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Cloud xarajatlarni qanday kamaytirish mumkin?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>1) Reserved Instances (30-70% tejash). 2) Spot/Preemptible (90% tejash, stateless workloads). 3) Right-sizing - ortiqcha katta instance ishlatmang. 4) Auto-scaling - tunda kam server. 5) S3 lifecycle policies. 6) Unused resources o'chirish. Kubecost, AWS Cost Explorer ishlating.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Multi-cloud yoki single cloud?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Single cloud: sodda, optimal integration, vendor expertise. Multi-cloud: vendor lock-in yo'q, best-of-breed, lekin murakkab. Ko'p kompaniyalar aslida "multi-cloud by accident" - turli acquisitions natijasida. Bilgan holda multi-cloud = katta overhead. Lekin DR uchun ikkinchi cloud bo'lishi mumkin.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        GitOps nima afzalligi bor?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Git = single source of truth. Auditable - kim, qachon, nima o'zgartirdi (git log). Rollback oson (git revert). Declarative - desired state, reconciliation loop. ArgoCD, Flux. Security - cluster'ga to'g'ridan-to'g'ri access shart emas, faqat Git'ga push.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Disaster Recovery qanday sozlanadi?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>RTO (Recovery Time Objective) va RPO (Recovery Point Objective) aniqlang. Multi-AZ = AZ failure. Multi-region = region failure. Database replication, backup'lar, IaC (tez recreate). Chaos testing - muntazam DR drill o'tkazing. Runbooks tayyor bo'lsin.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Vendor lock-in dan qanday qochish mumkin?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Containers (Docker) - portable. Kubernetes - har qayerda ishlaydi. Terraform - multi-cloud IaC. Standard protocols (SQL, REST, gRPC). Lekin: 100% portable bo'lish qimmat va murakkab. Cloud-native servislar (Lambda, DynamoDB) afzalliklarini yo'qotasiz. Balance toping.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Production deploy qachon qilish kerak?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Ish vaqtida - jamoa tayyor bo'lganda. Juma kechqurun yoki bayram oldidan - HECH QACHON. Feature flags bilan xavfni kamaytiring. Canary deploy - avval 5% traffic. Monitoring va rollback tayyor. "Deploy early, deploy often" - kichik o'zgarishlar xavfsizroq.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="glossary">
+                <h2><i class="fas fa-book"></i> Glossary (Atamalar lug'ati)</h2>
+
+                <div class="glossary-grid">
+                    <div class="glossary-item">
+                        <span class="glossary-term">Region</span>
+                        <span class="glossary-def">Cloud provider ning geografik lokatsiyasi (us-east-1, eu-west-1).</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">AZ</span>
+                        <span class="glossary-def">Availability Zone - region ichidagi alohida data center(lar).</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">VPC</span>
+                        <span class="glossary-def">Virtual Private Cloud - izolyatsiyalangan virtual network.</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">Load Balancer</span>
+                        <span class="glossary-def">Traffic'ni bir nechta server orasida taqsimlovchi servis (ALB, NLB).</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">Auto Scaling</span>
+                        <span class="glossary-def">Load'ga qarab avtomatik server qo'shish/olib tashlash.</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">CDN</span>
+                        <span class="glossary-def">Content Delivery Network - static content'ni edge location'lardan serve qilish.</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">Serverless</span>
+                        <span class="glossary-def">Server management yo'q, faqat kod - Lambda, Cloud Functions.</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">Reserved Instance</span>
+                        <span class="glossary-def">1-3 yillik commitment evaziga chegirma olish.</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">Spot Instance</span>
+                        <span class="glossary-def">Unused capacity - arzon, lekin to'xtatilishi mumkin.</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">IAM</span>
+                        <span class="glossary-def">Identity and Access Management - users, roles, permissions.</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">S3/GCS/Blob</span>
+                        <span class="glossary-def">Object storage - fayllarni saqlash uchun (images, backups, logs).</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">FinOps</span>
+                        <span class="glossary-def">Cloud financial management - cost optimization culture va practice.</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Journey Complete -->
+            <div class="journey-complete">
+                <h3>Sayohat yakunlandi!</h3>
+                <p>Siz "From Code to Cloud" yo'lining barcha 8 bosqichini o'rgandingiz. Endi siz professional tarzda kod yozish, deploy qilish va cloud infrastructure boshqarishni bilasiz.</p>
+                <a href="index.html">
+                    <i class="fas fa-home"></i>
+                    Bosh sahifaga qaytish
+                </a>
+            </div>
+
+            <nav class="nav-footer">
+                <a href="devops.html" class="nav-btn prev">
+                    <i class="fas fa-arrow-left"></i>
+                    <div>
+                        <span class="nav-btn-label">Oldingi</span>
+                        <span class="nav-btn-title">DevOps</span>
+                    </div>
+                </a>
+                <a href="index.html" class="nav-btn next">
+                    <div>
+                        <span class="nav-btn-label">Bosh sahifa</span>
+                        <span class="nav-btn-title">Home</span>
+                    </div>
+                    <i class="fas fa-home"></i>
+                </a>
+            </nav>
+        </main>
+
+        <aside class="sidebar-right">
+            <div class="takeaways-card">
+                <h3 class="takeaways-title"><i class="fas fa-star"></i> Key Takeaways</h3>
+                <ul class="takeaways-list">
+                    <li><i class="fas fa-check"></i> Multi-AZ/Region = High Availability</li>
+                    <li><i class="fas fa-check"></i> IaC - Terraform, ClickOps yo'q</li>
+                    <li><i class="fas fa-check"></i> GitOps - ArgoCD, declarative deploy</li>
+                    <li><i class="fas fa-check"></i> Cost monitoring day 1 dan</li>
+                    <li><i class="fas fa-check"></i> IAM least privilege</li>
+                    <li><i class="fas fa-check"></i> Encryption everywhere</li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+
+    <script>
+        const navToggle = document.querySelector('.nav-toggle');
+        const navLinks = document.querySelector('.nav-links');
+
+        navToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            const icon = navToggle.querySelector('i');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
+        });
+
+        const progressBar = document.getElementById('progressBar');
+        
+        window.addEventListener('scroll', () => {
+            const winScroll = document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            progressBar.style.width = scrolled + '%';
+        });
+
+        const faqItems = document.querySelectorAll('.faq-item');
+        
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question');
+            question.addEventListener('click', () => {
+                const isActive = item.classList.contains('active');
+                faqItems.forEach(i => i.classList.remove('active'));
+                if (!isActive) {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        function copyCode(button) {
+            const codeBlock = button.closest('.code-block');
+            const code = codeBlock.querySelector('pre').textContent;
+            
+            navigator.clipboard.writeText(code).then(() => {
+                const originalHTML = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                button.style.color = 'var(--accent-green)';
+                
+                setTimeout(() => {
+                    button.innerHTML = originalHTML;
+                    button.style.color = '';
+                }, 2000);
+            });
+        }
+
+        const tocLinks = document.querySelectorAll('.toc-list a');
+        const sections = document.querySelectorAll('.section');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (window.scrollY >= sectionTop - 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            tocLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

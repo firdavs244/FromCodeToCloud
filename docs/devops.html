@@ -1,0 +1,1705 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevOps | From Code to Cloud</title>
+    <meta name="description" content="IaC, monitoring, logging, SRE basics, incident response va secrets management - DevOps madaniyati va amaliyotlari">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-primary: #0B1020;
+            --bg-secondary: #0A0F1A;
+            --bg-card: #0F1629;
+            --accent-teal: #27D7C4;
+            --accent-violet: #7C5CFF;
+            --accent-amber: #F59E0B;
+            --accent-red: #EF4444;
+            --accent-green: #10B981;
+            --accent-lime: #84CC16;
+            --text-primary: #E8EEF8;
+            --text-muted: #A7B1C2;
+            --text-dim: #6B7280;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            line-height: 1.7;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(132, 204, 22, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(124, 92, 255, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(11, 16, 32, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent-teal), var(--accent-violet));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--accent-lime);
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 60px;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-lime), var(--accent-violet));
+            z-index: 99;
+            transition: width 0.1s ease;
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 250px 1fr 280px;
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 5rem 2rem 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .sidebar-left {
+            position: sticky;
+            top: 80px;
+            height: fit-content;
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
+        }
+
+        .sidebar-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .toc-list {
+            list-style: none;
+        }
+
+        .toc-list a {
+            display: block;
+            padding: 0.5rem 0;
+            padding-left: 1rem;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.85rem;
+            border-left: 2px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+
+        .toc-list a:hover,
+        .toc-list a.active {
+            color: var(--accent-lime);
+            border-left-color: var(--accent-lime);
+        }
+
+        .main-content {
+            max-width: 800px;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            margin-bottom: 2rem;
+        }
+
+        .breadcrumb a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--accent-lime);
+        }
+
+        .breadcrumb i {
+            font-size: 0.7rem;
+        }
+
+        .hero {
+            margin-bottom: 3rem;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            font-size: 0.8rem;
+            color: var(--accent-lime);
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent-lime));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-tagline {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 600px;
+        }
+
+        .reading-time {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+        }
+
+        .reading-time span {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .section {
+            margin-bottom: 4rem;
+            scroll-margin-top: 100px;
+        }
+
+        .section h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section h2 i {
+            color: var(--accent-lime);
+            font-size: 1.2rem;
+        }
+
+        .section h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem;
+            color: var(--text-primary);
+        }
+
+        .section p {
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .callout {
+            padding: 1.25rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .callout-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 0.75rem;
+        }
+
+        .callout-info {
+            background: rgba(132, 204, 22, 0.1);
+            border: 1px solid rgba(132, 204, 22, 0.2);
+        }
+
+        .callout-info .callout-icon {
+            background: var(--accent-lime);
+            color: var(--bg-primary);
+        }
+
+        .callout-warning {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .callout-warning .callout-icon {
+            background: var(--accent-amber);
+            color: var(--bg-primary);
+        }
+
+        .callout-tip {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .callout-tip .callout-icon {
+            background: var(--accent-green);
+            color: white;
+        }
+
+        .callout-content {
+            flex: 1;
+        }
+
+        .callout-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+        }
+
+        .callout-text {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        .code-block {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            overflow: hidden;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .code-lang {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .code-copy {
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.75rem;
+            transition: color 0.3s ease;
+        }
+
+        .code-copy:hover {
+            color: var(--accent-lime);
+        }
+
+        .code-content {
+            padding: 1rem;
+            overflow-x: auto;
+        }
+
+        .code-content pre {
+            margin: 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+
+        .code-content .comment { color: var(--text-dim); }
+        .code-content .keyword { color: var(--accent-violet); }
+        .code-content .string { color: var(--accent-teal); }
+        .code-content .function { color: var(--accent-amber); }
+        .code-content .variable { color: var(--accent-lime); }
+
+        .section ul, .section ol {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+            color: var(--text-muted);
+        }
+
+        .section li {
+            margin-bottom: 0.5rem;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: var(--accent-lime);
+            transform: translateY(-2px);
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, rgba(132, 204, 22, 0.2), rgba(124, 92, 255, 0.2));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            color: var(--accent-lime);
+        }
+
+        .card h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .card p {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            margin: 0;
+        }
+
+        /* DevOps Infinity Loop */
+        .devops-loop {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .infinity-container {
+            position: relative;
+            width: 400px;
+            height: 180px;
+        }
+
+        .infinity-side {
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            border: 4px solid;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .infinity-left {
+            left: 0;
+            border-color: var(--accent-teal);
+            background: rgba(39, 215, 196, 0.05);
+        }
+
+        .infinity-right {
+            right: 0;
+            border-color: var(--accent-violet);
+            background: rgba(124, 92, 255, 0.05);
+        }
+
+        .infinity-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .infinity-left .infinity-label { color: var(--accent-teal); }
+        .infinity-right .infinity-label { color: var(--accent-violet); }
+
+        .infinity-items {
+            position: absolute;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        .infinity-left .infinity-items { bottom: -30px; left: 50%; transform: translateX(-50%); }
+        .infinity-right .infinity-items { bottom: -30px; right: 50%; transform: translateX(50%); }
+
+        .steps {
+            margin: 1.5rem 0;
+        }
+
+        .step {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent-lime), var(--accent-violet));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .step-content h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-content p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        .checklist {
+            list-style: none;
+            padding: 0;
+            margin: 1.5rem 0;
+        }
+
+        .checklist li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .checklist li i {
+            color: var(--accent-green);
+            margin-top: 0.2rem;
+        }
+
+        .tools-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin: 1.5rem 0;
+        }
+
+        .tool-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+        }
+
+        .tool-badge:hover {
+            border-color: var(--accent-lime);
+            color: var(--text-primary);
+        }
+
+        .tool-badge i {
+            color: var(--accent-lime);
+        }
+
+        .pillars-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .pillar {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            text-align: center;
+        }
+
+        .pillar-icon {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 1rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
+
+        .pillar:nth-child(1) .pillar-icon { background: rgba(132, 204, 22, 0.2); color: var(--accent-lime); }
+        .pillar:nth-child(2) .pillar-icon { background: rgba(6, 182, 212, 0.2); color: var(--accent-teal); }
+        .pillar:nth-child(3) .pillar-icon { background: rgba(124, 92, 255, 0.2); color: var(--accent-violet); }
+
+        .pillar h4 {
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .pillar p {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            margin: 0;
+        }
+
+        .faq-item {
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            margin-bottom: 0.75rem;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            background: var(--glass-bg);
+            border: none;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            transition: background 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .faq-question i {
+            color: var(--text-dim);
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 1rem 1.25rem;
+            max-height: 500px;
+        }
+
+        .faq-answer p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        .glossary-grid {
+            display: grid;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .glossary-item {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+        }
+
+        .glossary-term {
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--accent-lime);
+        }
+
+        .glossary-def {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .sidebar-right {
+            position: sticky;
+            top: 80px;
+            height: fit-content;
+        }
+
+        .takeaways-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+
+        .takeaways-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .takeaways-title i {
+            color: var(--accent-amber);
+        }
+
+        .takeaways-list {
+            list-style: none;
+        }
+
+        .takeaways-list li {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.5rem 0;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .takeaways-list li:last-child {
+            border-bottom: none;
+        }
+
+        .takeaways-list li i {
+            color: var(--accent-lime);
+            margin-top: 0.2rem;
+        }
+
+        .security-card {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.05), rgba(124, 92, 255, 0.05));
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .security-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--accent-red);
+        }
+
+        .security-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .security-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.5rem 0;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .security-list li i {
+            color: var(--accent-red);
+            margin-top: 0.2rem;
+        }
+
+        .nav-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 1.5rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            text-decoration: none;
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            border-color: var(--accent-lime);
+            color: var(--text-primary);
+        }
+
+        .nav-btn-label {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+
+        .nav-btn-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .nav-btn.next {
+            text-align: right;
+        }
+
+        @media (max-width: 1200px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar-left,
+            .sidebar-right {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem 1.5rem;
+            }
+
+            .nav-toggle {
+                display: block;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: rgba(11, 16, 32, 0.95);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                padding: 1rem;
+                gap: 0;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-links li {
+                padding: 0.75rem 1rem;
+            }
+
+            .main-layout {
+                padding: 4.5rem 1rem 2rem;
+            }
+
+            .hero h1 {
+                font-size: 1.75rem;
+            }
+
+            .glossary-item {
+                grid-template-columns: 1fr;
+            }
+
+            .pillars-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .infinity-container {
+                transform: scale(0.7);
+            }
+
+            .nav-footer {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-btn {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+
+    <header class="header">
+        <a href="index.html" class="logo">
+            <span class="logo-icon"><i class="fas fa-code"></i></span>
+            Code to Cloud
+        </a>
+        <button class="nav-toggle" aria-label="Toggle navigation">
+            <i class="fas fa-bars"></i>
+        </button>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="code.html">Code</a></li>
+            <li><a href="frontend.html">Frontend</a></li>
+            <li><a href="backend-api.html">Backend API</a></li>
+            <li><a href="database.html">Database</a></li>
+            <li><a href="architecture.html">Architecture</a></li>
+            <li><a href="cicd.html">CI/CD</a></li>
+            <li><a href="devops.html" class="active">DevOps</a></li>
+            <li><a href="cloud-deploy.html">Cloud</a></li>
+        </ul>
+    </header>
+
+    <div class="main-layout">
+        <aside class="sidebar-left">
+            <h3 class="sidebar-title">On This Page</h3>
+            <ul class="toc-list">
+                <li><a href="#what-is">DevOps nima?</a></li>
+                <li><a href="#why-needed">Nega kerak?</a></li>
+                <li><a href="#concepts">Asosiy tushunchalar</a></li>
+                <li><a href="#process">Amaliy jarayon</a></li>
+                <li><a href="#mistakes">Ko'p uchraydigan xatolar</a></li>
+                <li><a href="#best-practices">Best practices</a></li>
+                <li><a href="#tools">Asboblar</a></li>
+                <li><a href="#example">Mini misol</a></li>
+                <li><a href="#security">Xavfsizlik</a></li>
+                <li><a href="#faq">FAQ</a></li>
+                <li><a href="#glossary">Glossary</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <nav class="breadcrumb">
+                <a href="index.html">Home</a>
+                <i class="fas fa-chevron-right"></i>
+                <span>DevOps</span>
+            </nav>
+
+            <section class="hero">
+                <div class="hero-badge">
+                    <i class="fas fa-cogs"></i>
+                    <span>7-bosqich</span>
+                </div>
+                <h1>DevOps</h1>
+                <p class="hero-tagline">Development va Operations birlashuvi - tezroq deliver, barqaror ishlash, uzluksiz yaxshilash.</p>
+                <div class="reading-time">
+                    <span><i class="fas fa-clock"></i> 22 daqiqa o'qish</span>
+                    <span><i class="fas fa-book"></i> Ilg'or daraja</span>
+                </div>
+            </section>
+
+            <!-- DevOps Infinity Loop -->
+            <div class="devops-loop">
+                <div class="infinity-container">
+                    <div class="infinity-side infinity-left">
+                        <span class="infinity-label">Dev</span>
+                    </div>
+                    <div class="infinity-side infinity-right">
+                        <span class="infinity-label">Ops</span>
+                    </div>
+                    <div class="infinity-items" style="left: 90px; bottom: -45px;">
+                        Plan → Code → Build → Test
+                    </div>
+                    <div class="infinity-items" style="right: 90px; bottom: -45px;">
+                        Release → Deploy → Operate → Monitor
+                    </div>
+                </div>
+            </div>
+
+            <section class="section" id="what-is">
+                <h2><i class="fas fa-question-circle"></i> DevOps nima?</h2>
+                <p>DevOps - bu Development (dasturlash) va Operations (operatsiyalar) jamoalarini birlashtiradigan madaniyat, amaliyotlar va vositalar to'plami. Bu shunchaki toollar emas, bu fikrlash tarzi.</p>
+                
+                <p>DevOps ning asosiy maqsadlari:</p>
+                <ul>
+                    <li><strong>Tezroq delivery</strong> - kod yozilganidan production'ga tez yetkazish</li>
+                    <li><strong>Yuqori sifat</strong> - avtomatlashtirilgan testlar va tekshiruvlar</li>
+                    <li><strong>Barqarorlik</strong> - tizim ishonchli va oldindan bashorat qilinadigan</li>
+                    <li><strong>Hamkorlik</strong> - Dev va Ops birgalikda mas'ul</li>
+                </ul>
+
+                <div class="pillars-grid">
+                    <div class="pillar">
+                        <div class="pillar-icon"><i class="fas fa-users"></i></div>
+                        <h4>Culture</h4>
+                        <p>Hamkorlik, mas'uliyat, doimiy o'rganish</p>
+                    </div>
+                    <div class="pillar">
+                        <div class="pillar-icon"><i class="fas fa-robot"></i></div>
+                        <h4>Automation</h4>
+                        <p>Qo'l mehnati kamaytirish, takrorlanadigan jarayonlar</p>
+                    </div>
+                    <div class="pillar">
+                        <div class="pillar-icon"><i class="fas fa-chart-line"></i></div>
+                        <h4>Measurement</h4>
+                        <p>Metrikalar, monitoring, data-driven qarorlar</p>
+                    </div>
+                </div>
+
+                <div class="callout callout-info">
+                    <div class="callout-icon"><i class="fas fa-info"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">Oddiy tushuntirish</div>
+                        <p class="callout-text">Ilgari: "Mening kompyuterimda ishlayapti" - developer. "Mening serverimda ishlamayapti" - ops. Hozir DevOps bilan: "Biz birga mas'ulmiz - koddan productiongacha".</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="why-needed">
+                <h2><i class="fas fa-lightbulb"></i> Nega kerak?</h2>
+                <p>Traditional yondashuvda Dev va Ops alohida jamoalar edi. Bu ko'p muammolarga olib kelardi:</p>
+
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-rocket"></i></div>
+                        <h4>Tezkor bozorga chiqish</h4>
+                        <p>Amazon har 11.7 soniyada deploy qiladi. Netflix kuniga 1000+ marta. DevOps siz buni qila olmaysiz.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-sync"></i></div>
+                        <h4>Feedback loop</h4>
+                        <p>Production'dan tez feedback = tez yaxshilash. Muammo 5 daqiqada aniqlanadi, 5 kundan keyin emas.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-shield-alt"></i></div>
+                        <h4>Xavfsizlik (DevSecOps)</h4>
+                        <p>Security "shift left" - xavfsizlik boshidan o'ylanadi, oxirida emas.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-coins"></i></div>
+                        <h4>Cost efficiency</h4>
+                        <p>Avtomatlashtirish = kam qo'l mehnati = kam xato = kam xarajat.</p>
+                    </div>
+                </div>
+
+                <div class="callout callout-warning">
+                    <div class="callout-icon"><i class="fas fa-exclamation"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">DORA Metrics</div>
+                        <p class="callout-text">Elite DevOps jamoalar: Deploy frequency - kuniga bir necha marta, Lead time - 1 soatdan kam, Change fail rate - 0-15%, MTTR - 1 soatdan kam. Sizning jamoangiz qayerda?</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="concepts">
+                <h2><i class="fas fa-book-open"></i> Asosiy tushunchalar</h2>
+
+                <h3>Infrastructure as Code (IaC)</h3>
+                <p>Serverlar, network, database - barchasi kod sifatida yoziladi va version control'da saqlanadi:</p>
+                <ul>
+                    <li><strong>Terraform</strong> - cloud-agnostic, deklarativ</li>
+                    <li><strong>Pulumi</strong> - real dasturlash tillari (TypeScript, Python)</li>
+                    <li><strong>CloudFormation</strong> - AWS native</li>
+                    <li><strong>Ansible</strong> - configuration management</li>
+                </ul>
+
+                <h3>Monitoring va Observability</h3>
+                <p>Tizimni ichidan ko'rish uchun uchta ustun:</p>
+                <ul>
+                    <li><strong>Metrics</strong> - raqamlar: CPU, memory, request count, error rate (Prometheus, Datadog)</li>
+                    <li><strong>Logs</strong> - eventlar: nima bo'ldi, qachon, qayerda (ELK, Loki)</li>
+                    <li><strong>Traces</strong> - so'rov yo'li: request qaysi service'lardan o'tdi (Jaeger, Zipkin)</li>
+                </ul>
+
+                <h3>Site Reliability Engineering (SRE)</h3>
+                <p>Google tomonidan yaratilgan yondashuv - "software engineering lens to operations":</p>
+                <ul>
+                    <li><strong>SLI</strong> (Service Level Indicator) - o'lchov (latency, availability)</li>
+                    <li><strong>SLO</strong> (Service Level Objective) - maqsad (99.9% uptime)</li>
+                    <li><strong>SLA</strong> (Service Level Agreement) - shartnoma (buzilsa - kompensatsiya)</li>
+                    <li><strong>Error Budget</strong> - qancha downtime "ruxsat etilgan"</li>
+                </ul>
+
+                <h3>Incident Management</h3>
+                <p>Muammo bo'lganda nima qilish kerak:</p>
+                <ul>
+                    <li><strong>Detection</strong> - alert orqali erta aniqlash</li>
+                    <li><strong>Response</strong> - on-call engineer tez javob beradi</li>
+                    <li><strong>Mitigation</strong> - user ta'sirini kamaytirish (rollback, traffic shift)</li>
+                    <li><strong>Resolution</strong> - asosiy sababni tuzatish</li>
+                    <li><strong>Postmortem</strong> - blameless tahlil, o'rganish, oldini olish</li>
+                </ul>
+
+                <h3>Secrets Management</h3>
+                <p>Maxfiy ma'lumotlarni xavfsiz saqlash va tarqatish:</p>
+                <ul>
+                    <li>Kodda HECH QACHON plaintext secret bo'lmasin</li>
+                    <li>HashiCorp Vault, AWS Secrets Manager, Azure Key Vault</li>
+                    <li>Rotation - secret'larni muntazam yangilash</li>
+                    <li>Audit - kim, qachon, qaysi secret'ga kirdi</li>
+                </ul>
+            </section>
+
+            <section class="section" id="process">
+                <h2><i class="fas fa-tasks"></i> Amaliy jarayon (step-by-step)</h2>
+
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Infrastructure as Code joriy qilish</h4>
+                            <p>Terraform yoki Pulumi bilan infra'ni kodga o'tkazing. Version control, PR review, automated apply.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Monitoring stack o'rnatish</h4>
+                            <p>Prometheus + Grafana metrics uchun, Loki logs uchun. Yoki managed: Datadog, New Relic.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Alerting sozlash</h4>
+                            <p>Critical metrikalar uchun alert. PagerDuty, Opsgenie bilan on-call rotation.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>SLI/SLO aniqlash</h4>
+                            <p>Har bir service uchun: availability, latency p99, error rate. Dashboard yarating.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h4>Incident response jarayoni</h4>
+                            <p>Runbook'lar, escalation path, postmortem template. Practice: game days, chaos engineering.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">6</div>
+                        <div class="step-content">
+                            <h4>Secrets management</h4>
+                            <p>Vault yoki cloud-native secrets. Environment variables orqali inject. Rotation policy.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">7</div>
+                        <div class="step-content">
+                            <h4>Documentation va runbooks</h4>
+                            <p>Har bir alert uchun runbook: nima qilish kerak, escalation, useful commands.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">8</div>
+                        <div class="step-content">
+                            <h4>Continuous improvement</h4>
+                            <p>Haftalik ops review, postmortem action items, toil reduction.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="mistakes">
+                <h2><i class="fas fa-exclamation-triangle"></i> Eng ko'p uchraydigan xatolar</h2>
+
+                <div class="callout callout-warning">
+                    <div class="callout-icon"><i class="fas fa-times"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">1. Tool-first thinking</div>
+                        <p class="callout-text">"Kubernetes o'rnatdik = DevOps qildik" - xato. DevOps - bu madaniyat. Toollar yordamchi. Avval jarayonlarni tuzating.</p>
+                    </div>
+                </div>
+
+                <div class="callout callout-warning">
+                    <div class="callout-icon"><i class="fas fa-times"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">2. Alert fatigue</div>
+                        <p class="callout-text">Juda ko'p alert = hech kim e'tibor bermaydi. Faqat actionable alertlar. Noisy alertlarni tune qiling yoki o'chiring.</p>
+                    </div>
+                </div>
+
+                <div class="callout callout-warning">
+                    <div class="callout-icon"><i class="fas fa-times"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">3. Blame culture</div>
+                        <p class="callout-text">Xato qilgan odamni ayblash = odamlar xatolarni yashiradi. Blameless postmortems - system failures, not people failures.</p>
+                    </div>
+                </div>
+
+                <div class="callout callout-warning">
+                    <div class="callout-icon"><i class="fas fa-times"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">4. Runbook yo'qligi</div>
+                        <p class="callout-text">Alert keldi, lekin nima qilish kerak? On-call engineer panic. Har bir alert uchun runbook yozing.</p>
+                    </div>
+                </div>
+
+                <div class="callout callout-tip">
+                    <div class="callout-icon"><i class="fas fa-check"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">Yechim</div>
+                        <p class="callout-text">SRE prinsiplariga amal qiling: error budget, toil measurement, automation over manual work. "Hope is not a strategy".</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="best-practices">
+                <h2><i class="fas fa-medal"></i> Best practices</h2>
+
+                <ul class="checklist">
+                    <li><i class="fas fa-check"></i> Everything as Code - infra, config, policy, monitoring - hammasi Git'da</li>
+                    <li><i class="fas fa-check"></i> Immutable infrastructure - serverlarni yangilash emas, almashtrish</li>
+                    <li><i class="fas fa-check"></i> Cattle, not pets - serverlar bir xil, almashtiriladigan, special emas</li>
+                    <li><i class="fas fa-check"></i> Shift left - security, testing, quality - boshidan o'ylang</li>
+                    <li><i class="fas fa-check"></i> Blameless postmortems - xatolardan o'rganing, odamlarni ayblamang</li>
+                    <li><i class="fas fa-check"></i> On-call rotation - bir kishi doim mas'ul, rotatsiya bilan</li>
+                    <li><i class="fas fa-check"></i> Error budgets - SLO buzilsa, feature development to'xtaydi, reliability'ga fokus</li>
+                    <li><i class="fas fa-check"></i> Toil automation - takrorlanadigan qo'l ishini avtomatlang</li>
+                    <li><i class="fas fa-check"></i> Chaos engineering - production'da failure simulyatsiya qiling (Netflix Chaos Monkey)</li>
+                    <li><i class="fas fa-check"></i> Documentation - runbooks, architecture diagrams, onboarding guides</li>
+                </ul>
+            </section>
+
+            <section class="section" id="tools">
+                <h2><i class="fas fa-wrench"></i> Asboblar va texnologiyalar</h2>
+
+                <div class="tools-grid">
+                    <span class="tool-badge"><i class="fas fa-boxes"></i> Terraform</span>
+                    <span class="tool-badge"><i class="fas fa-cog"></i> Ansible</span>
+                    <span class="tool-badge"><i class="fab fa-docker"></i> Docker</span>
+                    <span class="tool-badge"><i class="fas fa-dharmachakra"></i> Kubernetes</span>
+                    <span class="tool-badge"><i class="fas fa-chart-line"></i> Prometheus</span>
+                    <span class="tool-badge"><i class="fas fa-chart-area"></i> Grafana</span>
+                    <span class="tool-badge"><i class="fas fa-search"></i> ELK Stack</span>
+                    <span class="tool-badge"><i class="fas fa-route"></i> Jaeger</span>
+                    <span class="tool-badge"><i class="fas fa-key"></i> HashiCorp Vault</span>
+                    <span class="tool-badge"><i class="fas fa-bell"></i> PagerDuty</span>
+                    <span class="tool-badge"><i class="fas fa-dog"></i> Datadog</span>
+                    <span class="tool-badge"><i class="fas fa-network-wired"></i> Istio</span>
+                </div>
+
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-boxes"></i></div>
+                        <h4>Terraform</h4>
+                        <p>IaC standart. AWS, GCP, Azure - hammasi bir tilda. State management, modules.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-chart-line"></i></div>
+                        <h4>Prometheus + Grafana</h4>
+                        <p>Metrics collection va visualization. PromQL, alerting, dashboards.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-key"></i></div>
+                        <h4>HashiCorp Vault</h4>
+                        <p>Secrets management, dynamic credentials, encryption as a service.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="example">
+                <h2><i class="fas fa-laptop-code"></i> Mini misol</h2>
+
+                <p>Terraform bilan AWS EC2 va monitoring:</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">hcl - main.tf</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <div class="code-content">
+<pre><span class="comment"># Terraform - Infrastructure as Code</span>
+
+<span class="keyword">terraform</span> {
+  required_providers {
+    aws = {
+      source  = <span class="string">"hashicorp/aws"</span>
+      version = <span class="string">"~> 5.0"</span>
+    }
+  }
+  
+  backend <span class="string">"s3"</span> {
+    bucket = <span class="string">"my-terraform-state"</span>
+    key    = <span class="string">"prod/terraform.tfstate"</span>
+    region = <span class="string">"us-east-1"</span>
+  }
+}
+
+<span class="keyword">provider</span> <span class="string">"aws"</span> {
+  region = var.aws_region
+}
+
+<span class="comment"># VPC</span>
+<span class="keyword">module</span> <span class="string">"vpc"</span> {
+  source  = <span class="string">"terraform-aws-modules/vpc/aws"</span>
+  version = <span class="string">"5.0.0"</span>
+  
+  name = <span class="string">"${var.project}-vpc"</span>
+  cidr = <span class="string">"10.0.0.0/16"</span>
+  
+  azs             = [<span class="string">"us-east-1a"</span>, <span class="string">"us-east-1b"</span>]
+  private_subnets = [<span class="string">"10.0.1.0/24"</span>, <span class="string">"10.0.2.0/24"</span>]
+  public_subnets  = [<span class="string">"10.0.101.0/24"</span>, <span class="string">"10.0.102.0/24"</span>]
+  
+  enable_nat_gateway = <span class="keyword">true</span>
+  single_nat_gateway = <span class="keyword">true</span>
+  
+  tags = var.common_tags
+}
+
+<span class="comment"># ECS Cluster</span>
+<span class="keyword">resource</span> <span class="string">"aws_ecs_cluster"</span> <span class="string">"main"</span> {
+  name = <span class="string">"${var.project}-cluster"</span>
+  
+  setting {
+    name  = <span class="string">"containerInsights"</span>
+    value = <span class="string">"enabled"</span>
+  }
+  
+  tags = var.common_tags
+}
+
+<span class="comment"># CloudWatch Alarms</span>
+<span class="keyword">resource</span> <span class="string">"aws_cloudwatch_metric_alarm"</span> <span class="string">"high_cpu"</span> {
+  alarm_name          = <span class="string">"${var.project}-high-cpu"</span>
+  comparison_operator = <span class="string">"GreaterThanThreshold"</span>
+  evaluation_periods  = <span class="string">"2"</span>
+  metric_name         = <span class="string">"CPUUtilization"</span>
+  namespace           = <span class="string">"AWS/ECS"</span>
+  period              = <span class="string">"300"</span>
+  statistic           = <span class="string">"Average"</span>
+  threshold           = <span class="string">"80"</span>
+  
+  alarm_actions = [aws_sns_topic.alerts.arn]
+  
+  dimensions = {
+    ClusterName = aws_ecs_cluster.main.name
+  }
+}</pre>
+                    </div>
+                </div>
+
+                <p>Prometheus alert rules:</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">yaml - alert-rules.yml</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <div class="code-content">
+<pre><span class="keyword">groups:</span>
+  - <span class="function">name:</span> application
+    <span class="function">rules:</span>
+      <span class="comment"># High error rate</span>
+      - <span class="function">alert:</span> HighErrorRate
+        <span class="function">expr:</span> |
+          sum(rate(http_requests_total{status=~"5.."}[5m])) 
+          / sum(rate(http_requests_total[5m])) > 0.05
+        <span class="function">for:</span> 5m
+        <span class="function">labels:</span>
+          severity: critical
+        <span class="function">annotations:</span>
+          summary: <span class="string">"High error rate detected"</span>
+          description: <span class="string">"Error rate is {{ $value | humanizePercentage }}"</span>
+          runbook_url: <span class="string">"https://wiki.example.com/runbooks/high-error-rate"</span>
+      
+      <span class="comment"># High latency</span>
+      - <span class="function">alert:</span> HighLatency
+        <span class="function">expr:</span> |
+          histogram_quantile(0.99, 
+            sum(rate(http_request_duration_seconds_bucket[5m])) by (le)
+          ) > 1
+        <span class="function">for:</span> 10m
+        <span class="function">labels:</span>
+          severity: warning
+        <span class="function">annotations:</span>
+          summary: <span class="string">"High latency (p99 > 1s)"</span>
+          description: <span class="string">"P99 latency is {{ $value | humanizeDuration }}"</span>
+      
+      <span class="comment"># Pod not ready</span>
+      - <span class="function">alert:</span> PodNotReady
+        <span class="function">expr:</span> |
+          kube_pod_status_ready{condition="true"} == 0
+        <span class="function">for:</span> 5m
+        <span class="function">labels:</span>
+          severity: warning
+        <span class="function">annotations:</span>
+          summary: <span class="string">"Pod {{ $labels.pod }} not ready"</span></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="security">
+                <div class="security-card">
+                    <h3 class="security-title"><i class="fas fa-shield-alt"></i> Xavfsizlik va ishonchlilik</h3>
+                    <ul class="security-list">
+                        <li><i class="fas fa-lock"></i> Secrets in Vault - hech qachon environment variables'da plaintext. HashiCorp Vault yoki cloud-native.</li>
+                        <li><i class="fas fa-lock"></i> Least privilege - har bir service faqat kerakli permission. IAM roles, RBAC.</li>
+                        <li><i class="fas fa-lock"></i> Network segmentation - public, private, database subnets. Security groups, NACLs.</li>
+                        <li><i class="fas fa-lock"></i> Audit logging - barcha admin amallar loglanadi. CloudTrail, audit logs.</li>
+                        <li><i class="fas fa-lock"></i> Immutable infrastructure - serverlar patch qilinmaydi, almashtiriladi. Golden AMI/images.</li>
+                        <li><i class="fas fa-lock"></i> Compliance as Code - OPA, Sentinel bilan policy enforcement. Automated compliance checks.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="section" id="faq">
+                <h2><i class="fas fa-question-circle"></i> Ko'p so'raladigan savollar (FAQ)</h2>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        DevOps va SRE farqi nima?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>DevOps - madaniyat va amaliyotlar (what). SRE - Google'ning specific implementation (how). SRE = "class that implements DevOps interface". SRE ko'proq metrikalar, SLO, error budgets'ga fokus qiladi.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Terraform va Ansible farqi nima?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Terraform - infrastructure provisioning (server yaratish, VPC, database). Ansible - configuration management (software o'rnatish, config yangilash). Ko'pincha birga ishlatiladi: Terraform infra yaratadi, Ansible configure qiladi.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        On-call rotation qanday tashkil qilinadi?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Haftalik yoki 2 haftalik rotatsiya. Primary + secondary on-call. Kompensatsiya (qo'shimcha to'lov yoki off time). Handoff meeting. PagerDuty, Opsgenie bilan schedule va escalation. Runbooks har alert uchun.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Error budget nima?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>SLO 99.9% = oyda 43 daqiqa downtime "ruxsat etilgan". Bu error budget. Budget tugasa - feature development to'xtaydi, faqat reliability. Budget bo'lsa - risk olish mumkin (yangi feature, experiment).</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Blameless postmortem qanday o'tkaziladi?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>1) Timeline - nima bo'ldi, qachon. 2) Impact - qancha user ta'sirlandi. 3) Root cause - asosiy sabab (system, not person). 4) What went well - yaxshi qilingan ishlar. 5) Action items - takrorlanmasligi uchun nima qilamiz. 72 soat ichida yoziladi.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Toil nima va qanday kamaytiriladi?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Toil - qo'lda bajariladigan, takrorlanadigan, avtomatlashtirilishi mumkin bo'lgan ish. SRE vaqtining 50%dan ko'pi toil bo'lmasligi kerak. Avtomatlashtiring: script, cron, operator pattern. Toil'ni tracking qiling va kamaytirish uchun vaqt ajrating.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Chaos engineering nima?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Production'da kontrollangan failure inject qilish - Netflix Chaos Monkey random server o'chiradi. Maqsad: tizim resilient ekanini isbotlash. Boshlang'ich: staging'da, keyin production'da (low traffic vaqtida). Gremlin, LitmusChaos toollar.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Platform Engineering nima?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>DevOps evolution - internal developer platform (IDP) yaratish. Developer'lar self-service orqali infra oladi, deploy qiladi. Platform team "golden paths" yaratadi. Backstage, Port kabi toollar. "You build it, you run it" enable qilish.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="glossary">
+                <h2><i class="fas fa-book"></i> Glossary (Atamalar lug'ati)</h2>
+
+                <div class="glossary-grid">
+                    <div class="glossary-item">
+                        <span class="glossary-term">IaC</span>
+                        <span class="glossary-def">Infrastructure as Code - infra'ni kod sifatida yozish va version control qilish.</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">SRE</span>
+                        <span class="glossary-def">Site Reliability Engineering - Google'ning DevOps implementatsiyasi, reliability fokus.</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">SLI/SLO/SLA</span>
+                        <span class="glossary-def">Service Level Indicator/Objective/Agreement - o'lchov, maqsad, shartnoma.</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">Error Budget</span>
+                        <span class="glossary-def">SLO dan kelib chiqadigan "ruxsat etilgan" downtime miqdori.</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">Toil</span>
+                        <span class="glossary-def">Qo'lda bajariladigan, takrorlanadigan, avtomatlashtirilishi kerak bo'lgan ish.</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">Postmortem</span>
+                        <span class="glossary-def">Incident'dan keyin blameless tahlil va o'rganish jarayoni.</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">Runbook</span>
+                        <span class="glossary-def">Alert yoki muammo uchun step-by-step ko'rsatmalar hujjati.</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">On-call</span>
+                        <span class="glossary-def">Production muammolariga 24/7 javob berish uchun mas'ul bo'lish davri.</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">Observability</span>
+                        <span class="glossary-def">Tizimni ichidan ko'rish qobiliyati - metrics, logs, traces.</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">Chaos Engineering</span>
+                        <span class="glossary-def">Production'da kontrollangan failure inject qilib resilience tekshirish.</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">Golden Path</span>
+                        <span class="glossary-def">Platform team tomonidan tavsiya etilgan, optimallashtirilgan development yo'li.</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">MTTR</span>
+                        <span class="glossary-def">Mean Time To Recovery - incident'dan tiklash uchun o'rtacha vaqt.</span>
+                    </div>
+                </div>
+            </section>
+
+            <nav class="nav-footer">
+                <a href="cicd.html" class="nav-btn prev">
+                    <i class="fas fa-arrow-left"></i>
+                    <div>
+                        <span class="nav-btn-label">Oldingi</span>
+                        <span class="nav-btn-title">CI/CD</span>
+                    </div>
+                </a>
+                <a href="cloud-deploy.html" class="nav-btn next">
+                    <div>
+                        <span class="nav-btn-label">Keyingi</span>
+                        <span class="nav-btn-title">Cloud Deploy</span>
+                    </div>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </nav>
+        </main>
+
+        <aside class="sidebar-right">
+            <div class="takeaways-card">
+                <h3 class="takeaways-title"><i class="fas fa-star"></i> Key Takeaways</h3>
+                <ul class="takeaways-list">
+                    <li><i class="fas fa-check"></i> DevOps = Culture + Automation + Measurement</li>
+                    <li><i class="fas fa-check"></i> Everything as Code - infra, config, policy</li>
+                    <li><i class="fas fa-check"></i> SLI/SLO/Error budget aniqlang</li>
+                    <li><i class="fas fa-check"></i> Blameless postmortems o'tkazing</li>
+                    <li><i class="fas fa-check"></i> Toil'ni avtomatlang</li>
+                    <li><i class="fas fa-check"></i> Runbooks har alert uchun</li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+
+    <script>
+        const navToggle = document.querySelector('.nav-toggle');
+        const navLinks = document.querySelector('.nav-links');
+
+        navToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            const icon = navToggle.querySelector('i');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
+        });
+
+        const progressBar = document.getElementById('progressBar');
+        
+        window.addEventListener('scroll', () => {
+            const winScroll = document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            progressBar.style.width = scrolled + '%';
+        });
+
+        const faqItems = document.querySelectorAll('.faq-item');
+        
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question');
+            question.addEventListener('click', () => {
+                const isActive = item.classList.contains('active');
+                faqItems.forEach(i => i.classList.remove('active'));
+                if (!isActive) {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        function copyCode(button) {
+            const codeBlock = button.closest('.code-block');
+            const code = codeBlock.querySelector('pre').textContent;
+            
+            navigator.clipboard.writeText(code).then(() => {
+                const originalHTML = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                button.style.color = 'var(--accent-green)';
+                
+                setTimeout(() => {
+                    button.innerHTML = originalHTML;
+                    button.style.color = '';
+                }, 2000);
+            });
+        }
+
+        const tocLinks = document.querySelectorAll('.toc-list a');
+        const sections = document.querySelectorAll('.section');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (window.scrollY >= sectionTop - 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            tocLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
