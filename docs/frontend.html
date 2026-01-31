@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Frontend | From Code to Cloud</title>
-    <meta name="description" content="SPA/SSR, bundler, accessibility, performance va design system - zamonaviy frontend development asoslari">
+    <meta name="description" content="HTML, CSS, JavaScript, React, Vue, Performance, Accessibility - zamonaviy frontend development to'liq qo'llanma">
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,6 +24,9 @@
             --accent-amber: #F59E0B;
             --accent-red: #EF4444;
             --accent-green: #10B981;
+            --accent-blue: #3B82F6;
+            --accent-pink: #EC4899;
+            --accent-orange: #F97316;
             --text-primary: #E8EEF8;
             --text-muted: #A7B1C2;
             --text-dim: #6B7280;
@@ -58,8 +61,8 @@
             width: 100%;
             height: 100%;
             background-image: 
-                radial-gradient(circle at 20% 50%, rgba(39, 215, 196, 0.03) 0%, transparent 50%),
-                radial-gradient(circle at 80% 50%, rgba(124, 92, 255, 0.03) 0%, transparent 50%);
+                radial-gradient(circle at 20% 50%, rgba(124, 92, 255, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(39, 215, 196, 0.03) 0%, transparent 50%);
             pointer-events: none;
             z-index: 0;
         }
@@ -126,7 +129,7 @@
 
         .nav-links a:hover,
         .nav-links a.active {
-            color: var(--accent-teal);
+            color: var(--accent-violet);
         }
 
         .progress-bar {
@@ -135,16 +138,16 @@
             left: 0;
             width: 0%;
             height: 3px;
-            background: linear-gradient(90deg, var(--accent-teal), var(--accent-violet));
+            background: linear-gradient(90deg, var(--accent-violet), var(--accent-teal));
             z-index: 99;
             transition: width 0.1s ease;
         }
 
         .main-layout {
             display: grid;
-            grid-template-columns: 250px 1fr 280px;
+            grid-template-columns: 260px 1fr 280px;
             gap: 2rem;
-            max-width: 1400px;
+            max-width: 1500px;
             margin: 0 auto;
             padding: 5rem 2rem 2rem;
             position: relative;
@@ -157,6 +160,19 @@
             height: fit-content;
             max-height: calc(100vh - 100px);
             overflow-y: auto;
+        }
+
+        .sidebar-left::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .sidebar-left::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .sidebar-left::-webkit-scrollbar-thumb {
+            background: var(--glass-border);
+            border-radius: 4px;
         }
 
         .sidebar-title {
@@ -175,23 +191,23 @@
 
         .toc-list a {
             display: block;
-            padding: 0.5rem 0;
+            padding: 0.4rem 0;
             padding-left: 1rem;
             color: var(--text-dim);
             text-decoration: none;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             border-left: 2px solid var(--glass-border);
             transition: all 0.3s ease;
         }
 
         .toc-list a:hover,
         .toc-list a.active {
-            color: var(--accent-teal);
-            border-left-color: var(--accent-teal);
+            color: var(--accent-violet);
+            border-left-color: var(--accent-violet);
         }
 
         .main-content {
-            max-width: 800px;
+            max-width: 900px;
         }
 
         .breadcrumb {
@@ -210,7 +226,7 @@
         }
 
         .breadcrumb a:hover {
-            color: var(--accent-teal);
+            color: var(--accent-violet);
         }
 
         .breadcrumb i {
@@ -248,7 +264,7 @@
         .hero-tagline {
             font-size: 1.1rem;
             color: var(--text-muted);
-            max-width: 600px;
+            max-width: 700px;
         }
 
         .reading-time {
@@ -258,12 +274,51 @@
             margin-top: 1.5rem;
             font-size: 0.85rem;
             color: var(--text-dim);
+            flex-wrap: wrap;
         }
 
         .reading-time span {
             display: flex;
             align-items: center;
             gap: 0.4rem;
+        }
+
+        .level-badges {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .level-badge {
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .level-badge.beginner {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--accent-green);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .level-badge.junior {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--accent-blue);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .level-badge.middle {
+            background: rgba(124, 92, 255, 0.2);
+            color: var(--accent-violet);
+            border: 1px solid rgba(124, 92, 255, 0.3);
+        }
+
+        .level-badge.senior {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--accent-amber);
+            border: 1px solid rgba(245, 158, 11, 0.3);
         }
 
         .section {
@@ -294,6 +349,13 @@
             font-weight: 600;
             margin: 2rem 0 1rem;
             color: var(--text-primary);
+        }
+
+        .section h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.75rem;
+            color: var(--accent-violet);
         }
 
         .section p {
@@ -348,6 +410,26 @@
 
         .callout-tip .callout-icon {
             background: var(--accent-violet);
+            color: white;
+        }
+
+        .callout-danger {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .callout-danger .callout-icon {
+            background: var(--accent-red);
+            color: white;
+        }
+
+        .callout-success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .callout-success .callout-icon {
+            background: var(--accent-green);
             color: white;
         }
 
@@ -424,8 +506,19 @@
         .code-content .keyword { color: var(--accent-violet); }
         .code-content .string { color: var(--accent-teal); }
         .code-content .function { color: var(--accent-amber); }
+        .code-content .number { color: var(--accent-pink); }
         .code-content .tag { color: var(--accent-red); }
-        .code-content .attr { color: var(--accent-violet); }
+        .code-content .attr { color: var(--accent-orange); }
+        .code-content .value { color: var(--accent-teal); }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85em;
+            background: rgba(124, 92, 255, 0.1);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            color: var(--accent-violet);
+        }
 
         .section ul, .section ol {
             margin: 1rem 0;
@@ -437,9 +530,13 @@
             margin-bottom: 0.5rem;
         }
 
+        .section li strong {
+            color: var(--text-primary);
+        }
+
         .cards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1rem;
             margin: 1.5rem 0;
         }
@@ -458,8 +555,8 @@
         }
 
         .card-icon {
-            width: 40px;
-            height: 40px;
+            width: 44px;
+            height: 44px;
             background: linear-gradient(135deg, rgba(124, 92, 255, 0.2), rgba(39, 215, 196, 0.2));
             border-radius: 10px;
             display: flex;
@@ -467,12 +564,14 @@
             justify-content: center;
             margin-bottom: 1rem;
             color: var(--accent-violet);
+            font-size: 1.2rem;
         }
 
         .card h4 {
             font-size: 0.95rem;
             font-weight: 600;
             margin-bottom: 0.5rem;
+            color: var(--text-primary);
         }
 
         .card p {
@@ -481,39 +580,101 @@
             margin: 0;
         }
 
-        .steps {
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
             margin: 1.5rem 0;
         }
 
-        .step {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
+        .tech-item {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
         }
 
-        .step-number {
-            width: 32px;
-            height: 32px;
-            background: linear-gradient(135deg, var(--accent-violet), var(--accent-teal));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.85rem;
-            font-weight: 600;
-            flex-shrink: 0;
+        .tech-item:hover {
+            border-color: var(--accent-violet);
         }
 
-        .step-content h4 {
+        .tech-item i {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .tech-item.html i { color: #E34F26; }
+        .tech-item.css i { color: #1572B6; }
+        .tech-item.js i { color: #F7DF1E; }
+
+        .tech-item h4 {
             font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
         }
 
-        .step-content p {
-            font-size: 0.9rem;
-            color: var(--text-muted);
+        .tech-item p {
+            font-size: 0.8rem;
+            color: var(--text-dim);
             margin: 0;
+        }
+
+        .framework-comparison {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .framework-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .framework-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .framework-card.react { border-top: 3px solid #61DAFB; }
+        .framework-card.vue { border-top: 3px solid #4FC08D; }
+        .framework-card.angular { border-top: 3px solid #DD0031; }
+        .framework-card.svelte { border-top: 3px solid #FF3E00; }
+
+        .framework-card i {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .framework-card.react i { color: #61DAFB; }
+        .framework-card.vue i { color: #4FC08D; }
+        .framework-card.angular i { color: #DD0031; }
+        .framework-card.svelte i { color: #FF3E00; }
+
+        .framework-card h4 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .framework-card p {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            margin: 0;
+        }
+
+        .framework-card .stats {
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--glass-border);
+            font-size: 0.7rem;
+            color: var(--text-muted);
         }
 
         .checklist {
@@ -532,6 +693,7 @@
             border-radius: 8px;
             margin-bottom: 0.5rem;
             font-size: 0.9rem;
+            color: var(--text-muted);
         }
 
         .checklist li i {
@@ -579,7 +741,7 @@
         .comparison-table td {
             padding: 1rem;
             text-align: left;
-            border-bottom: 1px solid var(--glass-border);
+            border: 1px solid var(--glass-border);
         }
 
         .comparison-table th {
@@ -593,7 +755,133 @@
         }
 
         .comparison-table tr:hover td {
-            background: rgba(255, 255, 255, 0.02);
+            background: var(--glass-bg);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, rgba(124, 92, 255, 0.1), rgba(39, 215, 196, 0.1));
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-violet), var(--accent-teal));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .metric-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        .metric-desc {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            margin-top: 0.5rem;
+        }
+
+        .a11y-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .a11y-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1.25rem;
+        }
+
+        .a11y-card h4 {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .a11y-card h4 i {
+            color: var(--accent-teal);
+        }
+
+        .a11y-card p {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            margin: 0;
+        }
+
+        .trend-grid {
+            display: grid;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .trend-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            transition: all 0.3s ease;
+        }
+
+        .trend-item:hover {
+            border-color: var(--accent-violet);
+        }
+
+        .trend-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, rgba(124, 92, 255, 0.2), rgba(39, 215, 196, 0.2));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-violet);
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .trend-content h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .trend-content p {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            margin: 0;
+        }
+
+        .trend-badge {
+            margin-left: auto;
+            padding: 0.25rem 0.75rem;
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--accent-green);
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
         }
 
         .faq-item {
@@ -641,7 +929,7 @@
 
         .faq-item.active .faq-answer {
             padding: 1rem 1.25rem;
-            max-height: 500px;
+            max-height: 1000px;
         }
 
         .faq-answer p {
@@ -658,7 +946,7 @@
 
         .glossary-item {
             display: grid;
-            grid-template-columns: 150px 1fr;
+            grid-template-columns: 140px 1fr;
             gap: 1rem;
             padding: 1rem;
             background: var(--glass-bg);
@@ -669,7 +957,7 @@
         .glossary-term {
             font-weight: 600;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--accent-violet);
         }
 
@@ -689,6 +977,7 @@
             border: 1px solid var(--glass-border);
             border-radius: 16px;
             padding: 1.5rem;
+            margin-bottom: 1.5rem;
         }
 
         .takeaways-title {
@@ -713,7 +1002,7 @@
             display: flex;
             gap: 0.5rem;
             padding: 0.5rem 0;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--text-muted);
             border-bottom: 1px solid var(--glass-border);
         }
@@ -725,6 +1014,47 @@
         .takeaways-list li i {
             color: var(--accent-violet);
             margin-top: 0.2rem;
+        }
+
+        .resources-card {
+            background: linear-gradient(135deg, rgba(124, 92, 255, 0.1), rgba(39, 215, 196, 0.1));
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .resources-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .resources-title i {
+            color: var(--accent-violet);
+        }
+
+        .resource-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .resource-link:hover {
+            color: var(--accent-violet);
+        }
+
+        .resource-link i {
+            width: 20px;
+            text-align: center;
         }
 
         .security-card {
@@ -812,6 +1142,15 @@
             .sidebar-right {
                 display: none;
             }
+
+            .tech-stack,
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .a11y-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 768px) {
@@ -829,7 +1168,7 @@
                 top: 100%;
                 left: 0;
                 right: 0;
-                background: rgba(11, 16, 32, 0.95);
+                background: rgba(11, 16, 32, 0.98);
                 backdrop-filter: blur(20px);
                 flex-direction: column;
                 padding: 1rem;
@@ -852,6 +1191,10 @@
                 font-size: 1.75rem;
             }
 
+            .framework-comparison {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
             .glossary-item {
                 grid-template-columns: 1fr;
             }
@@ -868,6 +1211,10 @@
 
             .nav-btn {
                 justify-content: center;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -902,13 +1249,23 @@
             <ul class="toc-list">
                 <li><a href="#what-is">Frontend nima?</a></li>
                 <li><a href="#why-needed">Nega kerak?</a></li>
-                <li><a href="#concepts">Asosiy tushunchalar</a></li>
-                <li><a href="#process">Amaliy jarayon</a></li>
-                <li><a href="#mistakes">Ko'p uchraydigan xatolar</a></li>
+                <li><a href="#html-css-js">HTML, CSS, JS asoslari</a></li>
+                <li><a href="#css-deep">CSS chuqurroq</a></li>
+                <li><a href="#javascript">JavaScript zamonaviy</a></li>
+                <li><a href="#frameworks">Frameworklar</a></li>
+                <li><a href="#state-management">State Management</a></li>
+                <li><a href="#build-tools">Build Tools</a></li>
+                <li><a href="#rendering">SPA vs SSR vs SSG</a></li>
+                <li><a href="#performance">Performance</a></li>
+                <li><a href="#accessibility">Accessibility</a></li>
+                <li><a href="#testing">Testing</a></li>
+                <li><a href="#api-integration">API Integration</a></li>
+                <li><a href="#design-system">Design System</a></li>
+                <li><a href="#trends-2024">2024 Trendlari</a></li>
+                <li><a href="#security">Xavfsizlik</a></li>
+                <li><a href="#mistakes">Ko'p xatolar</a></li>
                 <li><a href="#best-practices">Best practices</a></li>
                 <li><a href="#tools">Asboblar</a></li>
-                <li><a href="#example">Mini misol</a></li>
-                <li><a href="#security">Xavfsizlik</a></li>
                 <li><a href="#faq">FAQ</a></li>
                 <li><a href="#glossary">Glossary</a></li>
             </ul>
@@ -924,356 +1281,116 @@
             <section class="hero">
                 <div class="hero-badge">
                     <i class="fas fa-palette"></i>
-                    <span>2-bosqich</span>
+                    <span>02-bosqich</span>
                 </div>
-                <h1>Frontend</h1>
-                <p class="hero-tagline">Foydalanuvchi ko'radigan va muloqot qiladigan qism - zamonaviy web interfeyslarni yaratish san'ati.</p>
+                <h1>Frontend Development</h1>
+                <p class="hero-tagline">Foydalanuvchi ko'radigan va muloqot qiladigan qism - HTML, CSS, JavaScript dan React, Vue, Performance va Accessibility gacha to'liq qo'llanma.</p>
                 <div class="reading-time">
-                    <span><i class="fas fa-clock"></i> 18 daqiqa o'qish</span>
-                    <span><i class="fas fa-book"></i> O'rta daraja</span>
+                    <span><i class="fas fa-clock"></i> 45 daqiqa o'qish</span>
+                    <span><i class="fas fa-layer-group"></i> 21 ta mavzu</span>
+                    <span><i class="fas fa-code"></i> 20+ misol</span>
+                </div>
+                <div class="level-badges">
+                    <span class="level-badge beginner">Boshlang'ich</span>
+                    <span class="level-badge junior">Junior</span>
+                    <span class="level-badge middle">Middle</span>
+                    <span class="level-badge senior">Senior</span>
                 </div>
             </section>
 
+            <!-- What Is Section -->
             <section class="section" id="what-is">
                 <h2><i class="fas fa-question-circle"></i> Frontend nima?</h2>
                 <p>Frontend - bu foydalanuvchi bevosita ko'radigan va muloqot qiladigan qism. Brauzerda ochilgan veb-sahifa, mobil ilovaning ekrani, hatto bankomatning interfeysi - bularning barchasi frontend hisoblanadi.</p>
                 
-                <p>Frontend development quyidagi asosiy texnologiyalarni o'z ichiga oladi:</p>
+                <p>Oddiy qilib aytganda:</p>
                 <ul>
-                    <li><strong>HTML</strong> - sahifaning strukturasi (skelet)</li>
-                    <li><strong>CSS</strong> - dizayn va stillar (tashqi ko'rinish)</li>
-                    <li><strong>JavaScript</strong> - interaktivlik va dinamik xatti-harakatlar</li>
-                </ul>
-
-                <p>Zamonaviy frontend esa bundan ham kengroq:</p>
-                <ul>
-                    <li>React, Vue, Angular kabi frameworklar</li>
-                    <li>Build tools va bundlerlar (Vite, Webpack)</li>
-                    <li>State management (Redux, Pinia)</li>
-                    <li>Testing va optimization</li>
+                    <li><strong>Backend</strong> - oshxona (ovqat tayyorlanadi, lekin ko'rinmaydi)</li>
+                    <li><strong>Frontend</strong> - restoran zali (mijoz ko'radi, muloqot qiladi)</li>
+                    <li><strong>API</strong> - ofitsiant (oshxona va zal orasida aloqa)</li>
                 </ul>
 
                 <div class="callout callout-info">
                     <div class="callout-icon"><i class="fas fa-info"></i></div>
                     <div class="callout-content">
-                        <div class="callout-title">Bilasizmi?</div>
-                        <p class="callout-text">Frontend va Backend o'rtasidagi farq: Frontend foydalanuvchi brauzerida ishlaydi, Backend esa serverda. Frontend - "uy fasadi", Backend - "uy ichidagi kommunikatsiyalar".</p>
+                        <div class="callout-title">Frontend = UX + UI + Code</div>
+                        <p class="callout-text">Yaxshi frontend dasturchisi faqat kod yozmaydi - u foydalanuvchi tajribasini (UX), vizual dizaynni (UI) va texnik implementatsiyani birlashtiradi.</p>
                     </div>
                 </div>
             </section>
 
+            <!-- Why Needed Section -->
             <section class="section" id="why-needed">
                 <h2><i class="fas fa-lightbulb"></i> Nega kerak?</h2>
-                <p>Yaxshi frontend - bu biznesning yuzasi. Foydalanuvchilar birinchi bo'lib frontendni ko'rishadi va shu asosida qaror qilishadi:</p>
+                <p>Frontend - bu biznesning yuzasi. Foydalanuvchilar birinchi bo'lib frontendni ko'rishadi va shu asosida qaror qilishadi.</p>
+
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-value">0.05s</div>
+                        <div class="metric-label">Birinchi taassurot</div>
+                        <div class="metric-desc">Foydalanuvchi shu vaqtda sayt haqida fikr qiladi</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">53%</div>
+                        <div class="metric-label">Bounce rate</div>
+                        <div class="metric-desc">3+ soniya yuklanish = foydalanuvchi ketadi</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">1%</div>
+                        <div class="metric-label">Sotuvlar pasayishi</div>
+                        <div class="metric-desc">Har 100ms kechikish (Amazon statistikasi)</div>
+                    </div>
+                </div>
 
                 <div class="cards-grid">
                     <div class="card">
                         <div class="card-icon"><i class="fas fa-user-check"></i></div>
                         <h4>Birinchi taassurot</h4>
-                        <p>Foydalanuvchilar 0.05 soniyada sahifa haqida fikr qiladi. Yomon dizayn = ishonchsizlik.</p>
-                    </div>
-                    <div class="card">
-                        <div class="card-icon"><i class="fas fa-tachometer-alt"></i></div>
-                        <h4>Conversion rate</h4>
-                        <p>Amazon ma'lumotlariga ko'ra, 100ms kechikish sotuvlarni 1% ga kamaytiradi.</p>
-                    </div>
-                    <div class="card">
-                        <div class="card-icon"><i class="fas fa-universal-access"></i></div>
-                        <h4>Accessibility</h4>
-                        <p>Dunyo aholisining 15%i nogironlikka ega. Accessible bo'lmagan sayt ularni yo'qotadi.</p>
+                        <p>Yomon dizayn = ishonchsizlik. Foydalanuvchi 3 soniyada qaror qiladi.</p>
                     </div>
                     <div class="card">
                         <div class="card-icon"><i class="fas fa-mobile-alt"></i></div>
                         <h4>Mobile-first</h4>
-                        <p>Internet trafikining 60%+ dan ko'pi mobil qurilmalardan. Responsive bo'lishi shart.</p>
-                    </div>
-                </div>
-
-                <div class="callout callout-warning">
-                    <div class="callout-icon"><i class="fas fa-exclamation"></i></div>
-                    <div class="callout-content">
-                        <div class="callout-title">Statistika</div>
-                        <p class="callout-text">Google tadqiqotiga ko'ra, sahifa yuklanishi 3 soniyadan oshsa, foydalanuvchilarning 53%i saytni tark etadi. Performance = pul.</p>
-                    </div>
-                </div>
-            </section>
-
-            <section class="section" id="concepts">
-                <h2><i class="fas fa-book-open"></i> Asosiy tushunchalar</h2>
-
-                <h3>SPA vs MPA vs SSR</h3>
-                <p>Veb-ilovalar uchta asosiy arxitekturada qurilishi mumkin:</p>
-
-                <table class="comparison-table">
-                    <thead>
-                        <tr>
-                            <th>Turi</th>
-                            <th>Tavsifi</th>
-                            <th>Afzalligi</th>
-                            <th>Kamchiligi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>SPA</strong></td>
-                            <td>Single Page Application - bitta HTML, JavaScript orqali kontentni almashtiradi</td>
-                            <td>Tez navigatsiya, yaxshi UX</td>
-                            <td>SEO qiyin, initial load sekin</td>
-                        </tr>
-                        <tr>
-                            <td><strong>MPA</strong></td>
-                            <td>Multi Page Application - har bir sahifa alohida HTML fayl</td>
-                            <td>Yaxshi SEO, oddiy</td>
-                            <td>Har safar to'liq reload, sekin</td>
-                        </tr>
-                        <tr>
-                            <td><strong>SSR</strong></td>
-                            <td>Server Side Rendering - serverda HTML yaratiladi</td>
-                            <td>Yaxshi SEO + tez FCP</td>
-                            <td>Server yuklamasi, murakkab</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <h3>Component-Based Architecture</h3>
-                <p>Zamonaviy frontend komponentlarga asoslangan. Har bir UI qismi (tugma, modal, card) alohida komponent sifatida yoziladi:</p>
-                <ul>
-                    <li><strong>Reusability</strong> - bir marta yozib, ko'p joyda ishlatish</li>
-                    <li><strong>Maintainability</strong> - bir joyni o'zgartirish barchasiga ta'sir qiladi</li>
-                    <li><strong>Testing</strong> - har bir komponentni alohida test qilish</li>
-                </ul>
-
-                <h3>Design System</h3>
-                <p>Katta loyihalarda barcha UI elementlari bitta tizimga bo'ysunadi:</p>
-                <ul>
-                    <li>Ranglar palitrasi (colors)</li>
-                    <li>Tipografiya (fonts, sizes)</li>
-                    <li>Spacing va grid</li>
-                    <li>Komponentlar kutubxonasi</li>
-                    <li>Ikonlar to'plami</li>
-                </ul>
-
-                <h3>Performance Optimization</h3>
-                <p>Tez sahifa - yaxshi UX va SEO. Asosiy optimizatsiya usullari:</p>
-                <ul>
-                    <li><strong>Code splitting</strong> - faqat kerakli kodni yuklash</li>
-                    <li><strong>Lazy loading</strong> - rasmlar va komponentlarni kerak bo'lganda yuklash</li>
-                    <li><strong>Minification</strong> - CSS/JS fayllarni kichiklashtirish</li>
-                    <li><strong>Caching</strong> - brauzer keshidan foydalanish</li>
-                    <li><strong>CDN</strong> - statik fayllarni tez tarqatish</li>
-                </ul>
-            </section>
-
-            <section class="section" id="process">
-                <h2><i class="fas fa-tasks"></i> Amaliy jarayon (step-by-step)</h2>
-
-                <div class="steps">
-                    <div class="step">
-                        <div class="step-number">1</div>
-                        <div class="step-content">
-                            <h4>Loyiha sozlash</h4>
-                            <p>Vite, Create React App yoki Next.js bilan yangi loyiha yarating. Linter, formatter sozlang.</p>
-                        </div>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">2</div>
-                        <div class="step-content">
-                            <h4>Design system yaratish</h4>
-                            <p>Ranglar, shriftlar, spacing ni aniqlang. Tailwind CSS yoki styled-components tanlang.</p>
-                        </div>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">3</div>
-                        <div class="step-content">
-                            <h4>Komponentlar yaratish</h4>
-                            <p>Button, Input, Card kabi asosiy komponentlardan boshlang. Atomic design metodologiyasiga amal qiling.</p>
-                        </div>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">4</div>
-                        <div class="step-content">
-                            <h4>Routing sozlash</h4>
-                            <p>React Router, Vue Router yoki Next.js routing orqali sahifalar navigatsiyasini yarating.</p>
-                        </div>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">5</div>
-                        <div class="step-content">
-                            <h4>API integratsiya</h4>
-                            <p>Backend bilan bog'lanish: fetch, axios yoki React Query orqali ma'lumotlarni olish.</p>
-                        </div>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">6</div>
-                        <div class="step-content">
-                            <h4>Testing</h4>
-                            <p>Unit testlar (Jest), integration testlar (Testing Library), E2E testlar (Playwright) yozing.</p>
-                        </div>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">7</div>
-                        <div class="step-content">
-                            <h4>Optimization va deploy</h4>
-                            <p>Lighthouse orqali tekshiring, optimizatsiya qiling, Vercel/Netlify ga deploy qiling.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="section" id="mistakes">
-                <h2><i class="fas fa-exclamation-triangle"></i> Eng ko'p uchraydigan xatolar</h2>
-
-                <div class="callout callout-warning">
-                    <div class="callout-icon"><i class="fas fa-times"></i></div>
-                    <div class="callout-content">
-                        <div class="callout-title">1. Accessibility e'tiborsiz qoldiriladi</div>
-                        <p class="callout-text">Ko'p dasturchilar alt attributlarini, semantic HTML ni, keyboard navigatsiyani unutadi. Bu foydalanuvchilarning katta qismini yo'qotishga olib keladi.</p>
-                    </div>
-                </div>
-
-                <div class="callout callout-warning">
-                    <div class="callout-icon"><i class="fas fa-times"></i></div>
-                    <div class="callout-content">
-                        <div class="callout-title">2. Over-engineering</div>
-                        <p class="callout-text">Oddiy landing page uchun Redux, GraphQL, Microservices kerak emas. Loyiha hajmiga mos texnologiya tanlang.</p>
-                    </div>
-                </div>
-
-                <div class="callout callout-warning">
-                    <div class="callout-icon"><i class="fas fa-times"></i></div>
-                    <div class="callout-content">
-                        <div class="callout-title">3. Mobile-ni oxirgi o'ringa qo'yish</div>
-                        <p class="callout-text">"Keyin mobile qilamiz" yondashuvi xato. Mobile-first yondashuv bilan boshlang.</p>
-                    </div>
-                </div>
-
-                <div class="callout callout-warning">
-                    <div class="callout-icon"><i class="fas fa-times"></i></div>
-                    <div class="callout-content">
-                        <div class="callout-title">4. Bundler konfiguratsiyasini tushunmaslik</div>
-                        <p class="callout-text">Vite/Webpack qanday ishlashini tushunmasdan ishlatish muammolarga olib keladi. Asoslarini o'rganing.</p>
-                    </div>
-                </div>
-
-                <div class="callout callout-tip">
-                    <div class="callout-icon"><i class="fas fa-check"></i></div>
-                    <div class="callout-content">
-                        <div class="callout-title">Maslahat</div>
-                        <p class="callout-text">Har bir loyihada Lighthouse audit o'tkazing. Performance, Accessibility, Best Practices, SEO ballari 90+ bo'lishiga harakat qiling.</p>
-                    </div>
-                </div>
-            </section>
-
-            <section class="section" id="best-practices">
-                <h2><i class="fas fa-medal"></i> Best practices</h2>
-
-                <ul class="checklist">
-                    <li><i class="fas fa-check"></i> Semantic HTML ishlatish: div o'rniga section, article, nav, header</li>
-                    <li><i class="fas fa-check"></i> Har bir img tagida alt attribute bo'lsin</li>
-                    <li><i class="fas fa-check"></i> CSS-in-JS yoki Tailwind bilan scoped styles yarating</li>
-                    <li><i class="fas fa-check"></i> Komponentlarni kichik va reusable qiling (Single Responsibility)</li>
-                    <li><i class="fas fa-check"></i> Environment variablelarni .env faylda saqlang</li>
-                    <li><i class="fas fa-check"></i> Error boundaries bilan xatolarni tutib oling</li>
-                    <li><i class="fas fa-check"></i> React.memo, useMemo, useCallback bilan keraksiz re-renderlarni oldini oling</li>
-                    <li><i class="fas fa-check"></i> TypeScript ishlatish - runtime xatolarini compile vaqtida toping</li>
-                </ul>
-            </section>
-
-            <section class="section" id="tools">
-                <h2><i class="fas fa-wrench"></i> Asboblar va texnologiyalar</h2>
-
-                <div class="tools-grid">
-                    <span class="tool-badge"><i class="fab fa-react"></i> React</span>
-                    <span class="tool-badge"><i class="fab fa-vuejs"></i> Vue.js</span>
-                    <span class="tool-badge"><i class="fab fa-angular"></i> Angular</span>
-                    <span class="tool-badge"><i class="fas fa-bolt"></i> Vite</span>
-                    <span class="tool-badge"><i class="fas fa-box"></i> Webpack</span>
-                    <span class="tool-badge"><i class="fas fa-wind"></i> Tailwind CSS</span>
-                    <span class="tool-badge"><i class="fab fa-sass"></i> Sass/SCSS</span>
-                    <span class="tool-badge"><i class="fas fa-vial"></i> Jest</span>
-                    <span class="tool-badge"><i class="fas fa-theater-masks"></i> Playwright</span>
-                    <span class="tool-badge"><i class="fas fa-book"></i> Storybook</span>
-                    <span class="tool-badge"><i class="fas fa-layer-group"></i> Redux</span>
-                    <span class="tool-badge"><i class="fas fa-file-code"></i> TypeScript</span>
-                </div>
-
-                <div class="cards-grid">
-                    <div class="card">
-                        <div class="card-icon"><i class="fab fa-react"></i></div>
-                        <h4>React + Next.js</h4>
-                        <p>Eng mashhur frontend stack. SSR, SSG, API routes - hammasi bir joyda.</p>
+                        <p>Trafikning 60%+ mobil. Responsive bo'lmasa, foydalanuvchilarni yo'qotasiz.</p>
                     </div>
                     <div class="card">
-                        <div class="card-icon"><i class="fas fa-bolt"></i></div>
-                        <h4>Vite</h4>
-                        <p>Lightning fast dev server. Webpack ga zamonaviy alternativa.</p>
+                        <div class="card-icon"><i class="fas fa-universal-access"></i></div>
+                        <h4>Accessibility</h4>
+                        <p>15% odamlar nogironlikka ega. A11y - huquqiy talab va katta bozor.</p>
                     </div>
                     <div class="card">
-                        <div class="card-icon"><i class="fas fa-wind"></i></div>
-                        <h4>Tailwind CSS</h4>
-                        <p>Utility-first CSS framework. Tez prototyping va consistent dizayn.</p>
+                        <div class="card-icon"><i class="fas fa-search"></i></div>
+                        <h4>SEO</h4>
+                        <p>Google Core Web Vitals ranking faktor. Tez sayt = yuqori o'rin.</p>
                     </div>
                 </div>
             </section>
 
-            <section class="section" id="example">
-                <h2><i class="fas fa-laptop-code"></i> Mini misol</h2>
+            <!-- HTML CSS JS Basics -->
+            <section class="section" id="html-css-js">
+                <h2><i class="fas fa-layer-group"></i> HTML, CSS, JavaScript asoslari</h2>
+                <p>Frontend uchta asosiy texnologiyaga qurilgan - ularni "web trio" deb atashadi:</p>
 
-                <p>React komponent misoli (TypeScript bilan):</p>
-
-                <div class="code-block">
-                    <div class="code-header">
-                        <span class="code-lang">tsx - Button.tsx</span>
-                        <button class="code-copy" onclick="copyCode(this)">
-                            <i class="fas fa-copy"></i> Copy
-                        </button>
+                <div class="tech-stack">
+                    <div class="tech-item html">
+                        <i class="fab fa-html5"></i>
+                        <h4>HTML</h4>
+                        <p>Struktura (skelet)</p>
                     </div>
-                    <div class="code-content">
-<pre><span class="keyword">import</span> { <span class="function">ButtonHTMLAttributes</span> } <span class="keyword">from</span> <span class="string">'react'</span>;
-
-<span class="keyword">interface</span> ButtonProps <span class="keyword">extends</span> ButtonHTMLAttributes&lt;HTMLButtonElement&gt; {
-  variant?: <span class="string">'primary'</span> | <span class="string">'secondary'</span> | <span class="string">'danger'</span>;
-  size?: <span class="string">'sm'</span> | <span class="string">'md'</span> | <span class="string">'lg'</span>;
-  isLoading?: boolean;
-}
-
-<span class="keyword">export function</span> <span class="function">Button</span>({
-  children,
-  variant = <span class="string">'primary'</span>,
-  size = <span class="string">'md'</span>,
-  isLoading,
-  disabled,
-  className,
-  ...props
-}: ButtonProps) {
-  <span class="keyword">const</span> baseStyles = <span class="string">'rounded-lg font-medium transition-colors'</span>;
-  
-  <span class="keyword">const</span> variants = {
-    primary: <span class="string">'bg-teal-500 text-white hover:bg-teal-600'</span>,
-    secondary: <span class="string">'bg-gray-200 text-gray-800 hover:bg-gray-300'</span>,
-    danger: <span class="string">'bg-red-500 text-white hover:bg-red-600'</span>,
-  };
-  
-  <span class="keyword">const</span> sizes = {
-    sm: <span class="string">'px-3 py-1.5 text-sm'</span>,
-    md: <span class="string">'px-4 py-2 text-base'</span>,
-    lg: <span class="string">'px-6 py-3 text-lg'</span>,
-  };
-
-  <span class="keyword">return</span> (
-    <span class="tag">&lt;button</span>
-      <span class="attr">className</span>={<span class="string">`${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`</span>}
-      <span class="attr">disabled</span>={disabled || isLoading}
-      {...props}
-    <span class="tag">&gt;</span>
-      {isLoading ? <span class="string">'Loading...'</span> : children}
-    <span class="tag">&lt;/button&gt;</span>
-  );
-}</pre>
+                    <div class="tech-item css">
+                        <i class="fab fa-css3-alt"></i>
+                        <h4>CSS</h4>
+                        <p>Dizayn (tashqi ko'rinish)</p>
+                    </div>
+                    <div class="tech-item js">
+                        <i class="fab fa-js-square"></i>
+                        <h4>JavaScript</h4>
+                        <p>Interaktivlik (xatti-harakat)</p>
                     </div>
                 </div>
 
-                <p>Tailwind CSS bilan responsive grid:</p>
+                <h3>HTML - Semantic Tags</h3>
+                <p>To'g'ri HTML yozish SEO va Accessibility uchun muhim:</p>
 
                 <div class="code-block">
                     <div class="code-header">
@@ -1283,33 +1400,956 @@
                         </button>
                     </div>
                     <div class="code-content">
-<pre><span class="comment">&lt;!-- Responsive grid: 1 col mobile, 2 cols tablet, 3 cols desktop --&gt;</span>
-<span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="string">"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"</span><span class="tag">&gt;</span>
-  <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="string">"bg-white rounded-xl shadow-lg p-6"</span><span class="tag">&gt;</span>
-    <span class="tag">&lt;h3</span> <span class="attr">class</span>=<span class="string">"text-xl font-bold text-gray-900"</span><span class="tag">&gt;</span>Card 1<span class="tag">&lt;/h3&gt;</span>
-    <span class="tag">&lt;p</span> <span class="attr">class</span>=<span class="string">"text-gray-600 mt-2"</span><span class="tag">&gt;</span>Description...<span class="tag">&lt;/p&gt;</span>
-  <span class="tag">&lt;/div&gt;</span>
-  <span class="comment">&lt;!-- More cards... --&gt;</span>
-<span class="tag">&lt;/div&gt;</span></pre>
+<pre><span class="comment">&lt;!-- ❌ Yomon - faqat div ishlatish --&gt;</span>
+<span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="value">"header"</span><span class="tag">&gt;</span>...<span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="value">"nav"</span><span class="tag">&gt;</span>...<span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="value">"content"</span><span class="tag">&gt;</span>...<span class="tag">&lt;/div&gt;</span>
+
+<span class="comment">&lt;!-- ✅ Yaxshi - semantic HTML --&gt;</span>
+<span class="tag">&lt;header&gt;</span>
+    <span class="tag">&lt;nav</span> <span class="attr">aria-label</span>=<span class="value">"Main navigation"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;ul&gt;</span>
+            <span class="tag">&lt;li&gt;&lt;a</span> <span class="attr">href</span>=<span class="value">"/"</span><span class="tag">&gt;</span>Home<span class="tag">&lt;/a&gt;&lt;/li&gt;</span>
+        <span class="tag">&lt;/ul&gt;</span>
+    <span class="tag">&lt;/nav&gt;</span>
+<span class="tag">&lt;/header&gt;</span>
+
+<span class="tag">&lt;main&gt;</span>
+    <span class="tag">&lt;article&gt;</span>
+        <span class="tag">&lt;h1&gt;</span>Sarlavha<span class="tag">&lt;/h1&gt;</span>
+        <span class="tag">&lt;section&gt;</span>...<span class="tag">&lt;/section&gt;</span>
+    <span class="tag">&lt;/article&gt;</span>
+    <span class="tag">&lt;aside&gt;</span>Sidebar<span class="tag">&lt;/aside&gt;</span>
+<span class="tag">&lt;/main&gt;</span>
+
+<span class="tag">&lt;footer&gt;</span>...<span class="tag">&lt;/footer&gt;</span></pre>
+                    </div>
+                </div>
+
+                <h3>Muhim HTML elementlari</h3>
+                <ul>
+                    <li><code>&lt;header&gt;</code>, <code>&lt;footer&gt;</code>, <code>&lt;nav&gt;</code> - sahifa qismlari</li>
+                    <li><code>&lt;main&gt;</code>, <code>&lt;article&gt;</code>, <code>&lt;section&gt;</code> - kontent tuzilishi</li>
+                    <li><code>&lt;figure&gt;</code>, <code>&lt;figcaption&gt;</code> - rasm va izoh</li>
+                    <li><code>&lt;time&gt;</code>, <code>&lt;address&gt;</code> - maxsus ma'lumotlar</li>
+                    <li><code>&lt;button&gt;</code> vs <code>&lt;a&gt;</code> - action vs navigation</li>
+                </ul>
+            </section>
+
+            <!-- CSS Deep Dive -->
+            <section class="section" id="css-deep">
+                <h2><i class="fab fa-css3-alt"></i> CSS chuqurroq</h2>
+                
+                <h3>Flexbox va Grid</h3>
+                <p>Zamonaviy layout uchun ikki asosiy usul:</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">css</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <div class="code-content">
+<pre><span class="comment">/* FLEXBOX - bir o'qli layout */</span>
+.<span class="function">flex-container</span> {
+    <span class="attr">display</span>: <span class="keyword">flex</span>;
+    <span class="attr">justify-content</span>: <span class="keyword">space-between</span>;  <span class="comment">/* gorizontal */</span>
+    <span class="attr">align-items</span>: <span class="keyword">center</span>;           <span class="comment">/* vertikal */</span>
+    <span class="attr">gap</span>: <span class="number">1rem</span>;
+    <span class="attr">flex-wrap</span>: <span class="keyword">wrap</span>;               <span class="comment">/* keyingi qatorga o'tish */</span>
+}
+
+<span class="comment">/* CSS GRID - ikki o'qli layout */</span>
+.<span class="function">grid-container</span> {
+    <span class="attr">display</span>: <span class="keyword">grid</span>;
+    <span class="attr">grid-template-columns</span>: <span class="keyword">repeat</span>(<span class="number">3</span>, <span class="number">1fr</span>);  <span class="comment">/* 3 teng ustun */</span>
+    <span class="attr">grid-template-columns</span>: <span class="keyword">repeat</span>(<span class="keyword">auto-fit</span>, <span class="keyword">minmax</span>(<span class="number">250px</span>, <span class="number">1fr</span>));
+    <span class="attr">gap</span>: <span class="number">2rem</span>;
+}
+
+<span class="comment">/* Responsive grid */</span>
+.<span class="function">responsive-grid</span> {
+    <span class="attr">display</span>: <span class="keyword">grid</span>;
+    <span class="attr">grid-template-columns</span>: <span class="number">1fr</span>;
+}
+
+<span class="keyword">@media</span> (<span class="attr">min-width</span>: <span class="number">768px</span>) {
+    .<span class="function">responsive-grid</span> {
+        <span class="attr">grid-template-columns</span>: <span class="keyword">repeat</span>(<span class="number">2</span>, <span class="number">1fr</span>);
+    }
+}
+
+<span class="keyword">@media</span> (<span class="attr">min-width</span>: <span class="number">1024px</span>) {
+    .<span class="function">responsive-grid</span> {
+        <span class="attr">grid-template-columns</span>: <span class="keyword">repeat</span>(<span class="number">3</span>, <span class="number">1fr</span>);
+    }
+}</pre>
+                    </div>
+                </div>
+
+                <h3>CSS Methodologiyalari</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Metodologiya</th>
+                            <th>Tavsifi</th>
+                            <th>Misol</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>BEM</strong></td>
+                            <td>Block Element Modifier - eng mashhur</td>
+                            <td><code>.card__title--active</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tailwind</strong></td>
+                            <td>Utility-first CSS framework</td>
+                            <td><code>class="flex items-center p-4"</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>CSS Modules</strong></td>
+                            <td>Scoped CSS (React/Vue)</td>
+                            <td><code>import styles from './Button.module.css'</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>CSS-in-JS</strong></td>
+                            <td>JavaScript ichida CSS</td>
+                            <td>styled-components, Emotion</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>CSS Custom Properties (Variables)</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">css</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <div class="code-content">
+<pre><span class="comment">/* Root da global o'zgaruvchilar */</span>
+:<span class="function">root</span> {
+    <span class="attr">--color-primary</span>: <span class="value">#7C5CFF</span>;
+    <span class="attr">--color-secondary</span>: <span class="value">#27D7C4</span>;
+    <span class="attr">--font-size-base</span>: <span class="number">16px</span>;
+    <span class="attr">--spacing-unit</span>: <span class="number">8px</span>;
+    <span class="attr">--border-radius</span>: <span class="number">12px</span>;
+    <span class="attr">--shadow</span>: <span class="number">0</span> <span class="number">4px</span> <span class="number">20px</span> <span class="keyword">rgba</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0.1</span>);
+}
+
+<span class="comment">/* Dark mode */</span>
+<span class="keyword">@media</span> (<span class="attr">prefers-color-scheme</span>: <span class="keyword">dark</span>) {
+    :<span class="function">root</span> {
+        <span class="attr">--color-bg</span>: <span class="value">#0B1020</span>;
+        <span class="attr">--color-text</span>: <span class="value">#E8EEF8</span>;
+    }
+}
+
+<span class="comment">/* Ishlatish */</span>
+.<span class="function">button</span> {
+    <span class="attr">background</span>: <span class="keyword">var</span>(<span class="attr">--color-primary</span>);
+    <span class="attr">padding</span>: <span class="keyword">calc</span>(<span class="keyword">var</span>(<span class="attr">--spacing-unit</span>) * <span class="number">2</span>);
+    <span class="attr">border-radius</span>: <span class="keyword">var</span>(<span class="attr">--border-radius</span>);
+}</pre>
                     </div>
                 </div>
             </section>
 
+            <!-- JavaScript Modern -->
+            <section class="section" id="javascript">
+                <h2><i class="fab fa-js"></i> JavaScript zamonaviy</h2>
+                <p>ES6+ bilan JavaScript juda kuchli til bo'ldi. Eng muhim xususiyatlar:</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">javascript</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <div class="code-content">
+<pre><span class="comment">// 1. DESTRUCTURING</span>
+<span class="keyword">const</span> user = { name: <span class="string">'Ali'</span>, age: <span class="number">25</span>, city: <span class="string">'Tashkent'</span> };
+<span class="keyword">const</span> { name, age } = user;  <span class="comment">// object destructuring</span>
+
+<span class="keyword">const</span> colors = [<span class="string">'red'</span>, <span class="string">'green'</span>, <span class="string">'blue'</span>];
+<span class="keyword">const</span> [first, second] = colors;  <span class="comment">// array destructuring</span>
+
+<span class="comment">// 2. SPREAD & REST</span>
+<span class="keyword">const</span> newUser = { ...user, email: <span class="string">'ali@mail.com'</span> };  <span class="comment">// spread</span>
+<span class="keyword">const</span> [head, ...tail] = colors;  <span class="comment">// rest</span>
+
+<span class="comment">// 3. ARROW FUNCTIONS</span>
+<span class="keyword">const</span> <span class="function">add</span> = (a, b) => a + b;
+<span class="keyword">const</span> <span class="function">greet</span> = name => <span class="string">`Hello, ${name}!`</span>;  <span class="comment">// template literal</span>
+
+<span class="comment">// 4. ASYNC/AWAIT</span>
+<span class="keyword">async function</span> <span class="function">fetchUser</span>(id) {
+    <span class="keyword">try</span> {
+        <span class="keyword">const</span> response = <span class="keyword">await</span> <span class="function">fetch</span>(<span class="string">`/api/users/${id}`</span>);
+        <span class="keyword">if</span> (!response.ok) <span class="keyword">throw new</span> <span class="function">Error</span>(<span class="string">'User not found'</span>);
+        <span class="keyword">return await</span> response.<span class="function">json</span>();
+    } <span class="keyword">catch</span> (error) {
+        console.<span class="function">error</span>(<span class="string">'Error:'</span>, error);
+    }
+}
+
+<span class="comment">// 5. OPTIONAL CHAINING & NULLISH COALESCING</span>
+<span class="keyword">const</span> city = user?.address?.city ?? <span class="string">'Unknown'</span>;
+
+<span class="comment">// 6. ARRAY METHODS</span>
+<span class="keyword">const</span> adults = users
+    .<span class="function">filter</span>(u => u.age >= <span class="number">18</span>)
+    .<span class="function">map</span>(u => u.name)
+    .<span class="function">sort</span>();
+
+<span class="comment">// 7. ES MODULES</span>
+<span class="keyword">import</span> { useState, useEffect } <span class="keyword">from</span> <span class="string">'react'</span>;
+<span class="keyword">export default function</span> <span class="function">Component</span>() { }</pre>
+                    </div>
+                </div>
+
+                <div class="callout callout-tip">
+                    <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">TypeScript o'rganing!</div>
+                        <p class="callout-text">2024-yilda TypeScript deyarli standart. Type safety katta loyihalarda xatolarni 40%+ ga kamaytiradi. JavaScript bilsangiz, 1-2 haftada o'rganasiz.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Frameworks -->
+            <section class="section" id="frameworks">
+                <h2><i class="fas fa-cubes"></i> Frontend Frameworklar</h2>
+                <p>Zamonaviy web-ilovalar framework'lar bilan quriladi. Har birining o'z kuchli tomonlari bor:</p>
+
+                <div class="framework-comparison">
+                    <div class="framework-card react">
+                        <i class="fab fa-react"></i>
+                        <h4>React</h4>
+                        <p>Meta (Facebook) tomonidan. Eng katta ekotizim.</p>
+                        <div class="stats">⭐ 220k+ GitHub | 📦 npm: 20M+/hafta</div>
+                    </div>
+                    <div class="framework-card vue">
+                        <i class="fab fa-vuejs"></i>
+                        <h4>Vue.js</h4>
+                        <p>O'rganish oson. Yaxshi dokumentatsiya.</p>
+                        <div class="stats">⭐ 45k+ GitHub | 📦 npm: 4M+/hafta</div>
+                    </div>
+                    <div class="framework-card angular">
+                        <i class="fab fa-angular"></i>
+                        <h4>Angular</h4>
+                        <p>Google tomonidan. Enterprise loyihalar uchun.</p>
+                        <div class="stats">⭐ 95k+ GitHub | 📦 npm: 3M+/hafta</div>
+                    </div>
+                    <div class="framework-card svelte">
+                        <i class="fas fa-bolt"></i>
+                        <h4>Svelte</h4>
+                        <p>Compile-time. Eng yengil bundle.</p>
+                        <div class="stats">⭐ 75k+ GitHub | 📦 npm: 500k+/hafta</div>
+                    </div>
+                </div>
+
+                <h3>Qaysi birini tanlash kerak?</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Holat</th>
+                            <th>Tavsiya</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Ish topish oson bo'lsin</td>
+                            <td><strong>React</strong> - eng ko'p ish o'rinlari</td>
+                        </tr>
+                        <tr>
+                            <td>Tez o'rganish kerak</td>
+                            <td><strong>Vue</strong> - eng yaxshi dokumentatsiya</td>
+                        </tr>
+                        <tr>
+                            <td>Katta enterprise loyiha</td>
+                            <td><strong>Angular</strong> - to'liq framework</td>
+                        </tr>
+                        <tr>
+                            <td>Performance muhim</td>
+                            <td><strong>Svelte</strong> - eng kichik bundle</td>
+                        </tr>
+                        <tr>
+                            <td>SEO + Full-stack</td>
+                            <td><strong>Next.js</strong> (React) yoki <strong>Nuxt</strong> (Vue)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>React Component misoli</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">tsx</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <div class="code-content">
+<pre><span class="keyword">import</span> { useState, useEffect } <span class="keyword">from</span> <span class="string">'react'</span>;
+
+<span class="keyword">interface</span> User {
+    id: <span class="keyword">number</span>;
+    name: <span class="keyword">string</span>;
+    email: <span class="keyword">string</span>;
+}
+
+<span class="keyword">export function</span> <span class="function">UserCard</span>({ userId }: { userId: <span class="keyword">number</span> }) {
+    <span class="keyword">const</span> [user, setUser] = <span class="function">useState</span>&lt;User | <span class="keyword">null</span>&gt;(<span class="keyword">null</span>);
+    <span class="keyword">const</span> [loading, setLoading] = <span class="function">useState</span>(<span class="keyword">true</span>);
+    <span class="keyword">const</span> [error, setError] = <span class="function">useState</span>&lt;<span class="keyword">string</span> | <span class="keyword">null</span>&gt;(<span class="keyword">null</span>);
+
+    <span class="function">useEffect</span>(() => {
+        <span class="keyword">async function</span> <span class="function">fetchUser</span>() {
+            <span class="keyword">try</span> {
+                <span class="keyword">const</span> res = <span class="keyword">await</span> <span class="function">fetch</span>(<span class="string">`/api/users/${userId}`</span>);
+                <span class="keyword">if</span> (!res.ok) <span class="keyword">throw new</span> <span class="function">Error</span>(<span class="string">'Failed to fetch'</span>);
+                <span class="function">setUser</span>(<span class="keyword">await</span> res.<span class="function">json</span>());
+            } <span class="keyword">catch</span> (e) {
+                <span class="function">setError</span>(e.<span class="function">message</span>);
+            } <span class="keyword">finally</span> {
+                <span class="function">setLoading</span>(<span class="keyword">false</span>);
+            }
+        }
+        <span class="function">fetchUser</span>();
+    }, [userId]);
+
+    <span class="keyword">if</span> (loading) <span class="keyword">return</span> <span class="tag">&lt;div&gt;</span>Loading...<span class="tag">&lt;/div&gt;</span>;
+    <span class="keyword">if</span> (error) <span class="keyword">return</span> <span class="tag">&lt;div&gt;</span>Error: {error}<span class="tag">&lt;/div&gt;</span>;
+    <span class="keyword">if</span> (!user) <span class="keyword">return null</span>;
+
+    <span class="keyword">return</span> (
+        <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="value">"user-card"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;h2&gt;</span>{user.name}<span class="tag">&lt;/h2&gt;</span>
+            <span class="tag">&lt;p&gt;</span>{user.email}<span class="tag">&lt;/p&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+    );
+}</pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- State Management -->
+            <section class="section" id="state-management">
+                <h2><i class="fas fa-database"></i> State Management</h2>
+                <p>Ilova holatini (state) boshqarish - frontend'ning eng murakkab qismlaridan biri.</p>
+
+                <h3>State turlari</h3>
+                <ul>
+                    <li><strong>Local State</strong> - bitta komponentda (useState)</li>
+                    <li><strong>Global State</strong> - butun ilovada (Redux, Zustand)</li>
+                    <li><strong>Server State</strong> - API'dan kelgan ma'lumotlar (React Query, SWR)</li>
+                    <li><strong>URL State</strong> - query parameters</li>
+                    <li><strong>Form State</strong> - formalar (React Hook Form)</li>
+                </ul>
+
+                <h3>Mashhur state management kutubxonalari</h3>
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-atom"></i></div>
+                        <h4>Redux Toolkit</h4>
+                        <p>Eng mashhur, katta loyihalar uchun. DevTools bilan debugging oson.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-feather"></i></div>
+                        <h4>Zustand</h4>
+                        <p>Minimal, tez. Redux'ga alternativa. 2KB bundle.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-sync"></i></div>
+                        <h4>React Query / TanStack</h4>
+                        <p>Server state uchun eng yaxshi. Caching, refetching avtomatik.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-box"></i></div>
+                        <h4>Jotai / Recoil</h4>
+                        <p>Atomic state. Kichik, independent state qismlari.</p>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">typescript - Zustand misoli</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <div class="code-content">
+<pre><span class="keyword">import</span> { create } <span class="keyword">from</span> <span class="string">'zustand'</span>;
+
+<span class="keyword">interface</span> CartStore {
+    items: CartItem[];
+    <span class="function">addItem</span>: (item: CartItem) => <span class="keyword">void</span>;
+    <span class="function">removeItem</span>: (id: <span class="keyword">string</span>) => <span class="keyword">void</span>;
+    <span class="function">clearCart</span>: () => <span class="keyword">void</span>;
+    total: () => <span class="keyword">number</span>;
+}
+
+<span class="keyword">export const</span> useCartStore = <span class="function">create</span>&lt;CartStore&gt;((set, get) => ({
+    items: [],
+    <span class="function">addItem</span>: (item) => <span class="function">set</span>((state) => ({ 
+        items: [...state.items, item] 
+    })),
+    <span class="function">removeItem</span>: (id) => <span class="function">set</span>((state) => ({ 
+        items: state.items.<span class="function">filter</span>(i => i.id !== id) 
+    })),
+    <span class="function">clearCart</span>: () => <span class="function">set</span>({ items: [] }),
+    <span class="function">total</span>: () => <span class="function">get</span>().items.<span class="function">reduce</span>((sum, i) => sum + i.price, <span class="number">0</span>),
+}));
+
+<span class="comment">// Ishlatish</span>
+<span class="keyword">function</span> <span class="function">CartButton</span>() {
+    <span class="keyword">const</span> { items, addItem } = <span class="function">useCartStore</span>();
+    <span class="keyword">return</span> <span class="tag">&lt;span&gt;</span>Cart: {items.length}<span class="tag">&lt;/span&gt;</span>;
+}</pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Build Tools -->
+            <section class="section" id="build-tools">
+                <h2><i class="fas fa-tools"></i> Build Tools</h2>
+                <p>Build tool'lar kodingizni brauzer tushunadigan shaklga o'zgartiradi:</p>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Tool</th>
+                            <th>Tezligi</th>
+                            <th>Ishlatish</th>
+                            <th>Izoh</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Vite</strong> ⚡</td>
+                            <td>Juda tez</td>
+                            <td>React, Vue, Svelte</td>
+                            <td>2024 standart. ESM-based. Eng mashhur.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Webpack</strong></td>
+                            <td>O'rta</td>
+                            <td>Hamma uchun</td>
+                            <td>Klassik, murakkab konfiguratsiya.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Turbopack</strong></td>
+                            <td>Eng tez</td>
+                            <td>Next.js</td>
+                            <td>Rust'da yozilgan, Webpack'dan 700x tez.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>esbuild</strong></td>
+                            <td>Eng tez</td>
+                            <td>Low-level</td>
+                            <td>Go'da yozilgan. Vite uni ishlatadi.</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">bash - Vite bilan loyiha boshlash</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <div class="code-content">
+<pre><span class="comment"># React + TypeScript</span>
+npm create vite@latest my-app -- --template react-ts
+
+<span class="comment"># Vue + TypeScript</span>
+npm create vite@latest my-app -- --template vue-ts
+
+<span class="comment"># Svelte</span>
+npm create vite@latest my-app -- --template svelte-ts
+
+<span class="comment"># Ishga tushirish</span>
+<span class="function">cd</span> my-app
+npm install
+npm run dev</pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Rendering Strategies -->
+            <section class="section" id="rendering">
+                <h2><i class="fas fa-server"></i> SPA vs SSR vs SSG</h2>
+                <p>Web-ilovalar turli usullarda render qilinishi mumkin:</p>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Turi</th>
+                            <th>Qachon render</th>
+                            <th>SEO</th>
+                            <th>Qachon ishlatish</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>CSR/SPA</strong></td>
+                            <td>Brauzerda</td>
+                            <td>❌ Yomon</td>
+                            <td>Admin panel, dashboard</td>
+                        </tr>
+                        <tr>
+                            <td><strong>SSR</strong></td>
+                            <td>Har so'rovda serverda</td>
+                            <td>✅ Yaxshi</td>
+                            <td>Dynamic content, e-commerce</td>
+                        </tr>
+                        <tr>
+                            <td><strong>SSG</strong></td>
+                            <td>Build vaqtida</td>
+                            <td>✅ Yaxshi</td>
+                            <td>Blog, marketing saytlar</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ISR</strong></td>
+                            <td>Build + periodic</td>
+                            <td>✅ Yaxshi</td>
+                            <td>Katta saytlar, yangilanadigan kontent</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="callout callout-info">
+                    <div class="callout-icon"><i class="fas fa-info"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">Next.js va Nuxt</div>
+                        <p class="callout-text">Next.js (React) va Nuxt (Vue) - bu "meta-framework"lar. Ular SPA, SSR, SSG hammasini qo'llab-quvvatlaydi. Har bir sahifa uchun alohida strategiya tanlash mumkin.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Performance -->
+            <section class="section" id="performance">
+                <h2><i class="fas fa-tachometer-alt"></i> Performance Optimization</h2>
+                <p>Tez sayt = yaxshi UX + yaxshi SEO + ko'proq konversiya.</p>
+
+                <h3>Core Web Vitals</h3>
+                <p>Google'ning rasmiy performance metrikalari:</p>
+
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-value">LCP</div>
+                        <div class="metric-label">Largest Contentful Paint</div>
+                        <div class="metric-desc">< 2.5s yaxshi</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">INP</div>
+                        <div class="metric-label">Interaction to Next Paint</div>
+                        <div class="metric-desc">< 200ms yaxshi</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">CLS</div>
+                        <div class="metric-label">Cumulative Layout Shift</div>
+                        <div class="metric-desc">< 0.1 yaxshi</div>
+                    </div>
+                </div>
+
+                <h3>Optimization usullari</h3>
+                <ul class="checklist">
+                    <li><i class="fas fa-check"></i> <strong>Code Splitting:</strong> Faqat kerakli kodni yuklash. <code>React.lazy()</code>, dynamic imports</li>
+                    <li><i class="fas fa-check"></i> <strong>Lazy Loading:</strong> Rasmlarni viewport'ga kirganda yuklash. <code>loading="lazy"</code></li>
+                    <li><i class="fas fa-check"></i> <strong>Image Optimization:</strong> WebP/AVIF format, responsive images, next/image</li>
+                    <li><i class="fas fa-check"></i> <strong>Minification:</strong> CSS/JS fayllarni kichiklashtirish (Terser, cssnano)</li>
+                    <li><i class="fas fa-check"></i> <strong>Caching:</strong> Service Workers, Cache-Control headers</li>
+                    <li><i class="fas fa-check"></i> <strong>CDN:</strong> Statik fayllarni global tarqatish (Cloudflare, Vercel Edge)</li>
+                    <li><i class="fas fa-check"></i> <strong>Tree Shaking:</strong> Ishlatilmagan kodni avtomatik o'chirish</li>
+                </ul>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">tsx - Lazy Loading Component</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <div class="code-content">
+<pre><span class="keyword">import</span> { lazy, Suspense } <span class="keyword">from</span> <span class="string">'react'</span>;
+
+<span class="comment">// Komponentni lazy yuklash</span>
+<span class="keyword">const</span> HeavyChart = <span class="function">lazy</span>(() => <span class="keyword">import</span>(<span class="string">'./HeavyChart'</span>));
+
+<span class="keyword">function</span> <span class="function">Dashboard</span>() {
+    <span class="keyword">return</span> (
+        <span class="tag">&lt;div&gt;</span>
+            <span class="tag">&lt;h1&gt;</span>Dashboard<span class="tag">&lt;/h1&gt;</span>
+            <span class="tag">&lt;Suspense</span> <span class="attr">fallback</span>=<span class="value">{&lt;div&gt;Loading chart...&lt;/div&gt;}</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;HeavyChart /&gt;</span>
+            <span class="tag">&lt;/Suspense&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+    );
+}</pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Accessibility -->
+            <section class="section" id="accessibility">
+                <h2><i class="fas fa-universal-access"></i> Accessibility (a11y)</h2>
+                <p>Accessibility - bu saytni barcha odamlar, jumladan nogironligi bo'lganlar ham foydalana olishini ta'minlash.</p>
+
+                <div class="a11y-grid">
+                    <div class="a11y-card">
+                        <h4><i class="fas fa-keyboard"></i> Keyboard Navigation</h4>
+                        <p>Barcha funksiyalar klaviatura orqali ishlasin. Tab, Enter, Space, Arrow keys.</p>
+                    </div>
+                    <div class="a11y-card">
+                        <h4><i class="fas fa-eye"></i> Screen Readers</h4>
+                        <p>ARIA labellar, semantic HTML, alt textlar. NVDA, VoiceOver uchun.</p>
+                    </div>
+                    <div class="a11y-card">
+                        <h4><i class="fas fa-adjust"></i> Kontrast</h4>
+                        <p>Matn va fon orasida yetarli kontrast. WCAG 2.1 AA: 4.5:1 minimum.</p>
+                    </div>
+                    <div class="a11y-card">
+                        <h4><i class="fas fa-text-height"></i> Font Size</h4>
+                        <p>Relative units (rem, em) ishlating. Foydalanuvchi zoom qila olsin.</p>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">html - Accessible Button</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <div class="code-content">
+<pre><span class="comment">&lt;!-- ❌ Yomon --&gt;</span>
+<span class="tag">&lt;div</span> <span class="attr">onclick</span>=<span class="value">"submit()"</span><span class="tag">&gt;</span>Submit<span class="tag">&lt;/div&gt;</span>
+
+<span class="comment">&lt;!-- ✅ Yaxshi --&gt;</span>
+<span class="tag">&lt;button</span>
+    <span class="attr">type</span>=<span class="value">"submit"</span>
+    <span class="attr">aria-label</span>=<span class="value">"Submit form"</span>
+    <span class="attr">disabled</span>=<span class="value">{isLoading}</span>
+<span class="tag">&gt;</span>
+    {isLoading ? <span class="string">'Loading...'</span> : <span class="string">'Submit'</span>}
+<span class="tag">&lt;/button&gt;</span>
+
+<span class="comment">&lt;!-- Image with alt --&gt;</span>
+<span class="tag">&lt;img</span>
+    <span class="attr">src</span>=<span class="value">"user.jpg"</span>
+    <span class="attr">alt</span>=<span class="value">"John Doe - Software Engineer"</span>
+    <span class="attr">loading</span>=<span class="value">"lazy"</span>
+<span class="tag">/&gt;</span>
+
+<span class="comment">&lt;!-- Form with labels --&gt;</span>
+<span class="tag">&lt;label</span> <span class="attr">for</span>=<span class="value">"email"</span><span class="tag">&gt;</span>Email address<span class="tag">&lt;/label&gt;</span>
+<span class="tag">&lt;input</span>
+    <span class="attr">id</span>=<span class="value">"email"</span>
+    <span class="attr">type</span>=<span class="value">"email"</span>
+    <span class="attr">aria-describedby</span>=<span class="value">"email-hint"</span>
+    <span class="attr">required</span>
+<span class="tag">/&gt;</span>
+<span class="tag">&lt;span</span> <span class="attr">id</span>=<span class="value">"email-hint"</span><span class="tag">&gt;</span>We'll never share your email<span class="tag">&lt;/span&gt;</span></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Testing -->
+            <section class="section" id="testing">
+                <h2><i class="fas fa-vial"></i> Frontend Testing</h2>
+                <p>Frontend uchun testing pyramid:</p>
+
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-cube"></i></div>
+                        <h4>Unit Tests (70%)</h4>
+                        <p>Utility funksiyalar, hooks, helpers. Jest, Vitest.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-cubes"></i></div>
+                        <h4>Integration (20%)</h4>
+                        <p>Komponentlar birgalikda. React Testing Library.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-desktop"></i></div>
+                        <h4>E2E Tests (10%)</h4>
+                        <p>To'liq user flows. Playwright, Cypress.</p>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">typescript - React Testing Library</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <div class="code-content">
+<pre><span class="keyword">import</span> { render, screen, fireEvent } <span class="keyword">from</span> <span class="string">'@testing-library/react'</span>;
+<span class="keyword">import</span> { Counter } <span class="keyword">from</span> <span class="string">'./Counter'</span>;
+
+<span class="function">describe</span>(<span class="string">'Counter'</span>, () => {
+    <span class="function">it</span>(<span class="string">'increments count when button clicked'</span>, () => {
+        <span class="function">render</span>(<span class="tag">&lt;Counter /&gt;</span>);
+        
+        <span class="keyword">const</span> button = screen.<span class="function">getByRole</span>(<span class="string">'button'</span>, { name: <span class="string">/increment/i</span> });
+        <span class="keyword">const</span> count = screen.<span class="function">getByText</span>(<span class="string">/count: 0/i</span>);
+        
+        <span class="function">expect</span>(count).<span class="function">toBeInTheDocument</span>();
+        
+        fireEvent.<span class="function">click</span>(button);
+        
+        <span class="function">expect</span>(screen.<span class="function">getByText</span>(<span class="string">/count: 1/i</span>)).<span class="function">toBeInTheDocument</span>();
+    });
+
+    <span class="function">it</span>(<span class="string">'is accessible'</span>, <span class="keyword">async</span> () => {
+        <span class="keyword">const</span> { container } = <span class="function">render</span>(<span class="tag">&lt;Counter /&gt;</span>);
+        <span class="keyword">const</span> results = <span class="keyword">await</span> <span class="function">axe</span>(container);
+        <span class="function">expect</span>(results).<span class="function">toHaveNoViolations</span>();
+    });
+});</pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- API Integration -->
+            <section class="section" id="api-integration">
+                <h2><i class="fas fa-plug"></i> API Integration</h2>
+                <p>Backend bilan bog'lanish uchun eng yaxshi usullar:</p>
+
+                <h3>React Query / TanStack Query</h3>
+                <p>Server state uchun eng yaxshi yechim. Caching, refetching, error handling avtomatik.</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">typescript - React Query misoli</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <div class="code-content">
+<pre><span class="keyword">import</span> { useQuery, useMutation, useQueryClient } <span class="keyword">from</span> <span class="string">'@tanstack/react-query'</span>;
+
+<span class="comment">// GET request</span>
+<span class="keyword">function</span> <span class="function">useUsers</span>() {
+    <span class="keyword">return</span> <span class="function">useQuery</span>({
+        queryKey: [<span class="string">'users'</span>],
+        queryFn: () => <span class="function">fetch</span>(<span class="string">'/api/users'</span>).<span class="function">then</span>(r => r.<span class="function">json</span>()),
+        staleTime: <span class="number">5</span> * <span class="number">60</span> * <span class="number">1000</span>, <span class="comment">// 5 min cache</span>
+    });
+}
+
+<span class="comment">// POST request with cache invalidation</span>
+<span class="keyword">function</span> <span class="function">useCreateUser</span>() {
+    <span class="keyword">const</span> queryClient = <span class="function">useQueryClient</span>();
+    
+    <span class="keyword">return</span> <span class="function">useMutation</span>({
+        mutationFn: (newUser) => <span class="function">fetch</span>(<span class="string">'/api/users'</span>, {
+            method: <span class="string">'POST'</span>,
+            body: <span class="function">JSON.stringify</span>(newUser),
+        }),
+        onSuccess: () => {
+            queryClient.<span class="function">invalidateQueries</span>({ queryKey: [<span class="string">'users'</span>] });
+        },
+    });
+}
+
+<span class="comment">// Ishlatish</span>
+<span class="keyword">function</span> <span class="function">UserList</span>() {
+    <span class="keyword">const</span> { data, isLoading, error } = <span class="function">useUsers</span>();
+    <span class="keyword">const</span> createUser = <span class="function">useCreateUser</span>();
+    
+    <span class="keyword">if</span> (isLoading) <span class="keyword">return</span> <span class="tag">&lt;Skeleton /&gt;</span>;
+    <span class="keyword">if</span> (error) <span class="keyword">return</span> <span class="tag">&lt;Error</span> <span class="attr">message</span>=<span class="value">{error.message}</span> <span class="tag">/&gt;</span>;
+    
+    <span class="keyword">return</span> <span class="tag">&lt;ul&gt;</span>{data.<span class="function">map</span>(u => <span class="tag">&lt;li</span> <span class="attr">key</span>=<span class="value">{u.id}</span><span class="tag">&gt;</span>{u.name}<span class="tag">&lt;/li&gt;</span>)}<span class="tag">&lt;/ul&gt;</span>;
+}</pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Design System -->
+            <section class="section" id="design-system">
+                <h2><i class="fas fa-paint-brush"></i> Design System</h2>
+                <p>Katta loyihalarda barcha UI elementlari bitta tizimga bo'ysunadi:</p>
+
+                <ul>
+                    <li><strong>Design Tokens:</strong> Ranglar, shriftlar, spacing, shadow</li>
+                    <li><strong>Component Library:</strong> Button, Input, Modal, Card...</li>
+                    <li><strong>Documentation:</strong> Storybook bilan component showcase</li>
+                    <li><strong>Guidelines:</strong> Qachon qaysi komponent ishlatish</li>
+                </ul>
+
+                <h3>Mashhur Design System'lar</h3>
+                <div class="tools-grid">
+                    <span class="tool-badge"><i class="fas fa-box"></i> shadcn/ui</span>
+                    <span class="tool-badge"><i class="fas fa-gem"></i> Radix UI</span>
+                    <span class="tool-badge"><i class="fas fa-cube"></i> Chakra UI</span>
+                    <span class="tool-badge"><i class="fab fa-google"></i> Material UI</span>
+                    <span class="tool-badge"><i class="fas fa-ant-design"></i> Ant Design</span>
+                    <span class="tool-badge"><i class="fas fa-feather"></i> Headless UI</span>
+                </div>
+            </section>
+
+            <!-- 2024 Trends -->
+            <section class="section" id="trends-2024">
+                <h2><i class="fas fa-rocket"></i> 2024 Frontend Trendlari</h2>
+
+                <div class="trend-grid">
+                    <div class="trend-item">
+                        <div class="trend-icon"><i class="fas fa-server"></i></div>
+                        <div class="trend-content">
+                            <h4>React Server Components (RSC)</h4>
+                            <p>Serverda render, client'ga HTML yuborish. Bundle size kamayadi, SEO yaxshilanadi.</p>
+                        </div>
+                        <span class="trend-badge">HOT 🔥</span>
+                    </div>
+                    <div class="trend-item">
+                        <div class="trend-icon"><i class="fas fa-bolt"></i></div>
+                        <div class="trend-content">
+                            <h4>Server Actions</h4>
+                            <p>Form submission serverda. API endpoint yaratish shart emas.</p>
+                        </div>
+                        <span class="trend-badge">NEW ✨</span>
+                    </div>
+                    <div class="trend-item">
+                        <div class="trend-icon"><i class="fas fa-island-tropical"></i></div>
+                        <div class="trend-content">
+                            <h4>Islands Architecture</h4>
+                            <p>Astro, Fresh. Sahifaning faqat interaktiv qismlari hydrate qilinadi.</p>
+                        </div>
+                        <span class="trend-badge">RISING 📈</span>
+                    </div>
+                    <div class="trend-item">
+                        <div class="trend-icon"><i class="fas fa-robot"></i></div>
+                        <div class="trend-content">
+                            <h4>AI-Powered Development</h4>
+                            <p>v0.dev, GitHub Copilot. UI generatsiya qilish, kod yozishda yordam.</p>
+                        </div>
+                        <span class="trend-badge">HOT 🔥</span>
+                    </div>
+                    <div class="trend-item">
+                        <div class="trend-icon"><i class="fas fa-globe"></i></div>
+                        <div class="trend-content">
+                            <h4>Edge Computing</h4>
+                            <p>Vercel Edge, Cloudflare Workers. Foydalanuvchiga yaqin joyda kod ishga tushadi.</p>
+                        </div>
+                        <span class="trend-badge">GROWING 🌱</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Security -->
             <section class="section" id="security">
                 <div class="security-card">
-                    <h3 class="security-title"><i class="fas fa-shield-alt"></i> Xavfsizlik va ishonchlilik</h3>
+                    <h3 class="security-title"><i class="fas fa-shield-alt"></i> Frontend Xavfsizlik</h3>
                     <ul class="security-list">
-                        <li><i class="fas fa-lock"></i> XSS (Cross-Site Scripting) hujumlariga qarshi: foydalanuvchi kiritgan ma'lumotlarni sanitize qiling.</li>
-                        <li><i class="fas fa-lock"></i> API kalitlarini frontend kodida saqlang! Environment variables va backend orqali foydalaning.</li>
-                        <li><i class="fas fa-lock"></i> HTTPS dan foydalaning. HTTP orqali maxfiy ma'lumotlar uzatilmasin.</li>
-                        <li><i class="fas fa-lock"></i> Content Security Policy (CSP) header'larini o'rnating.</li>
-                        <li><i class="fas fa-lock"></i> npm audit muntazam o'tkazing - dependency'lardagi zaifliklarni toping.</li>
+                        <li><i class="fas fa-lock"></i> <strong>XSS (Cross-Site Scripting):</strong> Foydalanuvchi inputini sanitize qiling. React avtomatik escape qiladi, lekin <code>dangerouslySetInnerHTML</code> dan ehtiyot bo'ling.</li>
+                        <li><i class="fas fa-lock"></i> <strong>API kalitlarini yashirmang:</strong> Frontend kodi ochiq! Maxfiy kalitlarni backend'da saqlang.</li>
+                        <li><i class="fas fa-lock"></i> <strong>HTTPS:</strong> Barcha trafik shifrlangan bo'lsin. Mixed content (HTTP resurslar) bo'lmasin.</li>
+                        <li><i class="fas fa-lock"></i> <strong>CSP Headers:</strong> Content Security Policy bilan qaysi resurslar yuklanishini cheklang.</li>
+                        <li><i class="fas fa-lock"></i> <strong>npm audit:</strong> Dependency'lardagi zaifliklarni muntazam tekshiring.</li>
+                        <li><i class="fas fa-lock"></i> <strong>CORS:</strong> Faqat ishonchli domenlardan so'rovlarga ruxsat bering.</li>
                     </ul>
                 </div>
             </section>
 
+            <!-- Common Mistakes -->
+            <section class="section" id="mistakes">
+                <h2><i class="fas fa-exclamation-triangle"></i> Ko'p uchraydigan xatolar</h2>
+
+                <div class="callout callout-danger">
+                    <div class="callout-icon"><i class="fas fa-times"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">1. Accessibility e'tiborsiz</div>
+                        <p class="callout-text">alt, aria-label, semantic HTML unutiladi. 15% foydalanuvchi yo'qotiladi + huquqiy muammolar.</p>
+                    </div>
+                </div>
+
+                <div class="callout callout-danger">
+                    <div class="callout-icon"><i class="fas fa-times"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">2. Over-engineering</div>
+                        <p class="callout-text">Landing page uchun Redux, GraphQL, Microservices kerak emas. Loyiha hajmiga mos tool tanlang.</p>
+                    </div>
+                </div>
+
+                <div class="callout callout-danger">
+                    <div class="callout-icon"><i class="fas fa-times"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">3. Mobile oxirgi o'rinda</div>
+                        <p class="callout-text">"Keyin mobile qilamiz" - xato! Mobile-first yondashuv bilan boshlang.</p>
+                    </div>
+                </div>
+
+                <div class="callout callout-danger">
+                    <div class="callout-icon"><i class="fas fa-times"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">4. Keraksiz re-renderlar</div>
+                        <p class="callout-text">React.memo, useMemo, useCallback ishlatmaslik. Performance monitoring qiling.</p>
+                    </div>
+                </div>
+
+                <div class="callout callout-danger">
+                    <div class="callout-icon"><i class="fas fa-times"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">5. Bundle size e'tiborsiz</div>
+                        <p class="callout-text">Ko'p library import qilish. Bundle analyzer ishlatib, keraksiz kodlarni olib tashlang.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Best Practices -->
+            <section class="section" id="best-practices">
+                <h2><i class="fas fa-medal"></i> Best Practices</h2>
+
+                <ul class="checklist">
+                    <li><i class="fas fa-check"></i> <strong>Semantic HTML:</strong> div o'rniga section, article, nav, header ishlating</li>
+                    <li><i class="fas fa-check"></i> <strong>TypeScript:</strong> Katta loyihalarda type safety juda muhim</li>
+                    <li><i class="fas fa-check"></i> <strong>Component composition:</strong> Katta komponentlarni kichik qismlarga ajrating</li>
+                    <li><i class="fas fa-check"></i> <strong>CSS variables:</strong> Ranglar, spacing uchun custom properties ishlating</li>
+                    <li><i class="fas fa-check"></i> <strong>Lazy loading:</strong> Og'ir komponentlarni kerak bo'lganda yuklang</li>
+                    <li><i class="fas fa-check"></i> <strong>Error boundaries:</strong> Xatolarni gracefully handle qiling</li>
+                    <li><i class="fas fa-check"></i> <strong>Lighthouse audit:</strong> Muntazam performance tekshiring, 90+ score</li>
+                    <li><i class="fas fa-check"></i> <strong>Testing:</strong> Kritik funksiyalarni test qiling</li>
+                    <li><i class="fas fa-check"></i> <strong>Documentation:</strong> Component API'larni hujjatlashtiring</li>
+                    <li><i class="fas fa-check"></i> <strong>Accessibility:</strong> axe, WAVE bilan tekshiring</li>
+                </ul>
+            </section>
+
+            <!-- Tools -->
+            <section class="section" id="tools">
+                <h2><i class="fas fa-wrench"></i> Asboblar va texnologiyalar</h2>
+
+                <div class="tools-grid">
+                    <span class="tool-badge"><i class="fab fa-react"></i> React</span>
+                    <span class="tool-badge"><i class="fab fa-vuejs"></i> Vue.js</span>
+                    <span class="tool-badge"><i class="fab fa-angular"></i> Angular</span>
+                    <span class="tool-badge"><i class="fas fa-bolt"></i> Svelte</span>
+                    <span class="tool-badge"><i class="fas fa-rocket"></i> Next.js</span>
+                    <span class="tool-badge"><i class="fas fa-rocket"></i> Nuxt</span>
+                    <span class="tool-badge"><i class="fas fa-wind"></i> Tailwind CSS</span>
+                    <span class="tool-badge"><i class="fas fa-box"></i> shadcn/ui</span>
+                    <span class="tool-badge"><i class="fas fa-bolt"></i> Vite</span>
+                    <span class="tool-badge"><i class="fas fa-vial"></i> Vitest</span>
+                    <span class="tool-badge"><i class="fas fa-theater-masks"></i> Playwright</span>
+                    <span class="tool-badge"><i class="fas fa-book"></i> Storybook</span>
+                    <span class="tool-badge"><i class="fas fa-sync"></i> React Query</span>
+                    <span class="tool-badge"><i class="fas fa-feather"></i> Zustand</span>
+                    <span class="tool-badge"><i class="fas fa-file-code"></i> TypeScript</span>
+                    <span class="tool-badge"><i class="fas fa-magic"></i> Framer Motion</span>
+                </div>
+            </section>
+
+            <!-- FAQ -->
             <section class="section" id="faq">
-                <h2><i class="fas fa-question-circle"></i> Ko'p so'raladigan savollar (FAQ)</h2>
+                <h2><i class="fas fa-question-circle"></i> Ko'p so'raladigan savollar</h2>
 
                 <div class="faq-item">
                     <button class="faq-question">
@@ -1317,17 +2357,7 @@
                         <i class="fas fa-chevron-down"></i>
                     </button>
                     <div class="faq-answer">
-                        <p>"Eng yaxshi" yo'q - har birining o'z joyi bor. React - eng katta ekotizim va ish bozori. Vue - o'rganish oson, yaxshi dokumentatsiya. Angular - katta korporativ loyihalar uchun, full framework. Loyihangiz talablariga qarab tanlang.</p>
-                    </div>
-                </div>
-
-                <div class="faq-item">
-                    <button class="faq-question">
-                        Tailwind CSS yoki oddiy CSS yozishim kerakmi?
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="faq-answer">
-                        <p>Ikkalasini ham bilish kerak. Avval CSS fundamentallarini (Flexbox, Grid, Cascade) o'rganing. Keyin Tailwind - tez prototyping va consistency uchun juda yaxshi. Katta loyihalarda ikkalasi ham birga ishlatiladi.</p>
+                        <p>"Eng yaxshi" yo'q. <strong>React</strong> - ish bozori katta, ekotizim boy. <strong>Vue</strong> - o'rganish oson, dokumentatsiya a'lo. <strong>Angular</strong> - enterprise, to'liq framework. Ish topmoqchi bo'lsangiz React, tez o'rganmoqchi bo'lsangiz Vue.</p>
                     </div>
                 </div>
 
@@ -1337,27 +2367,27 @@
                         <i class="fas fa-chevron-down"></i>
                     </button>
                     <div class="faq-answer">
-                        <p>2024-yilda ha, deyarli shart. Ko'pchilik kompaniyalar TypeScript talab qiladi. Type safety katta loyihalarda xatolarni 40%+ ga kamaytiradi. JavaScript bilsangiz, TypeScript o'rganish 1-2 hafta oladi.</p>
+                        <p>2024-yilda ha. Ko'p kompaniyalar talab qiladi. Type safety xatolarni 40%+ ga kamaytiradi. JavaScript bilsangiz 1-2 haftada o'rganasiz. Boshlang!</p>
                     </div>
                 </div>
 
                 <div class="faq-item">
                     <button class="faq-question">
-                        SPA yoki SSR qachon ishlatish kerak?
+                        Tailwind yoki oddiy CSS?
                         <i class="fas fa-chevron-down"></i>
                     </button>
                     <div class="faq-answer">
-                        <p>SPA - admin panellar, dashboardlar, internal toollar uchun (SEO muhim emas). SSR - public saytlar, e-commerce, bloglar uchun (SEO muhim). Next.js/Nuxt.js ikkalasini ham qo'llab-quvvatlaydi.</p>
+                        <p>Ikkalasini ham biling! Avval CSS fundamentallarini (Flexbox, Grid) o'rganing. Keyin Tailwind - tez prototyping, consistency uchun juda yaxshi. Ko'p kompaniyalar Tailwind ishlatadi.</p>
                     </div>
                 </div>
 
                 <div class="faq-item">
                     <button class="faq-question">
-                        Qanday qilib performance ni yaxshilayman?
+                        Next.js yoki oddiy React?
                         <i class="fas fa-chevron-down"></i>
                     </button>
                     <div class="faq-answer">
-                        <p>1) Rasmlarni optimize qiling (WebP, lazy loading). 2) Code splitting qiling. 3) Unused CSS/JS ni olib tashlang. 4) CDN dan foydalaning. 5) Caching strategiyasini o'rnating. Lighthouse dan boshlab, haqiqiy metrikalar (Core Web Vitals) ni kuzating.</p>
+                        <p>SEO muhim bo'lsa (blog, e-commerce) - <strong>Next.js</strong>. Admin panel, dashboard uchun - oddiy React yetarli. 2024-yilda Next.js de-facto standart bo'lib qolmoqda.</p>
                     </div>
                 </div>
 
@@ -1367,86 +2397,106 @@
                         <i class="fas fa-chevron-down"></i>
                     </button>
                     <div class="faq-answer">
-                        <p>Kichik loyihalarda React Context/Vue Provide yetarli. Redux/Zustand/Pinia katta loyihalarda kerak: ko'p komponentlar orasida shared state, murakkab asinxron logika, time-travel debugging zarur bo'lganda.</p>
+                        <p>Kichik loyihalarda React Context yetarli. Redux/Zustand katta loyihalarda: ko'p komponentlar shared state, murakkab async logika. Server state uchun React Query eng yaxshi.</p>
                     </div>
                 </div>
 
                 <div class="faq-item">
                     <button class="faq-question">
-                        Frontendni qanday test qilish kerak?
+                        Performance qanday yaxshilayman?
                         <i class="fas fa-chevron-down"></i>
                     </button>
                     <div class="faq-answer">
-                        <p>Testing pyramid: 1) Unit testlar (Jest) - utility funksiyalar, hooks. 2) Integration testlar (React Testing Library) - komponentlar. 3) E2E testlar (Playwright/Cypress) - user flowlar. 70% unit, 20% integration, 10% E2E nisbati optimal.</p>
+                        <p>1) Rasmlarni optimize (WebP, lazy loading). 2) Code splitting. 3) Unused code o'chirish. 4) CDN. 5) Caching. Lighthouse dan boshlab, Core Web Vitals kuzating.</p>
                     </div>
                 </div>
 
                 <div class="faq-item">
                     <button class="faq-question">
-                        Accessibility (a11y) nima uchun muhim?
+                        Frontend test qanday qilish kerak?
                         <i class="fas fa-chevron-down"></i>
                     </button>
                     <div class="faq-answer">
-                        <p>1) Etik sabab - barcha odamlar saytdan foydalana olishi kerak. 2) Huquqiy - ko'p davlatlarda qonun talab qiladi (ADA, EAA). 3) SEO - accessible saytlar search enginelarda yaxshiroq. 4) UX - keyboard navigation barchaga foydali.</p>
+                        <p>Testing pyramid: 70% Unit (Vitest), 20% Integration (React Testing Library), 10% E2E (Playwright). Kritik user flows test qiling.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Accessibility nima uchun muhim?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>1) Etik - barcha odamlar foydalana olsin. 2) Huquqiy - ko'p davlatlarda qonun (ADA). 3) SEO - accessible saytlar yaxshiroq rank oladi. 4) UX - keyboard navigation barchaga foydali.</p>
                     </div>
                 </div>
             </section>
 
+            <!-- Glossary -->
             <section class="section" id="glossary">
                 <h2><i class="fas fa-book"></i> Glossary (Atamalar lug'ati)</h2>
 
                 <div class="glossary-grid">
                     <div class="glossary-item">
                         <span class="glossary-term">SPA</span>
-                        <span class="glossary-def">Single Page Application - sahifa qayta yuklanmaydi, JavaScript kontent almashtirib turadi.</span>
+                        <span class="glossary-def">Single Page Application - sahifa qayta yuklanmaydi, JS kontent almashtirib turadi.</span>
                     </div>
                     <div class="glossary-item">
                         <span class="glossary-term">SSR</span>
-                        <span class="glossary-def">Server Side Rendering - HTML serverda generatsiya qilinadi, SEO uchun yaxshi.</span>
+                        <span class="glossary-def">Server Side Rendering - HTML serverda generatsiya qilinadi.</span>
                     </div>
                     <div class="glossary-item">
                         <span class="glossary-term">SSG</span>
-                        <span class="glossary-def">Static Site Generation - HTML build vaqtida yaratiladi, eng tez variant.</span>
+                        <span class="glossary-def">Static Site Generation - HTML build vaqtida yaratiladi.</span>
                     </div>
                     <div class="glossary-item">
                         <span class="glossary-term">Hydration</span>
-                        <span class="glossary-def">SSR HTML ni React/Vue interaktiv qilish jarayoni - JavaScript "jonlantiradi".</span>
+                        <span class="glossary-def">SSR HTML ni React/Vue interaktiv qilish - JS "jonlantiradi".</span>
                     </div>
                     <div class="glossary-item">
                         <span class="glossary-term">Bundler</span>
-                        <span class="glossary-def">Ko'p JavaScript/CSS fayllarni bitta yoki bir nechta faylga birlashtiruvchi tool (Vite, Webpack).</span>
+                        <span class="glossary-def">JS/CSS fayllarni birlashtiruvchi tool (Vite, Webpack).</span>
                     </div>
                     <div class="glossary-item">
                         <span class="glossary-term">Tree Shaking</span>
-                        <span class="glossary-def">Ishlatilmagan kodni avtomatik olib tashlash - bundle hajmini kamaytiradi.</span>
+                        <span class="glossary-def">Ishlatilmagan kodni avtomatik olib tashlash.</span>
                     </div>
                     <div class="glossary-item">
                         <span class="glossary-term">Virtual DOM</span>
-                        <span class="glossary-def">React/Vue ning memory'dagi DOM nusxasi - o'zgarishlarni optimallashtiradi.</span>
+                        <span class="glossary-def">React'ning memory'dagi DOM nusxasi - o'zgarishlarni optimallashtiradi.</span>
                     </div>
                     <div class="glossary-item">
                         <span class="glossary-term">Component</span>
-                        <span class="glossary-def">UI ning mustaqil, qayta ishlatiluvchi qismi - Button, Modal, Card.</span>
+                        <span class="glossary-def">UI ning mustaqil, qayta ishlatiluvchi qismi.</span>
                     </div>
                     <div class="glossary-item">
                         <span class="glossary-term">Props</span>
-                        <span class="glossary-def">Parent komponentdan child komponentga uzatiladigan ma'lumotlar.</span>
+                        <span class="glossary-def">Parent'dan child'ga uzatiladigan ma'lumotlar.</span>
                     </div>
                     <div class="glossary-item">
                         <span class="glossary-term">State</span>
-                        <span class="glossary-def">Komponentning ichki holatsi - o'zgarganda UI qayta renderlanadi.</span>
+                        <span class="glossary-def">Komponentning ichki holati - o'zgarganda UI yangilanadi.</span>
                     </div>
                     <div class="glossary-item">
                         <span class="glossary-term">Hook</span>
-                        <span class="glossary-def">React funksiyalari (useState, useEffect) - functional componentlarda state va lifecycle.</span>
+                        <span class="glossary-def">React funksiyalari (useState, useEffect) - state va lifecycle.</span>
                     </div>
                     <div class="glossary-item">
                         <span class="glossary-term">Lazy Loading</span>
-                        <span class="glossary-def">Resurslarni kerak bo'lganda yuklash - dastlabki yuklanishni tezlashtiradi.</span>
+                        <span class="glossary-def">Resurslarni kerak bo'lganda yuklash.</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">Core Web Vitals</span>
+                        <span class="glossary-def">Google'ning rasmiy UX metrikalari: LCP, INP, CLS.</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">a11y</span>
+                        <span class="glossary-def">Accessibility (a + 11 harf + y). Web'ni barcha uchun accessible qilish.</span>
                     </div>
                 </div>
             </section>
 
+            <!-- Navigation Footer -->
             <nav class="nav-footer">
                 <a href="code.html" class="nav-btn prev">
                     <i class="fas fa-arrow-left"></i>
@@ -1465,22 +2515,55 @@
             </nav>
         </main>
 
+        <!-- Sidebar Right -->
         <aside class="sidebar-right">
             <div class="takeaways-card">
                 <h3 class="takeaways-title"><i class="fas fa-star"></i> Key Takeaways</h3>
                 <ul class="takeaways-list">
-                    <li><i class="fas fa-check"></i> Mobile-first yondashuv bilan boshlang</li>
-                    <li><i class="fas fa-check"></i> Accessibility birinchi kundan e'tibor bering</li>
-                    <li><i class="fas fa-check"></i> Performance = User Experience = Revenue</li>
-                    <li><i class="fas fa-check"></i> Component-based architecture o'rganing</li>
-                    <li><i class="fas fa-check"></i> TypeScript - kelajak uchun investitsiya</li>
-                    <li><i class="fas fa-check"></i> Lighthouse bilan muntazam audit qiling</li>
+                    <li><i class="fas fa-check"></i> HTML, CSS, JS - asoslarni mustahkam o'rganing</li>
+                    <li><i class="fas fa-check"></i> React yoki Vue dan birini yaxshi biling</li>
+                    <li><i class="fas fa-check"></i> TypeScript - 2024 standart</li>
+                    <li><i class="fas fa-check"></i> Performance = UX = Revenue</li>
+                    <li><i class="fas fa-check"></i> Accessibility birinchi kundan</li>
+                    <li><i class="fas fa-check"></i> Mobile-first yondashuv</li>
+                    <li><i class="fas fa-check"></i> Testing - ishonchli kod</li>
+                    <li><i class="fas fa-check"></i> Lighthouse 90+ score</li>
+                </ul>
+            </div>
+
+            <div class="resources-card">
+                <h3 class="resources-title"><i class="fas fa-link"></i> Foydali resurslar</h3>
+                <a href="https://react.dev" target="_blank" class="resource-link">
+                    <i class="fab fa-react"></i> React Documentation
+                </a>
+                <a href="https://nextjs.org/docs" target="_blank" class="resource-link">
+                    <i class="fas fa-rocket"></i> Next.js Docs
+                </a>
+                <a href="https://tailwindcss.com" target="_blank" class="resource-link">
+                    <i class="fas fa-wind"></i> Tailwind CSS
+                </a>
+                <a href="https://web.dev" target="_blank" class="resource-link">
+                    <i class="fab fa-google"></i> web.dev (Google)
+                </a>
+                <a href="https://developer.mozilla.org" target="_blank" class="resource-link">
+                    <i class="fab fa-firefox"></i> MDN Web Docs
+                </a>
+            </div>
+
+            <div class="takeaways-card">
+                <h3 class="takeaways-title"><i class="fas fa-book"></i> O'qish uchun</h3>
+                <ul class="takeaways-list">
+                    <li><i class="fas fa-book-open"></i> JavaScript: The Good Parts</li>
+                    <li><i class="fas fa-book-open"></i> You Don't Know JS</li>
+                    <li><i class="fas fa-book-open"></i> CSS Secrets</li>
+                    <li><i class="fas fa-book-open"></i> Refactoring UI</li>
                 </ul>
             </div>
         </aside>
     </div>
 
     <script>
+        // Mobile Navigation Toggle
         const navToggle = document.querySelector('.nav-toggle');
         const navLinks = document.querySelector('.nav-links');
 
@@ -1491,6 +2574,7 @@
             icon.classList.toggle('fa-times');
         });
 
+        // Progress Bar
         const progressBar = document.getElementById('progressBar');
         
         window.addEventListener('scroll', () => {
@@ -1500,6 +2584,7 @@
             progressBar.style.width = scrolled + '%';
         });
 
+        // FAQ Accordion
         const faqItems = document.querySelectorAll('.faq-item');
         
         faqItems.forEach(item => {
@@ -1513,6 +2598,7 @@
             });
         });
 
+        // Copy Code Function
         function copyCode(button) {
             const codeBlock = button.closest('.code-block');
             const code = codeBlock.querySelector('pre').textContent;
@@ -1529,6 +2615,7 @@
             });
         }
 
+        // Active TOC Link
         const tocLinks = document.querySelectorAll('.toc-list a');
         const sections = document.querySelectorAll('.section');
 
