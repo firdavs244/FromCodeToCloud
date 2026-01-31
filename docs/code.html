@@ -24,6 +24,8 @@
             --accent-amber: #F59E0B;
             --accent-red: #EF4444;
             --accent-green: #10B981;
+            --accent-blue: #3B82F6;
+            --accent-pink: #EC4899;
             --text-primary: #E8EEF8;
             --text-muted: #A7B1C2;
             --text-dim: #6B7280;
@@ -146,9 +148,9 @@
         /* Main Layout */
         .main-layout {
             display: grid;
-            grid-template-columns: 250px 1fr 280px;
+            grid-template-columns: 260px 1fr 280px;
             gap: 2rem;
-            max-width: 1400px;
+            max-width: 1500px;
             margin: 0 auto;
             padding: 5rem 2rem 2rem;
             position: relative;
@@ -162,6 +164,19 @@
             height: fit-content;
             max-height: calc(100vh - 100px);
             overflow-y: auto;
+        }
+
+        .sidebar-left::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .sidebar-left::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .sidebar-left::-webkit-scrollbar-thumb {
+            background: var(--glass-border);
+            border-radius: 4px;
         }
 
         .sidebar-title {
@@ -184,7 +199,7 @@
             padding-left: 1rem;
             color: var(--text-dim);
             text-decoration: none;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             border-left: 2px solid var(--glass-border);
             transition: all 0.3s ease;
         }
@@ -197,7 +212,7 @@
 
         /* Main Content */
         .main-content {
-            max-width: 800px;
+            max-width: 900px;
         }
 
         /* Breadcrumb */
@@ -256,7 +271,7 @@
         .hero-tagline {
             font-size: 1.1rem;
             color: var(--text-muted);
-            max-width: 600px;
+            max-width: 700px;
         }
 
         .reading-time {
@@ -266,12 +281,52 @@
             margin-top: 1.5rem;
             font-size: 0.85rem;
             color: var(--text-dim);
+            flex-wrap: wrap;
         }
 
         .reading-time span {
             display: flex;
             align-items: center;
             gap: 0.4rem;
+        }
+
+        /* Level Badges */
+        .level-badges {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .level-badge {
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .level-badge.beginner {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--accent-green);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .level-badge.junior {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--accent-blue);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .level-badge.middle {
+            background: rgba(124, 92, 255, 0.2);
+            color: var(--accent-violet);
+            border: 1px solid rgba(124, 92, 255, 0.3);
+        }
+
+        .level-badge.senior {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--accent-amber);
+            border: 1px solid rgba(245, 158, 11, 0.3);
         }
 
         /* Section Styles */
@@ -303,6 +358,13 @@
             font-weight: 600;
             margin: 2rem 0 1rem;
             color: var(--text-primary);
+        }
+
+        .section h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.75rem;
+            color: var(--accent-teal);
         }
 
         .section p {
@@ -358,6 +420,26 @@
 
         .callout-tip .callout-icon {
             background: var(--accent-violet);
+            color: white;
+        }
+
+        .callout-danger {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .callout-danger .callout-icon {
+            background: var(--accent-red);
+            color: white;
+        }
+
+        .callout-success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .callout-success .callout-icon {
+            background: var(--accent-green);
             color: white;
         }
 
@@ -435,6 +517,17 @@
         .code-content .keyword { color: var(--accent-violet); }
         .code-content .string { color: var(--accent-teal); }
         .code-content .function { color: var(--accent-amber); }
+        .code-content .number { color: var(--accent-pink); }
+
+        /* Inline Code */
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85em;
+            background: rgba(39, 215, 196, 0.1);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            color: var(--accent-teal);
+        }
 
         /* Lists */
         .section ul, .section ol {
@@ -445,6 +538,10 @@
 
         .section li {
             margin-bottom: 0.5rem;
+        }
+
+        .section li strong {
+            color: var(--text-primary);
         }
 
         /* Cards Grid */
@@ -469,8 +566,8 @@
         }
 
         .card-icon {
-            width: 40px;
-            height: 40px;
+            width: 44px;
+            height: 44px;
             background: linear-gradient(135deg, rgba(39, 215, 196, 0.2), rgba(124, 92, 255, 0.2));
             border-radius: 10px;
             display: flex;
@@ -478,12 +575,14 @@
             justify-content: center;
             margin-bottom: 1rem;
             color: var(--accent-teal);
+            font-size: 1.2rem;
         }
 
         .card h4 {
             font-size: 0.95rem;
             font-weight: 600;
             margin-bottom: 0.5rem;
+            color: var(--text-primary);
         }
 
         .card p {
@@ -520,6 +619,7 @@
             font-size: 1rem;
             font-weight: 600;
             margin-bottom: 0.5rem;
+            color: var(--text-primary);
         }
 
         .step-content p {
@@ -545,6 +645,7 @@
             border-radius: 8px;
             margin-bottom: 0.5rem;
             font-size: 0.9rem;
+            color: var(--text-muted);
         }
 
         .checklist li i {
@@ -580,6 +681,73 @@
 
         .tool-badge i {
             color: var(--accent-teal);
+        }
+
+        /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border: 1px solid var(--glass-border);
+        }
+
+        .comparison-table th {
+            background: var(--glass-bg);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .comparison-table td {
+            color: var(--text-muted);
+        }
+
+        .comparison-table tr:hover td {
+            background: var(--glass-bg);
+        }
+
+        /* Tabs */
+        .tabs {
+            margin: 1.5rem 0;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 0.5rem 1rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover,
+        .tab-btn.active {
+            background: var(--accent-teal);
+            color: var(--bg-primary);
+            border-color: var(--accent-teal);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
         }
 
         /* FAQ */
@@ -628,7 +796,7 @@
 
         .faq-item.active .faq-answer {
             padding: 1rem 1.25rem;
-            max-height: 500px;
+            max-height: 1000px;
         }
 
         .faq-answer p {
@@ -666,7 +834,7 @@
             color: var(--text-muted);
         }
 
-        /* Sidebar Right - Key Takeaways */
+        /* Sidebar Right */
         .sidebar-right {
             position: sticky;
             top: 80px;
@@ -678,6 +846,7 @@
             border: 1px solid var(--glass-border);
             border-radius: 16px;
             padding: 1.5rem;
+            margin-bottom: 1.5rem;
         }
 
         .takeaways-title {
@@ -702,7 +871,7 @@
             display: flex;
             gap: 0.5rem;
             padding: 0.5rem 0;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--text-muted);
             border-bottom: 1px solid var(--glass-border);
         }
@@ -714,6 +883,48 @@
         .takeaways-list li i {
             color: var(--accent-teal);
             margin-top: 0.2rem;
+        }
+
+        /* Resources Card */
+        .resources-card {
+            background: linear-gradient(135deg, rgba(124, 92, 255, 0.1), rgba(39, 215, 196, 0.1));
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .resources-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .resources-title i {
+            color: var(--accent-violet);
+        }
+
+        .resource-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .resource-link:hover {
+            color: var(--accent-teal);
+        }
+
+        .resource-link i {
+            width: 20px;
+            text-align: center;
         }
 
         /* Security Section */
@@ -751,6 +962,44 @@
         .security-list li i {
             color: var(--accent-red);
             margin-top: 0.2rem;
+        }
+
+        /* SOLID Cards */
+        .principle-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.75rem;
+            margin: 1.5rem 0;
+        }
+
+        .principle-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .principle-card:hover {
+            border-color: var(--accent-teal);
+            transform: scale(1.02);
+        }
+
+        .principle-letter {
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-teal), var(--accent-violet));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .principle-name {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            font-weight: 500;
         }
 
         /* Navigation Footer */
@@ -804,6 +1053,10 @@
             .sidebar-right {
                 display: none;
             }
+
+            .principle-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
         }
 
         @media (max-width: 768px) {
@@ -821,7 +1074,7 @@
                 top: 100%;
                 left: 0;
                 right: 0;
-                background: rgba(11, 16, 32, 0.95);
+                background: rgba(11, 16, 32, 0.98);
                 backdrop-filter: blur(20px);
                 flex-direction: column;
                 padding: 1rem;
@@ -855,6 +1108,14 @@
 
             .nav-btn {
                 justify-content: center;
+            }
+
+            .principle-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -893,12 +1154,22 @@
             <ul class="toc-list">
                 <li><a href="#what-is">Code nima?</a></li>
                 <li><a href="#why-needed">Nega kerak?</a></li>
-                <li><a href="#concepts">Asosiy tushunchalar</a></li>
-                <li><a href="#process">Amaliy jarayon</a></li>
-                <li><a href="#mistakes">Ko'p uchraydigan xatolar</a></li>
+                <li><a href="#git-basics">Git asoslari</a></li>
+                <li><a href="#git-commands">Git buyruqlari</a></li>
+                <li><a href="#branching">Branching strategiyasi</a></li>
+                <li><a href="#commits">Commit qoidalari</a></li>
+                <li><a href="#code-style">Code Style</a></li>
+                <li><a href="#clean-code">Clean Code</a></li>
+                <li><a href="#solid">SOLID printsiplari</a></li>
+                <li><a href="#linting">Linting & Formatting</a></li>
+                <li><a href="#testing">Testing asoslari</a></li>
+                <li><a href="#debugging">Debugging</a></li>
+                <li><a href="#code-review">Code Review</a></li>
+                <li><a href="#ide-setup">IDE sozlamalari</a></li>
+                <li><a href="#ai-tools">AI yordamchilari</a></li>
+                <li><a href="#mistakes">Ko'p xatolar</a></li>
                 <li><a href="#best-practices">Best practices</a></li>
                 <li><a href="#tools">Asboblar</a></li>
-                <li><a href="#example">Mini misol</a></li>
                 <li><a href="#security">Xavfsizlik</a></li>
                 <li><a href="#faq">FAQ</a></li>
                 <li><a href="#glossary">Glossary</a></li>
@@ -918,13 +1189,20 @@
             <section class="hero">
                 <div class="hero-badge">
                     <i class="fas fa-code"></i>
-                    <span>1-bosqich</span>
+                    <span>01-bosqich</span>
                 </div>
                 <h1>Code</h1>
-                <p class="hero-tagline">Professional kod yozish san'ati - Git workflow, code style, linting va testing asoslari bilan tanishing.</p>
+                <p class="hero-tagline">Professional kod yozish san'ati - Git workflow, branching, clean code, linting, testing va code review asoslari bilan tanishing.</p>
                 <div class="reading-time">
-                    <span><i class="fas fa-clock"></i> 15 daqiqa o'qish</span>
-                    <span><i class="fas fa-book"></i> Boshlang'ich daraja</span>
+                    <span><i class="fas fa-clock"></i> 35 daqiqa o'qish</span>
+                    <span><i class="fas fa-layer-group"></i> 21 ta mavzu</span>
+                    <span><i class="fas fa-code"></i> 15+ misol</span>
+                </div>
+                <div class="level-badges">
+                    <span class="level-badge beginner">Boshlang'ich</span>
+                    <span class="level-badge junior">Junior</span>
+                    <span class="level-badge middle">Middle</span>
+                    <span class="level-badge senior">Senior</span>
                 </div>
             </section>
 
@@ -939,13 +1217,14 @@
                     <li><strong>Qayta ishlatilsin</strong> - bir joyda yozib, ko'p joyda ishlatish</li>
                     <li><strong>Xatolar kam bo'lsin</strong> - testlar va tekshiruvlar orqali</li>
                     <li><strong>Jamoa bilan ishlashga mos bo'lsin</strong> - Git va code review</li>
+                    <li><strong>Kengaytirish oson bo'lsin</strong> - yangi funksiyalar qo'shish oddiy</li>
                 </ul>
 
                 <div class="callout callout-info">
                     <div class="callout-icon"><i class="fas fa-info"></i></div>
                     <div class="callout-content">
                         <div class="callout-title">Muhim!</div>
-                        <p class="callout-text">Yaxshi kod - bu faqat ishlaydigan kod emas, balki boshqalar (va kelajakdagi siz) oson tushuna oladigan koddir.</p>
+                        <p class="callout-text">Yaxshi kod - bu faqat ishlaydigan kod emas, balki boshqalar (va kelajakdagi siz) oson tushuna oladigan koddir. "Kod yozish - bu kompyuter uchun emas, odam uchun yozishdir."</p>
                     </div>
                 </div>
             </section>
@@ -964,7 +1243,7 @@
                     <div class="card">
                         <div class="card-icon"><i class="fas fa-history"></i></div>
                         <h4>Loyiha uzoq yashaydi</h4>
-                        <p>Loyiha 5-10 yil davomida rivojlanishi mumkin. Tartibsiz kod vaqt o'tishi bilan "chigal"ga aylanadi.</p>
+                        <p>Loyiha 5-10 yil davomida rivojlanishi mumkin. Tartibsiz kod "chigal"ga aylanadi.</p>
                     </div>
                     <div class="card">
                         <div class="card-icon"><i class="fas fa-bug"></i></div>
@@ -976,147 +1255,838 @@
                         <h4>Tez rivojlantirish</h4>
                         <p>Yaxshi kod bazasi bo'lsa, yangi funksiyalar qo'shish tez va oson.</p>
                     </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-dollar-sign"></i></div>
+                        <h4>Pul tejash</h4>
+                        <p>Sifatli kod - kamroq xato, kamroq tuzatish vaqti, kamroq xarajat.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-graduation-cap"></i></div>
+                        <h4>Professional o'sish</h4>
+                        <p>Yaxshi kod yozish - Senior darajaga yetishning asosiy mezoni.</p>
+                    </div>
                 </div>
 
                 <div class="callout callout-warning">
                     <div class="callout-icon"><i class="fas fa-exclamation"></i></div>
                     <div class="callout-content">
                         <div class="callout-title">Haqiqiy hayotdan</div>
-                        <p class="callout-text">Katta kompaniyalarda noto'g'ri yozilgan kod tufayli millionlab dollar yo'qotilgan holatlar bor. Masalan, Knight Capital 2012-yilda 45 daqiqada $440 million yo'qotdi - sabab: eski kod yangi tizimga to'g'ri integratsiya qilinmagan edi.</p>
+                        <p class="callout-text">Knight Capital 2012-yilda 45 daqiqada $440 million yo'qotdi - sabab: eski kod yangi tizimga to'g'ri integratsiya qilinmagan edi. Yaxshi kod yozish va testlash juda muhim!</p>
                     </div>
                 </div>
             </section>
 
-            <!-- Core Concepts Section -->
-            <section class="section" id="concepts">
-                <h2><i class="fas fa-book-open"></i> Asosiy tushunchalar</h2>
+            <!-- Git Basics Section -->
+            <section class="section" id="git-basics">
+                <h2><i class="fab fa-git-alt"></i> Git asoslari</h2>
+                <p>Git - bu eng mashhur version control tizimi. U kodingiz tarixini saqlaydi va jamoaviy ishlashni osonlashtiradi.</p>
 
-                <h3>Version Control (Git)</h3>
-                <p>Version control - bu kodingiz tarixini saqlaydigan tizim. Git eng mashhur version control tizimi hisoblanadi. U sizga imkon beradi:</p>
+                <h3>Git nima uchun kerak?</h3>
                 <ul>
-                    <li>Har bir o'zgarishni saqlash va kerak bo'lsa orqaga qaytarish</li>
-                    <li>Bir vaqtda bir nechta odam ishlashi</li>
-                    <li>Turli versiyalarni (branch) parallel rivojlantirish</li>
+                    <li><strong>Tarix saqlash:</strong> Har bir o'zgarish saqlanadi, xato bo'lsa orqaga qaytarish mumkin</li>
+                    <li><strong>Jamoaviy ish:</strong> 100 odam bir vaqtda bitta loyihada ishlashi mumkin</li>
+                    <li><strong>Branch'lar:</strong> Yangi funksiyalarni alohida ishlab, keyin birlashtirish</li>
+                    <li><strong>Backup:</strong> Kod GitHub/GitLab'da xavfsiz saqlanadi</li>
+                    <li><strong>Kuzatuv:</strong> Kim, qachon, nima o'zgartirganini ko'rish mumkin</li>
                 </ul>
 
-                <h3>Branching Strategy</h3>
-                <p>Branchlar - bu kodning alohida nusxalari. Eng ko'p ishlatiladigan strategiyalar:</p>
-                <ul>
-                    <li><strong>main/master</strong> - production tayyor kod</li>
-                    <li><strong>develop</strong> - rivojlanish jarayonidagi kod</li>
-                    <li><strong>feature/*</strong> - yangi funksiyalar uchun</li>
-                    <li><strong>hotfix/*</strong> - shoshilinch tuzatishlar uchun</li>
-                </ul>
-
-                <h3>Code Style</h3>
-                <p>Jamoadagi barcha dasturchilar bir xil uslubda yozishi kerak. Bu o'z ichiga oladi:</p>
-                <ul>
-                    <li>Nomlash qoidalari (camelCase, snake_case)</li>
-                    <li>Indentatsiya (tab yoki space, nechtasi)</li>
-                    <li>Fayllar tuzilishi</li>
-                    <li>Kommentariy yozish qoidalari</li>
-                </ul>
-
-                <h3>Linting</h3>
-                <p>Linter - bu kodingizni avtomatik tekshiradigan dastur. U topadi:</p>
-                <ul>
-                    <li>Sintaksis xatolarini</li>
-                    <li>Code style buzilishlarini</li>
-                    <li>Potensial xatolarni (masalan, ishlatilmagan o'zgaruvchilar)</li>
-                </ul>
+                <h3>Git vs GitHub</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Git</th>
+                            <th>GitHub/GitLab</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Dastur (kompyuterda o'rnatiladi)</td>
+                            <td>Onlayn platforma (sayt)</td>
+                        </tr>
+                        <tr>
+                            <td>Local ishlaydi</td>
+                            <td>Cloud'da saqlaydi</td>
+                        </tr>
+                        <tr>
+                            <td>Versiyalarni boshqaradi</td>
+                            <td>Hamkorlik va CI/CD</td>
+                        </tr>
+                        <tr>
+                            <td>Bepul va open source</td>
+                            <td>Bepul + pullik tariflar</td>
+                        </tr>
+                    </tbody>
+                </table>
             </section>
 
-            <!-- Process Section -->
-            <section class="section" id="process">
-                <h2><i class="fas fa-tasks"></i> Amaliy jarayon (step-by-step)</h2>
+            <!-- Git Commands Section -->
+            <section class="section" id="git-commands">
+                <h2><i class="fas fa-terminal"></i> Git buyruqlari</h2>
+                <p>Eng ko'p ishlatiladigan Git buyruqlari:</p>
 
-                <div class="steps">
-                    <div class="step">
-                        <div class="step-number">1</div>
-                        <div class="step-content">
-                            <h4>Repository yaratish</h4>
-                            <p>Yangi loyiha uchun Git repository oching. GitHub, GitLab yoki Bitbucket dan birini tanlang.</p>
-                        </div>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">bash</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
                     </div>
-                    <div class="step">
-                        <div class="step-number">2</div>
-                        <div class="step-content">
-                            <h4>Branch ochish</h4>
-                            <p>Har bir yangi funksiya uchun alohida branch oching: <code>git checkout -b feature/login-page</code></p>
-                        </div>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">3</div>
-                        <div class="step-content">
-                            <h4>Kod yozish va commit qilish</h4>
-                            <p>Kichik, mantiqiy bo'laklarda commit qiling. Har bir commit bitta ishni bajarsin.</p>
-                        </div>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">4</div>
-                        <div class="step-content">
-                            <h4>Lint va testlarni ishga tushirish</h4>
-                            <p>Commit qilishdan oldin linter va testlarni ishga tushiring. Xatolar bo'lsa tuzating.</p>
-                        </div>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">5</div>
-                        <div class="step-content">
-                            <h4>Pull Request ochish</h4>
-                            <p>Ishingiz tugagach, Pull Request (PR) oching. Jamoa a'zolari kodingizni ko'rib chiqadi.</p>
-                        </div>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">6</div>
-                        <div class="step-content">
-                            <h4>Code Review va merge</h4>
-                            <p>Review'dan o'tgach, kod asosiy branch'ga qo'shiladi (merge).</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
+                    <div class="code-content">
+<pre><span class="comment"># BOSHLASH</span>
+<span class="function">git init</span>                      <span class="comment"># Yangi repo yaratish</span>
+<span class="function">git clone</span> URL                 <span class="comment"># Mavjud reponi klonlash</span>
 
-            <!-- Common Mistakes Section -->
-            <section class="section" id="mistakes">
-                <h2><i class="fas fa-exclamation-triangle"></i> Eng ko'p uchraydigan xatolar</h2>
+<span class="comment"># O'ZGARISHLAR BILAN ISHLASH</span>
+<span class="function">git status</span>                    <span class="comment"># Holatni ko'rish</span>
+<span class="function">git add</span> filename              <span class="comment"># Faylni staging'ga qo'shish</span>
+<span class="function">git add</span> .                     <span class="comment"># Barcha fayllarni qo'shish</span>
+<span class="function">git commit</span> -m <span class="string">"xabar"</span>         <span class="comment"># Commit qilish</span>
+<span class="function">git commit</span> --amend            <span class="comment"># Oxirgi commitni o'zgartirish</span>
 
-                <div class="callout callout-warning">
-                    <div class="callout-icon"><i class="fas fa-times"></i></div>
-                    <div class="callout-content">
-                        <div class="callout-title">1. Juda katta commitlar</div>
-                        <p class="callout-text">Bir commitda 1000 qator o'zgartirish qilish. Bunday commitni review qilish va xato topish juda qiyin.</p>
-                    </div>
-                </div>
+<span class="comment"># BRANCH'LAR</span>
+<span class="function">git branch</span>                    <span class="comment"># Branch'lar ro'yxati</span>
+<span class="function">git branch</span> feature/login      <span class="comment"># Yangi branch yaratish</span>
+<span class="function">git checkout</span> branch-name      <span class="comment"># Branch'ga o'tish</span>
+<span class="function">git checkout</span> -b new-branch    <span class="comment"># Yaratish + o'tish</span>
+<span class="function">git merge</span> branch-name         <span class="comment"># Branch birlashtirish</span>
+<span class="function">git branch</span> -d branch-name     <span class="comment"># Branch o'chirish</span>
 
-                <div class="callout callout-warning">
-                    <div class="callout-icon"><i class="fas fa-times"></i></div>
-                    <div class="callout-content">
-                        <div class="callout-title">2. Yomon commit xabarlari</div>
-                        <p class="callout-text">"fix", "update", "changes" kabi xabarlar hech narsa aytmaydi. Aniq yozing: "Fix login button not responding on mobile"</p>
-                    </div>
-                </div>
+<span class="comment"># REMOTE BILAN ISHLASH</span>
+<span class="function">git remote</span> -v                 <span class="comment"># Remote'lar ro'yxati</span>
+<span class="function">git push</span> origin main          <span class="comment"># Kodni yuborish</span>
+<span class="function">git pull</span> origin main          <span class="comment"># Yangilanishlarni olish</span>
+<span class="function">git fetch</span>                     <span class="comment"># O'zgarishlarni tekshirish</span>
 
-                <div class="callout callout-warning">
-                    <div class="callout-icon"><i class="fas fa-times"></i></div>
-                    <div class="callout-content">
-                        <div class="callout-title">3. Main branch'ga to'g'ridan-to'g'ri push</div>
-                        <p class="callout-text">Hech qachon main branch'ga to'g'ridan-to'g'ri kod qo'shmang. Har doim PR orqali.</p>
-                    </div>
-                </div>
-
-                <div class="callout callout-warning">
-                    <div class="callout-icon"><i class="fas fa-times"></i></div>
-                    <div class="callout-content">
-                        <div class="callout-title">4. .env fayllarni commit qilish</div>
-                        <p class="callout-text">Maxfiy kalitlar va parollarni Git'ga qo'shmang! .gitignore dan foydalaning.</p>
+<span class="comment"># TARIX VA QAYTARISH</span>
+<span class="function">git log</span> --oneline             <span class="comment"># Commit tarixini ko'rish</span>
+<span class="function">git diff</span>                      <span class="comment"># O'zgarishlarni ko'rish</span>
+<span class="function">git reset</span> --soft HEAD~1       <span class="comment"># Oxirgi commitni bekor qilish</span>
+<span class="function">git stash</span>                     <span class="comment"># O'zgarishlarni vaqtinchalik saqlash</span>
+<span class="function">git stash pop</span>                 <span class="comment"># Saqlangan o'zgarishlarni qaytarish</span></pre>
                     </div>
                 </div>
 
                 <div class="callout callout-tip">
-                    <div class="callout-icon"><i class="fas fa-check"></i></div>
+                    <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
                     <div class="callout-content">
-                        <div class="callout-title">Yechim</div>
-                        <p class="callout-text">Pre-commit hooks o'rnating - ular commit qilishdan oldin avtomatik tekshiruvlar o'tkazadi.</p>
+                        <div class="callout-title">Pro tip</div>
+                        <p class="callout-text">Git alias'larni o'rnating: <code>git config --global alias.co checkout</code> - endi <code>git co</code> yozish yetarli!</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Branching Section -->
+            <section class="section" id="branching">
+                <h2><i class="fas fa-code-branch"></i> Branching strategiyasi</h2>
+                <p>Branchlar - kodning parallel versiyalari. Professional loyihalarda turli strategiyalar ishlatiladi.</p>
+
+                <h3>Git Flow (Klassik)</h3>
+                <ul>
+                    <li><strong>main/master</strong> - production tayyor kod</li>
+                    <li><strong>develop</strong> - rivojlanish jarayonidagi kod</li>
+                    <li><strong>feature/*</strong> - yangi funksiyalar uchun</li>
+                    <li><strong>release/*</strong> - relizga tayyorlash uchun</li>
+                    <li><strong>hotfix/*</strong> - shoshilinch tuzatishlar uchun</li>
+                </ul>
+
+                <h3>GitHub Flow (Oddiyroq)</h3>
+                <ul>
+                    <li><strong>main</strong> - har doim deploy-ready</li>
+                    <li><strong>feature-branch</strong> - har bir o'zgarish uchun</li>
+                    <li>Pull Request → Review → Merge → Deploy</li>
+                </ul>
+
+                <h3>Trunk-Based Development (Zamonaviy)</h3>
+                <ul>
+                    <li>Asosiy branch'da ishlash</li>
+                    <li>Juda qisqa muddatli branch'lar (1-2 kun)</li>
+                    <li>Feature flags orqali yangi funksiyalarni yashirish</li>
+                    <li>Tez-tez merge qilish (kuniga 1+ marta)</li>
+                </ul>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">bash</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <div class="code-content">
+<pre><span class="comment"># Feature branch yaratish</span>
+<span class="function">git checkout</span> -b feature/user-authentication
+
+<span class="comment"># Ish tugagach, develop ga merge</span>
+<span class="function">git checkout</span> develop
+<span class="function">git merge</span> feature/user-authentication
+
+<span class="comment"># Hotfix yaratish (production xatosi uchun)</span>
+<span class="function">git checkout</span> -b hotfix/fix-login-bug main
+<span class="comment"># ... tuzatish ...</span>
+<span class="function">git checkout</span> main
+<span class="function">git merge</span> hotfix/fix-login-bug</pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Commits Section -->
+            <section class="section" id="commits">
+                <h2><i class="fas fa-save"></i> Commit qoidalari</h2>
+                <p>Yaxshi commit xabarlari loyihani tushunishni osonlashtiradi. Conventional Commits standartidan foydalaning:</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">Conventional Commits</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <div class="code-content">
+<pre><span class="comment"># FORMAT: type(scope): description</span>
+
+<span class="keyword">feat</span>:     Yangi funksiya
+<span class="keyword">fix</span>:      Xato tuzatish
+<span class="keyword">docs</span>:     Dokumentatsiya
+<span class="keyword">style</span>:    Formatlash (kod o'zgarmaydi)
+<span class="keyword">refactor</span>: Kod refactoring
+<span class="keyword">test</span>:     Testlar qo'shish
+<span class="keyword">chore</span>:    Build, config o'zgarishlari
+<span class="keyword">perf</span>:     Performance yaxshilash
+<span class="keyword">ci</span>:       CI/CD o'zgarishlari
+
+<span class="comment"># MISOLLAR:</span>
+<span class="string">feat(auth): add password reset functionality</span>
+<span class="string">fix(ui): correct button alignment on mobile</span>
+<span class="string">docs(readme): update installation instructions</span>
+<span class="string">refactor(api): simplify user validation logic</span>
+<span class="string">test(auth): add unit tests for login service</span>
+<span class="string">chore(deps): update dependencies to latest versions</span></pre>
+                    </div>
+                </div>
+
+                <h3>Commit qoidalari</h3>
+                <ul class="checklist">
+                    <li><i class="fas fa-check"></i> Imperativ shaklda yozing: "Add feature" emas "Added feature"</li>
+                    <li><i class="fas fa-check"></i> Sarlavha 50 belgidan oshmasin</li>
+                    <li><i class="fas fa-check"></i> Har bir commit BIR mantiqiy o'zgarish bo'lsin</li>
+                    <li><i class="fas fa-check"></i> Katta o'zgarishlarda body qo'shing (sarlavhadan keyin bo'sh qator)</li>
+                    <li><i class="fas fa-check"></i> Issue raqamini qo'shing: "fix(auth): resolve login bug #123"</li>
+                </ul>
+            </section>
+
+            <!-- Code Style Section -->
+            <section class="section" id="code-style">
+                <h2><i class="fas fa-palette"></i> Code Style</h2>
+                <p>Jamoada barcha bir xil uslubda yozishi kerak. Bu kodni o'qish va tushunishni osonlashtiradi.</p>
+
+                <h3>Nomlash qoidalari (Naming Conventions)</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">javascript</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <div class="code-content">
+<pre><span class="comment">// camelCase - o'zgaruvchilar va funksiyalar</span>
+<span class="keyword">let</span> userName = <span class="string">"John"</span>;
+<span class="keyword">function</span> <span class="function">getUserData</span>() { }
+
+<span class="comment">// PascalCase - klasslar va komponentlar</span>
+<span class="keyword">class</span> <span class="function">UserService</span> { }
+<span class="keyword">function</span> <span class="function">UserProfile</span>() { }  <span class="comment">// React component</span>
+
+<span class="comment">// SCREAMING_SNAKE_CASE - konstantalar</span>
+<span class="keyword">const</span> MAX_RETRY_COUNT = <span class="number">3</span>;
+<span class="keyword">const</span> API_BASE_URL = <span class="string">"https://api.example.com"</span>;
+
+<span class="comment">// snake_case - Python, Ruby, database ustunlari</span>
+user_name = <span class="string">"John"</span>
+<span class="keyword">def</span> <span class="function">get_user_data</span>():
+    <span class="keyword">pass</span>
+
+<span class="comment">// kebab-case - URL, CSS class, fayl nomlari</span>
+<span class="comment">// user-profile.component.ts</span>
+<span class="comment">// .user-card { }</span></pre>
+                    </div>
+                </div>
+
+                <h3>Yaxshi nomlar tanlash</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">javascript</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <div class="code-content">
+<pre><span class="comment">// ❌ Yomon nomlar</span>
+<span class="keyword">let</span> d = <span class="number">86400</span>;           <span class="comment">// nima?</span>
+<span class="keyword">let</span> arr = [];             <span class="comment">// qaysi array?</span>
+<span class="keyword">function</span> <span class="function">process</span>() { }    <span class="comment">// nima process?</span>
+<span class="keyword">let</span> flag = <span class="keyword">true</span>;         <span class="comment">// qaysi flag?</span>
+
+<span class="comment">// ✅ Yaxshi nomlar</span>
+<span class="keyword">let</span> secondsInDay = <span class="number">86400</span>;
+<span class="keyword">let</span> activeUsers = [];
+<span class="keyword">function</span> <span class="function">processPayment</span>() { }
+<span class="keyword">let</span> isUserLoggedIn = <span class="keyword">true</span>;
+
+<span class="comment">// Boolean nomlar is, has, can, should bilan</span>
+<span class="keyword">let</span> isActive = <span class="keyword">true</span>;
+<span class="keyword">let</span> hasPermission = <span class="keyword">false</span>;
+<span class="keyword">let</span> canEdit = <span class="keyword">true</span>;
+<span class="keyword">let</span> shouldRefresh = <span class="keyword">false</span>;</pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Clean Code Section -->
+            <section class="section" id="clean-code">
+                <h2><i class="fas fa-broom"></i> Clean Code</h2>
+                <p>Clean Code - oson o'qiladigan, tushunarli va saqlab turish oson bo'lgan kod. Robert C. Martin (Uncle Bob) ning "Clean Code" kitobi asosiy manba.</p>
+
+                <h3>1. Funksiyalar kichik bo'lsin</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">javascript</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <div class="code-content">
+<pre><span class="comment">// ❌ Yomon - funksiya juda ko'p ish qilmoqda</span>
+<span class="keyword">function</span> <span class="function">processUser</span>(user) {
+    <span class="comment">// validate, save, send email, log... 100+ qator</span>
+}
+
+<span class="comment">// ✅ Yaxshi - har bir funksiya bitta ish</span>
+<span class="keyword">function</span> <span class="function">validateUser</span>(user) { ... }
+<span class="keyword">function</span> <span class="function">saveUser</span>(user) { ... }
+<span class="keyword">function</span> <span class="function">sendWelcomeEmail</span>(user) { ... }
+<span class="keyword">function</span> <span class="function">logUserCreation</span>(user) { ... }
+
+<span class="keyword">function</span> <span class="function">processUser</span>(user) {
+    <span class="function">validateUser</span>(user);
+    <span class="function">saveUser</span>(user);
+    <span class="function">sendWelcomeEmail</span>(user);
+    <span class="function">logUserCreation</span>(user);
+}</pre>
+                    </div>
+                </div>
+
+                <h3>2. DRY - Don't Repeat Yourself</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">javascript</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <div class="code-content">
+<pre><span class="comment">// ❌ Yomon - kod takrorlanmoqda</span>
+<span class="keyword">const</span> adminEmail = admin.email.<span class="function">toLowerCase</span>().<span class="function">trim</span>();
+<span class="keyword">const</span> userEmail = user.email.<span class="function">toLowerCase</span>().<span class="function">trim</span>();
+<span class="keyword">const</span> guestEmail = guest.email.<span class="function">toLowerCase</span>().<span class="function">trim</span>();
+
+<span class="comment">// ✅ Yaxshi - funksiya yarating</span>
+<span class="keyword">const</span> <span class="function">normalizeEmail</span> = (email) => email.<span class="function">toLowerCase</span>().<span class="function">trim</span>();
+
+<span class="keyword">const</span> adminEmail = <span class="function">normalizeEmail</span>(admin.email);
+<span class="keyword">const</span> userEmail = <span class="function">normalizeEmail</span>(user.email);
+<span class="keyword">const</span> guestEmail = <span class="function">normalizeEmail</span>(guest.email);</pre>
+                    </div>
+                </div>
+
+                <h3>3. KISS - Keep It Simple, Stupid</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">javascript</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <div class="code-content">
+<pre><span class="comment">// ❌ Murakkab</span>
+<span class="keyword">const</span> isEven = num => num % <span class="number">2</span> === <span class="number">0</span> ? <span class="keyword">true</span> : <span class="keyword">false</span>;
+
+<span class="comment">// ✅ Oddiy</span>
+<span class="keyword">const</span> isEven = num => num % <span class="number">2</span> === <span class="number">0</span>;
+
+<span class="comment">// ❌ Murakkab</span>
+<span class="keyword">if</span> (isLoggedIn === <span class="keyword">true</span>) { ... }
+
+<span class="comment">// ✅ Oddiy</span>
+<span class="keyword">if</span> (isLoggedIn) { ... }</pre>
+                    </div>
+                </div>
+
+                <h3>4. Early Return (Guard Clauses)</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">javascript</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <div class="code-content">
+<pre><span class="comment">// ❌ Yomon - chuqur nesting</span>
+<span class="keyword">function</span> <span class="function">getDiscount</span>(user) {
+    <span class="keyword">if</span> (user) {
+        <span class="keyword">if</span> (user.isPremium) {
+            <span class="keyword">if</span> (user.yearsActive > <span class="number">5</span>) {
+                <span class="keyword">return</span> <span class="number">0.3</span>;
+            } <span class="keyword">else</span> {
+                <span class="keyword">return</span> <span class="number">0.2</span>;
+            }
+        } <span class="keyword">else</span> {
+            <span class="keyword">return</span> <span class="number">0.1</span>;
+        }
+    }
+    <span class="keyword">return</span> <span class="number">0</span>;
+}
+
+<span class="comment">// ✅ Yaxshi - early return</span>
+<span class="keyword">function</span> <span class="function">getDiscount</span>(user) {
+    <span class="keyword">if</span> (!user) <span class="keyword">return</span> <span class="number">0</span>;
+    <span class="keyword">if</span> (!user.isPremium) <span class="keyword">return</span> <span class="number">0.1</span>;
+    <span class="keyword">if</span> (user.yearsActive > <span class="number">5</span>) <span class="keyword">return</span> <span class="number">0.3</span>;
+    <span class="keyword">return</span> <span class="number">0.2</span>;
+}</pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SOLID Section -->
+            <section class="section" id="solid">
+                <h2><i class="fas fa-cubes"></i> SOLID Printsiplari</h2>
+                <p>SOLID - bu 5 ta muhim OOP printsipi bo'lib, yaxshi, kengaytiriladigan kod yozishga yordam beradi.</p>
+
+                <div class="principle-grid">
+                    <div class="principle-card">
+                        <div class="principle-letter">S</div>
+                        <div class="principle-name">Single Responsibility</div>
+                    </div>
+                    <div class="principle-card">
+                        <div class="principle-letter">O</div>
+                        <div class="principle-name">Open/Closed</div>
+                    </div>
+                    <div class="principle-card">
+                        <div class="principle-letter">L</div>
+                        <div class="principle-name">Liskov Substitution</div>
+                    </div>
+                    <div class="principle-card">
+                        <div class="principle-letter">I</div>
+                        <div class="principle-name">Interface Segregation</div>
+                    </div>
+                    <div class="principle-card">
+                        <div class="principle-letter">D</div>
+                        <div class="principle-name">Dependency Inversion</div>
+                    </div>
+                </div>
+
+                <h4>S - Single Responsibility</h4>
+                <p>Har bir klass yoki funksiya faqat BIR vazifani bajarsin.</p>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">javascript</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <div class="code-content">
+<pre><span class="comment">// ❌ Yomon - klass ko'p ish qilmoqda</span>
+<span class="keyword">class</span> <span class="function">User</span> {
+    <span class="function">save</span>() { <span class="comment">/* bazaga saqlash */</span> }
+    <span class="function">sendEmail</span>() { <span class="comment">/* email yuborish */</span> }
+    <span class="function">generateReport</span>() { <span class="comment">/* hisobot yaratish */</span> }
+}
+
+<span class="comment">// ✅ Yaxshi - har bir klass o'z ishini qiladi</span>
+<span class="keyword">class</span> <span class="function">User</span> { <span class="comment">/* faqat user ma'lumotlari */</span> }
+<span class="keyword">class</span> <span class="function">UserRepository</span> { <span class="function">save</span>(user) { } }
+<span class="keyword">class</span> <span class="function">EmailService</span> { <span class="function">send</span>(to, message) { } }
+<span class="keyword">class</span> <span class="function">ReportGenerator</span> { <span class="function">generate</span>(data) { } }</pre>
+                    </div>
+                </div>
+
+                <h4>O - Open/Closed</h4>
+                <p>Kod kengaytirish uchun OCHIQ, o'zgartirish uchun YOPIQ bo'lsin.</p>
+
+                <h4>D - Dependency Inversion</h4>
+                <p>Yuqori darajali modullar quyi darajali modullarga bog'liq bo'lmasin. Abstraksiyalardan foydalaning.</p>
+            </section>
+
+            <!-- Linting Section -->
+            <section class="section" id="linting">
+                <h2><i class="fas fa-magic"></i> Linting & Formatting</h2>
+                <p>Linter va formatter - kod sifatini avtomatik tekshiruvchi va formatlashni yengillashtiruvchi asboblar.</p>
+
+                <h3>ESLint - JavaScript/TypeScript uchun</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">.eslintrc.json</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <div class="code-content">
+<pre>{
+  <span class="string">"extends"</span>: [
+    <span class="string">"eslint:recommended"</span>,
+    <span class="string">"plugin:@typescript-eslint/recommended"</span>
+  ],
+  <span class="string">"rules"</span>: {
+    <span class="string">"no-unused-vars"</span>: <span class="string">"warn"</span>,
+    <span class="string">"no-console"</span>: <span class="string">"warn"</span>,
+    <span class="string">"semi"</span>: [<span class="string">"error"</span>, <span class="string">"always"</span>],
+    <span class="string">"quotes"</span>: [<span class="string">"error"</span>, <span class="string">"single"</span>],
+    <span class="string">"max-lines-per-function"</span>: [<span class="string">"warn"</span>, <span class="number">50</span>]
+  }
+}</pre>
+                    </div>
+                </div>
+
+                <h3>Prettier - Kod formatlash</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">.prettierrc</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <div class="code-content">
+<pre>{
+  <span class="string">"semi"</span>: <span class="keyword">true</span>,
+  <span class="string">"singleQuote"</span>: <span class="keyword">true</span>,
+  <span class="string">"tabWidth"</span>: <span class="number">2</span>,
+  <span class="string">"trailingComma"</span>: <span class="string">"es5"</span>,
+  <span class="string">"printWidth"</span>: <span class="number">80</span>,
+  <span class="string">"bracketSpacing"</span>: <span class="keyword">true</span>
+}</pre>
+                    </div>
+                </div>
+
+                <h3>Husky - Git Hooks</h3>
+                <p>Commit qilishdan oldin avtomatik tekshiruvlar:</p>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">bash</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <div class="code-content">
+<pre><span class="comment"># Husky o'rnatish</span>
+npm install husky lint-staged --save-dev
+npx husky install
+
+<span class="comment"># Pre-commit hook qo'shish</span>
+npx husky add .husky/pre-commit <span class="string">"npx lint-staged"</span></pre>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">package.json</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <div class="code-content">
+<pre>{
+  <span class="string">"lint-staged"</span>: {
+    <span class="string">"*.{js,ts}"</span>: [<span class="string">"eslint --fix"</span>, <span class="string">"prettier --write"</span>],
+    <span class="string">"*.{json,md}"</span>: [<span class="string">"prettier --write"</span>]
+  }
+}</pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Testing Section -->
+            <section class="section" id="testing">
+                <h2><i class="fas fa-vial"></i> Testing asoslari</h2>
+                <p>Test yozish - professional dasturchilik belgisi. Testlar kodingiz to'g'ri ishlashini kafolatlaydi.</p>
+
+                <h3>Test turlari</h3>
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-cube"></i></div>
+                        <h4>Unit Tests</h4>
+                        <p>Bitta funksiya yoki metodni test qiladi. Eng kichik test birligi. Tez ishlaydi.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-cubes"></i></div>
+                        <h4>Integration Tests</h4>
+                        <p>Bir necha komponent birgalikda qanday ishlashini tekshiradi.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-desktop"></i></div>
+                        <h4>E2E Tests</h4>
+                        <p>Butun ilovani foydalanuvchi nuqtai nazaridan test qiladi. Cypress, Playwright.</p>
+                    </div>
+                </div>
+
+                <h3>Jest bilan test yozish</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">javascript</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <div class="code-content">
+<pre><span class="comment">// math.js</span>
+<span class="keyword">function</span> <span class="function">add</span>(a, b) {
+    <span class="keyword">return</span> a + b;
+}
+
+<span class="keyword">function</span> <span class="function">divide</span>(a, b) {
+    <span class="keyword">if</span> (b === <span class="number">0</span>) <span class="keyword">throw new</span> <span class="function">Error</span>(<span class="string">'Cannot divide by zero'</span>);
+    <span class="keyword">return</span> a / b;
+}
+
+<span class="comment">// math.test.js</span>
+<span class="function">describe</span>(<span class="string">'Math functions'</span>, () => {
+    <span class="function">test</span>(<span class="string">'adds 1 + 2 to equal 3'</span>, () => {
+        <span class="function">expect</span>(<span class="function">add</span>(<span class="number">1</span>, <span class="number">2</span>)).<span class="function">toBe</span>(<span class="number">3</span>);
+    });
+
+    <span class="function">test</span>(<span class="string">'throws error when dividing by zero'</span>, () => {
+        <span class="function">expect</span>(() => <span class="function">divide</span>(<span class="number">10</span>, <span class="number">0</span>)).<span class="function">toThrow</span>(<span class="string">'Cannot divide by zero'</span>);
+    });
+});</pre>
+                    </div>
+                </div>
+
+                <h3>AAA Pattern</h3>
+                <ul>
+                    <li><strong>Arrange</strong> - Test uchun kerakli ma'lumotlarni tayyorlash</li>
+                    <li><strong>Act</strong> - Test qilinadigan funksiyani chaqirish</li>
+                    <li><strong>Assert</strong> - Natijani kutilgan qiymat bilan solishtirish</li>
+                </ul>
+            </section>
+
+            <!-- Debugging Section -->
+            <section class="section" id="debugging">
+                <h2><i class="fas fa-bug"></i> Debugging</h2>
+                <p>Xatolarni topish va tuzatish - dasturchilik vaqtining 50%+ ni oladi.</p>
+
+                <h3>Debugging usullari</h3>
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-print"></i></div>
+                        <h4>Console.log</h4>
+                        <p>Eng oddiy usul. O'zgaruvchi qiymatlarini konsolga chiqarish.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-pause"></i></div>
+                        <h4>Breakpoints</h4>
+                        <p>Kodni ma'lum nuqtada to'xtatib, holati ko'rish. DevTools yoki IDE.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-duck"></i></div>
+                        <h4>Rubber Duck</h4>
+                        <p>Muammoni boshqaga tushuntirib, yechim topish usuli.</p>
+                    </div>
+                </div>
+
+                <h3>Console metodlari</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">javascript</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <div class="code-content">
+<pre><span class="comment">// Oddiy log</span>
+console.<span class="function">log</span>(<span class="string">'User:'</span>, user);
+
+<span class="comment">// Jadval ko'rinishida</span>
+console.<span class="function">table</span>(usersArray);
+
+<span class="comment">// Vaqtni o'lchash</span>
+console.<span class="function">time</span>(<span class="string">'fetchData'</span>);
+<span class="keyword">await</span> <span class="function">fetchData</span>();
+console.<span class="function">timeEnd</span>(<span class="string">'fetchData'</span>);
+
+<span class="comment">// Kod ichida breakpoint</span>
+<span class="keyword">debugger</span>; <span class="comment">// brauzer shu yerda to'xtaydi</span>
+
+<span class="comment">// Stack trace</span>
+console.<span class="function">trace</span>(<span class="string">'Current stack'</span>);
+
+<span class="comment">// Guruhlash</span>
+console.<span class="function">group</span>(<span class="string">'User Details'</span>);
+console.<span class="function">log</span>(<span class="string">'Name:'</span>, user.name);
+console.<span class="function">log</span>(<span class="string">'Email:'</span>, user.email);
+console.<span class="function">groupEnd</span>();</pre>
+                    </div>
+                </div>
+
+                <div class="callout callout-warning">
+                    <div class="callout-icon"><i class="fas fa-exclamation"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">Eslatma!</div>
+                        <p class="callout-text">Production kodda console.log larni qoldirmang! ESLint <code>no-console</code> qoidasini yoqing.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Code Review Section -->
+            <section class="section" id="code-review">
+                <h2><i class="fas fa-users"></i> Code Review</h2>
+                <p>Code Review - jamoa a'zolari bir-birlarining kodini tekshirish jarayoni.</p>
+
+                <h3>Code Review checklist</h3>
+                <ul class="checklist">
+                    <li><i class="fas fa-check"></i> <strong>Funksionallik:</strong> Kod talab qilinganidek ishlayaptimi?</li>
+                    <li><i class="fas fa-check"></i> <strong>Testlar:</strong> Yetarli testlar yozilganmi?</li>
+                    <li><i class="fas fa-check"></i> <strong>O'qilishi:</strong> Kod tushunarli yozilganmi?</li>
+                    <li><i class="fas fa-check"></i> <strong>DRY:</strong> Takrorlanuvchi kod yo'qmi?</li>
+                    <li><i class="fas fa-check"></i> <strong>Xavfsizlik:</strong> Zaifliklar yo'qmi?</li>
+                    <li><i class="fas fa-check"></i> <strong>Performance:</strong> Samaradorlikka ta'sir qiladimi?</li>
+                </ul>
+
+                <h3>Yaxshi review fikrlari</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">text</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <div class="code-content">
+<pre><span class="comment">❌ Yomon:</span>
+<span class="string">"Bu yomon kod"</span>
+<span class="string">"Nima uchun shunday yozdingiz?"</span>
+
+<span class="comment">✅ Yaxshi:</span>
+<span class="string">"Bu yerda `map` o'rniga `filter` yaxshiroq bo'lardi, chunki..."</span>
+<span class="string">"Savol: bu funksiya null qiymatda qanday ishlaydi?"</span>
+<span class="string">"Ajoyib yechim! 👍 Faqat bir kichik taklif..."</span>
+<span class="string">"Nit: o'zgaruvchi nomini `data`dan `userProfile`ga o'zgartirish mumkin"</span></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- IDE Setup Section -->
+            <section class="section" id="ide-setup">
+                <h2><i class="fas fa-laptop-code"></i> IDE sozlamalari</h2>
+                <p>To'g'ri sozlangan IDE sizning samaradorligingizni 2-3 barobar oshiradi.</p>
+
+                <h3>VS Code uchun muhim extensionlar</h3>
+                <div class="tools-grid">
+                    <span class="tool-badge"><i class="fas fa-magic"></i> ESLint</span>
+                    <span class="tool-badge"><i class="fas fa-paint-brush"></i> Prettier</span>
+                    <span class="tool-badge"><i class="fab fa-git-alt"></i> GitLens</span>
+                    <span class="tool-badge"><i class="fas fa-robot"></i> GitHub Copilot</span>
+                    <span class="tool-badge"><i class="fas fa-bug"></i> Error Lens</span>
+                    <span class="tool-badge"><i class="fas fa-folder"></i> Auto Import</span>
+                    <span class="tool-badge"><i class="fas fa-eye"></i> Live Server</span>
+                    <span class="tool-badge"><i class="fas fa-code"></i> Path Intellisense</span>
+                </div>
+
+                <h3>VS Code settings.json</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">json</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <div class="code-content">
+<pre>{
+  <span class="string">"editor.formatOnSave"</span>: <span class="keyword">true</span>,
+  <span class="string">"editor.defaultFormatter"</span>: <span class="string">"esbenp.prettier-vscode"</span>,
+  <span class="string">"editor.codeActionsOnSave"</span>: {
+    <span class="string">"source.fixAll.eslint"</span>: <span class="keyword">true</span>
+  },
+  <span class="string">"editor.tabSize"</span>: <span class="number">2</span>,
+  <span class="string">"files.autoSave"</span>: <span class="string">"afterDelay"</span>,
+  <span class="string">"editor.wordWrap"</span>: <span class="string">"on"</span>,
+  <span class="string">"emmet.includeLanguages"</span>: {
+    <span class="string">"javascript"</span>: <span class="string">"javascriptreact"</span>
+  }
+}</pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- AI Tools Section -->
+            <section class="section" id="ai-tools">
+                <h2><i class="fas fa-robot"></i> AI yordamchilari</h2>
+                <p>2024-yilda AI dasturlashni tubdan o'zgartirdi. Bu vositalar samaradorlikni 2-3 barobar oshiradi.</p>
+
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="card-icon"><i class="fab fa-github"></i></div>
+                        <h4>GitHub Copilot</h4>
+                        <p>VS Code'da real-time kod tavsiyalari. Funksiyalar, testlar avtomatik yaratadi. $19/oy.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-comments"></i></div>
+                        <h4>ChatGPT / Claude</h4>
+                        <p>Murakkab muammolarni tushuntirish, debugging, refactoring uchun ideal.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-terminal"></i></div>
+                        <h4>Cursor IDE</h4>
+                        <p>AI-first kod muharriri. VS Code asosida, AI chuqur integratsiya qilingan.</p>
+                    </div>
+                </div>
+
+                <div class="callout callout-warning">
+                    <div class="callout-icon"><i class="fas fa-exclamation"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">Muhim ogohlantirish!</div>
+                        <p class="callout-text">AI yozgan kodni TUSHUNISHINGIZ kerak! Ko'r-ko'rona copy-paste qilmang. AI xato qilishi mumkin, maxfiy ma'lumotlar bilan ehtiyot bo'ling.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Mistakes Section -->
+            <section class="section" id="mistakes">
+                <h2><i class="fas fa-exclamation-triangle"></i> Ko'p uchraydigan xatolar</h2>
+
+                <div class="callout callout-danger">
+                    <div class="callout-icon"><i class="fas fa-times"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">1. Juda katta commitlar</div>
+                        <p class="callout-text">Bir commitda 1000 qator o'zgartirish. Review qilish va xato topish juda qiyin. Kichik, mantiqiy commitlar qiling.</p>
+                    </div>
+                </div>
+
+                <div class="callout callout-danger">
+                    <div class="callout-icon"><i class="fas fa-times"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">2. Yomon commit xabarlari</div>
+                        <p class="callout-text">"fix", "update", "changes" kabi xabarlar. Aniq yozing: "fix(auth): resolve login timeout issue"</p>
+                    </div>
+                </div>
+
+                <div class="callout callout-danger">
+                    <div class="callout-icon"><i class="fas fa-times"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">3. Main branch'ga to'g'ridan-to'g'ri push</div>
+                        <p class="callout-text">Har doim PR orqali qo'shing. Branch protection rules o'rnating.</p>
+                    </div>
+                </div>
+
+                <div class="callout callout-danger">
+                    <div class="callout-icon"><i class="fas fa-times"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">4. .env fayllarni commit qilish</div>
+                        <p class="callout-text">Maxfiy kalitlarni Git'ga HECH QACHON qo'shmang! .gitignore dan foydalaning.</p>
+                    </div>
+                </div>
+
+                <div class="callout callout-danger">
+                    <div class="callout-icon"><i class="fas fa-times"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">5. Test yozmaslik</div>
+                        <p class="callout-text">"Vaqt yo'q" bahonasi bilan. Keyinchalik bu 10x ko'proq vaqt oladi.</p>
                     </div>
                 </div>
             </section>
@@ -1126,14 +2096,16 @@
                 <h2><i class="fas fa-medal"></i> Best practices</h2>
 
                 <ul class="checklist">
-                    <li><i class="fas fa-check"></i> Har kuni kamida bir marta pull qiling (yangilanishlarni oling)</li>
-                    <li><i class="fas fa-check"></i> Commit xabarlarini imperativ shaklda yozing: "Add feature" emas "Added feature"</li>
-                    <li><i class="fas fa-check"></i> Branch nomlarini standart qiling: feature/, bugfix/, hotfix/</li>
+                    <li><i class="fas fa-check"></i> Har kuni kamida bir marta <code>git pull</code> qiling</li>
+                    <li><i class="fas fa-check"></i> Commit xabarlarini Conventional Commits formatida yozing</li>
+                    <li><i class="fas fa-check"></i> Branch nomlarini standartlashtiring: feature/, bugfix/, hotfix/</li>
                     <li><i class="fas fa-check"></i> Har bir PR 400 qatordan oshmasin (ideal: 200-300)</li>
                     <li><i class="fas fa-check"></i> README.md faylini yangilab turing</li>
                     <li><i class="fas fa-check"></i> .gitignore faylini to'g'ri sozlang</li>
-                    <li><i class="fas fa-check"></i> Semantic versioning ishlating (v1.2.3)</li>
+                    <li><i class="fas fa-check"></i> Pre-commit hooks o'rnating (Husky)</li>
                     <li><i class="fas fa-check"></i> Code review'da konstruktiv bo'ling</li>
+                    <li><i class="fas fa-check"></i> Har bir funksiya uchun test yozing</li>
+                    <li><i class="fas fa-check"></i> Code coverage 80%+ ga intiling</li>
                 </ul>
             </section>
 
@@ -1145,122 +2117,72 @@
                     <span class="tool-badge"><i class="fab fa-git-alt"></i> Git</span>
                     <span class="tool-badge"><i class="fab fa-github"></i> GitHub</span>
                     <span class="tool-badge"><i class="fab fa-gitlab"></i> GitLab</span>
-                    <span class="tool-badge"><i class="fab fa-bitbucket"></i> Bitbucket</span>
                     <span class="tool-badge"><i class="fas fa-code"></i> VS Code</span>
                     <span class="tool-badge"><i class="fas fa-terminal"></i> ESLint</span>
-                    <span class="tool-badge"><i class="fas fa-terminal"></i> Prettier</span>
-                    <span class="tool-badge"><i class="fas fa-terminal"></i> Husky</span>
+                    <span class="tool-badge"><i class="fas fa-paint-brush"></i> Prettier</span>
+                    <span class="tool-badge"><i class="fas fa-dog"></i> Husky</span>
                     <span class="tool-badge"><i class="fas fa-vial"></i> Jest</span>
-                    <span class="tool-badge"><i class="fas fa-terminal"></i> commitlint</span>
-                </div>
-
-                <div class="cards-grid">
-                    <div class="card">
-                        <div class="card-icon"><i class="fab fa-git-alt"></i></div>
-                        <h4>Git</h4>
-                        <p>Versiya boshqaruv tizimi. Barcha zamonaviy loyihalarda ishlatiladi.</p>
-                    </div>
-                    <div class="card">
-                        <div class="card-icon"><i class="fas fa-magic"></i></div>
-                        <h4>ESLint + Prettier</h4>
-                        <p>ESLint xatolarni topadi, Prettier kodni formatlaydi. Birga juda kuchli.</p>
-                    </div>
-                    <div class="card">
-                        <div class="card-icon"><i class="fas fa-dog"></i></div>
-                        <h4>Husky</h4>
-                        <p>Git hooks boshqarish uchun. Commit qilishdan oldin testlarni ishga tushiradi.</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Example Section -->
-            <section class="section" id="example">
-                <h2><i class="fas fa-laptop-code"></i> Mini misol</h2>
-
-                <p>Oddiy Git workflow misoli:</p>
-
-                <div class="code-block">
-                    <div class="code-header">
-                        <span class="code-lang">bash</span>
-                        <button class="code-copy" onclick="copyCode(this)">
-                            <i class="fas fa-copy"></i> Copy
-                        </button>
-                    </div>
-                    <div class="code-content">
-<pre><span class="comment"># 1. Repository klonlash</span>
-<span class="function">git clone</span> https://github.com/username/project.git
-<span class="function">cd</span> project
-
-<span class="comment"># 2. Yangi branch ochish</span>
-<span class="function">git checkout</span> -b feature/user-authentication
-
-<span class="comment"># 3. Kod yozish va o'zgarishlarni staging'ga qo'shish</span>
-<span class="function">git add</span> src/auth/login.js
-
-<span class="comment"># 4. Commit qilish (yaxshi xabar bilan)</span>
-<span class="function">git commit</span> -m <span class="string">"Add user login functionality with JWT"</span>
-
-<span class="comment"># 5. Remote'ga push qilish</span>
-<span class="function">git push</span> origin feature/user-authentication
-
-<span class="comment"># 6. GitHub/GitLab'da Pull Request ochish</span></pre>
-                    </div>
-                </div>
-
-                <p>ESLint konfiguratsiya misoli:</p>
-
-                <div class="code-block">
-                    <div class="code-header">
-                        <span class="code-lang">.eslintrc.json</span>
-                        <button class="code-copy" onclick="copyCode(this)">
-                            <i class="fas fa-copy"></i> Copy
-                        </button>
-                    </div>
-                    <div class="code-content">
-<pre>{
-  <span class="string">"extends"</span>: [<span class="string">"eslint:recommended"</span>],
-  <span class="string">"env"</span>: {
-    <span class="string">"browser"</span>: <span class="keyword">true</span>,
-    <span class="string">"node"</span>: <span class="keyword">true</span>,
-    <span class="string">"es2021"</span>: <span class="keyword">true</span>
-  },
-  <span class="string">"rules"</span>: {
-    <span class="string">"no-unused-vars"</span>: <span class="string">"warn"</span>,
-    <span class="string">"no-console"</span>: <span class="string">"warn"</span>,
-    <span class="string">"semi"</span>: [<span class="string">"error"</span>, <span class="string">"always"</span>]
-  }
-}</pre>
-                    </div>
+                    <span class="tool-badge"><i class="fas fa-vial"></i> Vitest</span>
+                    <span class="tool-badge"><i class="fas fa-robot"></i> Cypress</span>
+                    <span class="tool-badge"><i class="fas fa-theater-masks"></i> Playwright</span>
+                    <span class="tool-badge"><i class="fas fa-file-alt"></i> commitlint</span>
+                    <span class="tool-badge"><i class="fas fa-check-double"></i> lint-staged</span>
+                    <span class="tool-badge"><i class="fab fa-npm"></i> npm/yarn/pnpm</span>
                 </div>
             </section>
 
             <!-- Security Section -->
             <section class="section" id="security">
                 <div class="security-card">
-                    <h3 class="security-title"><i class="fas fa-shield-alt"></i> Xavfsizlik va ishonchlilik</h3>
+                    <h3 class="security-title"><i class="fas fa-shield-alt"></i> Xavfsizlik qoidalari</h3>
                     <ul class="security-list">
                         <li><i class="fas fa-lock"></i> Maxfiy kalitlarni HECH QACHON Git'ga push qilmang. .env fayllarni .gitignore'ga qo'shing.</li>
                         <li><i class="fas fa-lock"></i> GitHub Secrets yoki boshqa secret manager'lardan foydalaning.</li>
-                        <li><i class="fas fa-lock"></i> Dependency'larni muntazam yangilang (npm audit, Dependabot).</li>
-                        <li><i class="fas fa-lock"></i> Branch protection rules o'rnating - main branch'ga to'g'ridan-to'g'ri push taqiqlang.</li>
-                        <li><i class="fas fa-lock"></i> 2FA (ikki faktorli autentifikatsiya) yoqing GitHub/GitLab akkauntingizda.</li>
+                        <li><i class="fas fa-lock"></i> Dependency'larni muntazam yangilang: <code>npm audit fix</code></li>
+                        <li><i class="fas fa-lock"></i> Branch protection rules o'rnating - main'ga to'g'ridan-to'g'ri push taqiqlang.</li>
+                        <li><i class="fas fa-lock"></i> 2FA (ikki faktorli autentifikatsiya) yoqing.</li>
+                        <li><i class="fas fa-lock"></i> Dependabot yoki Renovate bot o'rnating.</li>
+                        <li><i class="fas fa-lock"></i> SSH kalitlaridan foydalaning (HTTPS o'rniga).</li>
                     </ul>
+                </div>
+
+                <h3>.gitignore namunasi</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">.gitignore</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <div class="code-content">
+<pre><span class="comment"># Environment variables</span>
+.env
+.env.local
+.env.production
+
+<span class="comment"># Dependencies</span>
+node_modules/
+
+<span class="comment"># Build outputs</span>
+dist/
+build/
+
+<span class="comment"># IDE</span>
+.idea/
+.vscode/
+
+<span class="comment"># Logs</span>
+*.log
+
+<span class="comment"># OS</span>
+.DS_Store</pre>
+                    </div>
                 </div>
             </section>
 
             <!-- FAQ Section -->
             <section class="section" id="faq">
-                <h2><i class="fas fa-question-circle"></i> Ko'p so'raladigan savollar (FAQ)</h2>
-
-                <div class="faq-item">
-                    <button class="faq-question">
-                        Git va GitHub farqi nima?
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="faq-answer">
-                        <p>Git - bu versiya boshqaruv dasturi (local kompyuteringizda ishlaydi). GitHub esa Git repository'larni online saqlash va hamkorlik qilish uchun platforma. GitLab va Bitbucket ham GitHub'ga o'xshash xizmatlar.</p>
-                    </div>
-                </div>
+                <h2><i class="fas fa-question-circle"></i> Ko'p so'raladigan savollar</h2>
 
                 <div class="faq-item">
                     <button class="faq-question">
@@ -1268,7 +2190,7 @@
                         <i class="fas fa-chevron-down"></i>
                     </button>
                     <div class="faq-answer">
-                        <p>Merge - ikki branch'ni birlashtiradi va yangi "merge commit" yaratadi. Rebase esa branch tarixini "qayta yozadi", commitlarni boshqa branch ustiga ko'chiradi. Rebase tarixni toza saqlaydi, lekin shared branch'larda ehtiyot bo'lish kerak.</p>
+                        <p>Merge - ikki branch'ni birlashtiradi va yangi "merge commit" yaratadi. Rebase esa branch tarixini "qayta yozadi", commitlarni boshqa branch ustiga ko'chiradi. Rebase tarixni toza saqlaydi, lekin shared branch'larda ehtiyot bo'ling.</p>
                     </div>
                 </div>
 
@@ -1278,47 +2200,17 @@
                         <i class="fas fa-chevron-down"></i>
                     </button>
                     <div class="faq-answer">
-                        <p>Oxirgi commit'ni o'zgartirish: <code>git commit --amend</code>. Commit'ni bekor qilish (lekin o'zgarishlarni saqlash): <code>git reset --soft HEAD~1</code>. Butunlay o'chirish: <code>git reset --hard HEAD~1</code>.</p>
+                        <p><code>git commit --amend</code> - oxirgi commitni o'zgartirish. <code>git reset --soft HEAD~1</code> - commitni bekor qilish (o'zgarishlar saqlanadi). <code>git reset --hard HEAD~1</code> - butunlay o'chirish.</p>
                     </div>
                 </div>
 
                 <div class="faq-item">
                     <button class="faq-question">
-                        .gitignore nima uchun kerak?
+                        Conflict yuzaga kelsa nima qilish kerak?
                         <i class="fas fa-chevron-down"></i>
                     </button>
                     <div class="faq-answer">
-                        <p>.gitignore fayli Git'ga qaysi fayl va papkalarni e'tiborsiz qoldirish kerakligini aytadi. Masalan: node_modules/, .env, build/, *.log kabi fayllarni commit qilmaslik kerak.</p>
-                    </div>
-                </div>
-
-                <div class="faq-item">
-                    <button class="faq-question">
-                        Conflict (ziddiyat) yuzaga kelsa nima qilish kerak?
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="faq-answer">
-                        <p>Conflict - ikki odam bir faylning bir joyini o'zgartirganda yuzaga keladi. Uni hal qilish uchun: 1) Conflict bo'lgan fayllarni oching, 2) <<<, ===, >>> belgilar orasidagi kodni ko'ring, 3) Qaysi versiyani saqlashni hal qiling, 4) Belgilarni o'chirib, to'g'ri kodni qoldiring, 5) git add va git commit qiling.</p>
-                    </div>
-                </div>
-
-                <div class="faq-item">
-                    <button class="faq-question">
-                        Qanday qilib yaxshi commit xabari yozaman?
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="faq-answer">
-                        <p>Yaxshi format: "type(scope): description". Masalan: "feat(auth): add password reset functionality", "fix(ui): correct button alignment on mobile", "docs(readme): update installation instructions". Conventional Commits spetsifikatsiyasiga amal qiling.</p>
-                    </div>
-                </div>
-
-                <div class="faq-item">
-                    <button class="faq-question">
-                        Pull Request'da nimalarni tekshirish kerak?
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="faq-answer">
-                        <p>1) Kod ishlayaptimi? 2) Testlar bormi va o'tayaptimi? 3) Code style qoidalariga mos kelayaptimi? 4) Xavfsizlik muammolari yo'qmi? 5) Performance ta'sir qilmaydimi? 6) Dokumentatsiya yangilangan mi?</p>
+                        <p>1) Conflict fayllarni oching, 2) <<<, ===, >>> belgilar orasidagi kodni ko'ring, 3) Qaysi versiyani saqlashni hal qiling, 4) Belgilarni o'chirib, to'g'ri kodni qoldiring, 5) <code>git add</code> va <code>git commit</code> qiling.</p>
                     </div>
                 </div>
 
@@ -1328,7 +2220,37 @@
                         <i class="fas fa-chevron-down"></i>
                     </button>
                     <div class="faq-answer">
-                        <p>git stash - joriy o'zgarishlarni vaqtinchalik saqlaydi. Masalan, biror ishni qilyapsiz, lekin tezda boshqa branch'ga o'tishingiz kerak. <code>git stash</code> qiling, branch'ni almashtirib ish qiling, keyin <code>git stash pop</code> bilan o'zgarishlarni qaytaring.</p>
+                        <p><code>git stash</code> - joriy o'zgarishlarni vaqtinchalik saqlaydi. Masalan, tezda boshqa branch'ga o'tishingiz kerak. <code>git stash pop</code> bilan qaytarasiz.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Pull Request'da nimalarni tekshirish kerak?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>1) Kod ishlayaptimi? 2) Testlar bormi? 3) Code style qoidalariga mos kelayaptimi? 4) Xavfsizlik muammolari yo'qmi? 5) Performance ta'sir qilmaydimi? 6) Dokumentatsiya yangilangan mi?</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Qaysi code editor ishlatish kerak?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p><strong>VS Code</strong> - eng mashhur, bepul, ko'p extension'lar. <strong>WebStorm</strong> - pullik, lekin juda kuchli. <strong>Cursor</strong> - AI integratsiyasi bilan. Boshlang'ich uchun VS Code tavsiya etiladi.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        ESLint va Prettier farqi nima?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>ESLint - kod sifatini tekshiradi (xatolar, anti-patterns). Prettier - faqat formatlash (bo'sh joy, qatorlar). Ikkalasini birga ishlatish tavsiya etiladi.</p>
                     </div>
                 </div>
             </section>
@@ -1340,15 +2262,15 @@
                 <div class="glossary-grid">
                     <div class="glossary-item">
                         <span class="glossary-term">Repository</span>
-                        <span class="glossary-def">Loyihaning barcha fayllari va ularning tarixini saqlaydigan joy. Qisqacha "repo" deb ataladi.</span>
+                        <span class="glossary-def">Loyihaning barcha fayllari va tarixini saqlaydigan joy. Qisqacha "repo".</span>
                     </div>
                     <div class="glossary-item">
                         <span class="glossary-term">Commit</span>
-                        <span class="glossary-def">Koddagi o'zgarishlarning saqlangan holati. Har bir commit o'ziga xos ID (hash) ga ega.</span>
+                        <span class="glossary-def">Koddagi o'zgarishlarning saqlangan holati. Har bir commit o'ziga xos ID ga ega.</span>
                     </div>
                     <div class="glossary-item">
                         <span class="glossary-term">Branch</span>
-                        <span class="glossary-def">Kodning parallel nusxasi. Yangi funksiyalar yoki tuzatishlar uchun alohida ishlash imkonini beradi.</span>
+                        <span class="glossary-def">Kodning parallel nusxasi. Yangi funksiyalar uchun alohida ishlash imkonini beradi.</span>
                     </div>
                     <div class="glossary-item">
                         <span class="glossary-term">Merge</span>
@@ -1356,7 +2278,7 @@
                     </div>
                     <div class="glossary-item">
                         <span class="glossary-term">Pull Request</span>
-                        <span class="glossary-def">Kodni asosiy branch'ga qo'shish so'rovi. Jamoa a'zolari kod review qiladi.</span>
+                        <span class="glossary-def">Kodni asosiy branch'ga qo'shish so'rovi. Jamoa review qiladi.</span>
                     </div>
                     <div class="glossary-item">
                         <span class="glossary-term">Clone</span>
@@ -1364,7 +2286,7 @@
                     </div>
                     <div class="glossary-item">
                         <span class="glossary-term">Fork</span>
-                        <span class="glossary-def">Boshqa odamning repository'sini o'z akkauntingizga nusxalash (open source uchun).</span>
+                        <span class="glossary-def">Boshqa odamning repo'sini o'z akkauntingizga nusxalash.</span>
                     </div>
                     <div class="glossary-item">
                         <span class="glossary-term">Staging</span>
@@ -1372,19 +2294,27 @@
                     </div>
                     <div class="glossary-item">
                         <span class="glossary-term">HEAD</span>
-                        <span class="glossary-def">Hozirgi joylashgan commit'ga ko'rsatgich. Odatda branch'ning oxirgi commit'i.</span>
+                        <span class="glossary-def">Hozirgi joylashgan commit'ga ko'rsatgich.</span>
                     </div>
                     <div class="glossary-item">
                         <span class="glossary-term">Remote</span>
-                        <span class="glossary-def">Online saqlangan repository (masalan GitHub'da). "origin" eng ko'p ishlatiladigan nom.</span>
+                        <span class="glossary-def">Online saqlangan repository. "origin" eng ko'p ishlatiladigan nom.</span>
                     </div>
                     <div class="glossary-item">
                         <span class="glossary-term">Linter</span>
-                        <span class="glossary-def">Kodni avtomatik tekshirib, xatolar va style buzilishlarini ko'rsatadigan dastur.</span>
+                        <span class="glossary-def">Kodni tekshirib, xatolar va style buzilishlarini ko'rsatadigan dastur.</span>
                     </div>
                     <div class="glossary-item">
                         <span class="glossary-term">Hook</span>
-                        <span class="glossary-def">Git amallaridan oldin yoki keyin avtomatik ishlaydigan skriptlar (pre-commit, post-merge va h.k.).</span>
+                        <span class="glossary-def">Git amallaridan oldin/keyin ishlaydigan skriptlar.</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">Refactoring</span>
+                        <span class="glossary-def">Kod ishlashini o'zgartirmay, uni toza qilish.</span>
+                    </div>
+                    <div class="glossary-item">
+                        <span class="glossary-term">Code Review</span>
+                        <span class="glossary-def">Jamoa a'zolari tomonidan kodni tekshirish jarayoni.</span>
                     </div>
                 </div>
             </section>
@@ -1415,10 +2345,40 @@
                 <ul class="takeaways-list">
                     <li><i class="fas fa-check"></i> Git - professional dasturlashning asosi</li>
                     <li><i class="fas fa-check"></i> Kichik, mantiqiy commitlar qiling</li>
-                    <li><i class="fas fa-check"></i> Branch'lar orqali parallel ishlang</li>
+                    <li><i class="fas fa-check"></i> Conventional Commits ishlating</li>
+                    <li><i class="fas fa-check"></i> Clean Code tamoyillariga amal qiling</li>
                     <li><i class="fas fa-check"></i> Linter va formatter o'rnating</li>
+                    <li><i class="fas fa-check"></i> Testlar yozing</li>
                     <li><i class="fas fa-check"></i> Code review - sifat kafolati</li>
-                    <li><i class="fas fa-check"></i> Maxfiy ma'lumotlarni himoyalang</li>
+                    <li><i class="fas fa-check"></i> AI toollarni o'rganing</li>
+                </ul>
+            </div>
+
+            <div class="resources-card">
+                <h3 class="resources-title"><i class="fas fa-link"></i> Foydali linklar</h3>
+                <a href="https://git-scm.com/doc" target="_blank" class="resource-link">
+                    <i class="fab fa-git-alt"></i> Git Documentation
+                </a>
+                <a href="https://conventionalcommits.org" target="_blank" class="resource-link">
+                    <i class="fas fa-file-alt"></i> Conventional Commits
+                </a>
+                <a href="https://eslint.org" target="_blank" class="resource-link">
+                    <i class="fas fa-terminal"></i> ESLint
+                </a>
+                <a href="https://prettier.io" target="_blank" class="resource-link">
+                    <i class="fas fa-paint-brush"></i> Prettier
+                </a>
+                <a href="https://jestjs.io" target="_blank" class="resource-link">
+                    <i class="fas fa-vial"></i> Jest
+                </a>
+            </div>
+
+            <div class="takeaways-card">
+                <h3 class="takeaways-title"><i class="fas fa-book"></i> O'qish uchun</h3>
+                <ul class="takeaways-list">
+                    <li><i class="fas fa-book-open"></i> Clean Code - Robert C. Martin</li>
+                    <li><i class="fas fa-book-open"></i> The Pragmatic Programmer</li>
+                    <li><i class="fas fa-book-open"></i> Refactoring - M. Fowler</li>
                 </ul>
             </div>
         </aside>
@@ -1466,7 +2426,6 @@
             const code = codeBlock.querySelector('pre').textContent;
             
             navigator.clipboard.writeText(code).then(() => {
-                const icon = button.querySelector('i');
                 const originalHTML = button.innerHTML;
                 button.innerHTML = '<i class="fas fa-check"></i> Copied!';
                 button.style.color = 'var(--accent-green)';
